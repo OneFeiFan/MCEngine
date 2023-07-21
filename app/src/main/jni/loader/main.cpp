@@ -28,6 +28,7 @@ char *jstringToChar(JNIEnv *env, jstring jstr)
     return rtn;
 };
 
+
 extern "C"
 {
 
