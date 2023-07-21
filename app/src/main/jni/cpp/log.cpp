@@ -1,6 +1,7 @@
 //
 // Created by 25843 on 2023/7/20.
 //
+#ifndef MCENGINE_LOG_COO
 
 #include <c++/v1/string>
 #include "log.h"
@@ -53,3 +54,4 @@ void log::Toast(std::string str) {
     jstring _jName = env -> NewStringUTF(_charName);
     env -> CallStaticVoidMethod(HookEngineptr, id, _jName);
 }
+#endif

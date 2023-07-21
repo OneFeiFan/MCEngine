@@ -1,15 +1,14 @@
 #ifndef _NATIVEENGINE_CPP
-#define _NATIVEENGINE_CPP
-#include <stdarg.h>
-#include <stdlib.h>
+
+#include <cstdarg>
+#include <cstdlib>
 
 #include "NativeEngine.h"
-//#include "stl/string"
-#include "JavaAtach.cpp"
+#include "JavaAtach.h"
 #include <c++/v1/string>
 
 jclass NativeEngine::HookEngineptr = nullptr;
-std::vector<std::function<void()>> NativeEngine::v;
+
 jclass NativeEngine::HookEngineClass() {
     return HookEngineptr;
 }

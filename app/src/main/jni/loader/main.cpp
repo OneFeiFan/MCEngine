@@ -1,5 +1,6 @@
 #include "headers/ProcessView.h"
 #include "includes/dobby.h"
+#include "../cpp/log.h"
 #include <jni.h>
 #include <dlfcn.h>
 #include <unistd.h>
@@ -60,6 +61,7 @@ extern "C"
                 if (processObj.getModules()[i].name == "libminecraftpe.so")
                 {
                     void *handle =  my___loader_android_dlopen_ext(strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libexample.so"), RTLD_NOW, nullptr, (void *)processObj.getModules()[i].baseAddress);
+                    //log::Toast("已取得句柄");
                     jint (*my_JNI_OnLoad)(JavaVM *,void *)=(jint (*)(JavaVM *, void *))dlsym(handle,"JNI_OnLoad");
                     my_JNI_OnLoad(loaderVM,loaderPtr);
                     

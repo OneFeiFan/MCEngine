@@ -15,4 +15,4 @@ public:
     static char* jstringToChar(jstring jstr);
     static void Toast(std::string);
 };
-#endif //MCENGINE_LOG_H
+#endif
