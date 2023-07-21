@@ -4,7 +4,6 @@
 #include <cstdlib>
 
 #include "NativeEngine.h"
-#include "JavaAtach.h"
 #include <c++/v1/string>
 
 jclass NativeEngine::HookEngineptr = nullptr;
@@ -12,13 +11,12 @@ jclass NativeEngine::HookEngineptr = nullptr;
 jclass NativeEngine::HookEngineClass() {
     return HookEngineptr;
 }
-jclass NativeEngine::HookEngineClass(JNIEnv* env) {
+void NativeEngine::HookEngineClass(JNIEnv* env) {
     jclass tempRef = env->FindClass("com/taolesi/mcengine/HookEngine");
     HookEngineptr = static_cast<jclass>(env->NewGlobalRef(tempRef));
     env->DeleteLocalRef(tempRef);
-    return HookEngineptr;
 }
-void NativeEngine::Log(std::string claz, int a) {
+/*void NativeEngine::Log(std::string claz, int a) {
     JNIEnv* env = JavaAtach::attach();
     jclass HookEngineptr = NativeEngine::HookEngineClass();
     jmethodID id = env -> GetStaticMethodID(HookEngineptr, "Log", "(Ljava/lang/String;I)V");
@@ -51,5 +49,5 @@ void NativeEngine::Log(std::string claz, std::string a) {
     const char* _charName = a.c_str();
     jstring _jName = env -> NewStringUTF(_charName);
     env -> CallStaticVoidMethod(HookEngineptr, id, jName, _jName);
-}
+}*/
 #endif
