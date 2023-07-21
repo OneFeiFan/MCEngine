@@ -87,4 +87,13 @@ public class HookEngine implements IXposedHookLoadPackage {
     public static void Toast(String str) {
         Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
     }
+    public static void Log(String claz, int nummber) {
+
+    }
+    public static void Log(String claz, float nummber) {
+
+    }
+    public static void Log(String claz, String str) {
+
+    }
 }
