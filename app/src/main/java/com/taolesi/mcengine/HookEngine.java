@@ -37,18 +37,14 @@ public class HookEngine implements IXposedHookLoadPackage {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
                 context = (Context) param.thisObject;
-                //param.
-                /*if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R || Environment.isExternalStorageManager()) {
-                    Toast.makeText(context, "已获得访问所有文件的权限", Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                    context.startActivity(intent);
-                }*/
                 Toast.makeText(context, "已取得Context", Toast.LENGTH_SHORT).show();
-                //define();
                 Toast.makeText(context, "正在加载so文件", Toast.LENGTH_SHORT).show();
-                System.loadLibrary("mcengine");
-                define();
+                try{
+                    System.loadLibrary("mcengine");
+                    Toast.makeText(context, "mcengine.so加载完毕", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
+                }
 //                try {
 //                    System.loadLibrary("substrate");
 //                    Toast.makeText(context, "substrate.so加载完毕", Toast.LENGTH_SHORT).show();
@@ -75,7 +71,15 @@ public class HookEngine implements IXposedHookLoadPackage {
                         Toast.makeText(context, "开始", Toast.LENGTH_SHORT).show();
                         applicationInfo = packageManager.getApplicationInfo("com.taolesi.mcengine", 0);
                         try {
-                            setDL(applicationInfo.sourceDir);
+
+                            ApplicationInfo finalApplicationInfo = applicationInfo;
+                            ((Activity)context).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setDL(finalApplicationInfo.sourceDir);
+                                    define();
+                                }
+                            });
                         } catch (Exception e) {
                             Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                         }
@@ -84,13 +88,17 @@ public class HookEngine implements IXposedHookLoadPackage {
                 } catch (PackageManager.NameNotFoundException e) {
                     throw new RuntimeException(e);
                 }
-                //System.loadLibrary("example");
-                //define();
             }
         });
     }
     public static void Toast(String str) {
         Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
+        ((Activity)context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     public static void Log(String claz, int nummber) {
 

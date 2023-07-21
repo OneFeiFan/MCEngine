@@ -1,6 +1,5 @@
 #include "headers/ProcessView.h"
 #include "includes/dobby.h"
-#include "../cpp/log.h"
 #include <jni.h>
 #include <dlfcn.h>
 #include <unistd.h>
@@ -49,9 +48,7 @@ JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env,[[
             auto *(*my_android_dlopen_ext)(const char *, int, void *, void *) = (void *(*)(const char *,int, void *,void *)) symbol;
             for (int i = 0; i < processObj.getModules().size(); ++i) {
                 if (processObj.getModules()[i].name == "libminecraftpe.so") {
-                    void *handle = my_android_dlopen_ext(
-                            strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libexample.so"),
-                            RTLD_NOW, nullptr, (void *) processObj.getModules()[i].baseAddress);
+                    void *handle = my_android_dlopen_ext(strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libexample.so"), RTLD_NOW, nullptr, (void *) processObj.getModules()[i].baseAddress);
                     //log::Toast("已取得句柄");
                     auto(*my_JNI_OnLoad)(JavaVM *, void *) =(jint (*)(JavaVM *, void *)) dlsym(handle,"JNI_OnLoad");
                     my_JNI_OnLoad(loaderVM, loaderPtr);

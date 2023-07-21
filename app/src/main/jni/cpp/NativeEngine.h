@@ -9,10 +9,10 @@ class NativeEngine {
 public:
     static jclass HookEngineptr;
     static jclass HookEngineClass();
-    static jclass HookEngineClass(JNIEnv* env);
-    static void Log(std::string claz, int a);
+    static void HookEngineClass(JNIEnv* env);
+/*    static void Log(std::string claz, int a);
     static void Log(std::string claz, float a);
     static void Log(std::string claz, long a);
-    static void Log(std::string claz, std::string a);
+    static void Log(std::string claz, std::string a);*/
 };
 #endif
