@@ -1,0 +1,14 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "ndk编译",
+            "type": "shell",
+            "options": {
+                "cwd": ".\\app\\src\\main\\jni"
+            },
+            "command": "ndk-build",
+            "group": "build"
+        }
+    ]
+}

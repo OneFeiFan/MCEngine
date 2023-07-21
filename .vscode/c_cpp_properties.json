@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "Android",
+            "compilerPath": "E:/mingw64/bin/g++.exe",
+            "includePath": [
+                "E:\\mingw64\\include",
+                "E:\\mingw64\\x86_64-w64-mingw32\\include",
+                "E:\\mingw64\\lib\\gcc\\x86_64-w64-mingw32\\8.1.0\\include\\c++",
+                "E:\\mingw64\\lib\\gcc\\x86_64-w64-mingw32\\8.1.0\\include\\c++\\backward",
+                "E:\\mingw64\\lib\\gcc\\x86_64-w64-mingw32\\8.1.0\\include\\c++\\x86_64-w64-mingw32",
+                "E:\\android-ndk-r23c\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\include",
+                "E:\\android-ndk-r23c\\toolchains\\llvm\\prebuilt\\windows-x86_64\\lib64\\clang\\12.0.9\\include",
+                "E:\\android-ndk-r23c\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\include\\arm-linux-androideabi",
+                "${workspaceFolder}\\app\\src\\main\\jni"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "intelliSenseMode": "gcc-x86",
+            "cStandard": "c17",
+            "cppStandard": "c++20",
+            "configurationProvider": "ms-vscode.cmake-tools"
+        }
+    ],
+    "version": 4
+}

@@ -1,7 +1,8 @@
-#include "EXHookFR.hpp"
+#include "EXHookFR.h"
+#include <cstdio>
 EXHookFR *EXHookFR::hookerPtr;
-JavaVM * EXHookFR::jvm;
-jclass EXHookFR::Class;
+JavaVM *EXHookFR::jvm;
+[[maybe_unused]] jclass EXHookFR::Class;
 EXHookFR::EXHookFR(void *handle) : MCHandle(handle) {}
 JNIEnv *EXHookFR::getENV()
 {
@@ -12,4 +13,25 @@ JNIEnv *EXHookFR::getENV()
         EXHookFR::jvm->AttachCurrentThread(&env, nullptr);
     }
     return env;
+}
+
+void InLineHook(void *hook, void *original, const char *symbol_name)
+{
+    void *ptr = my_DobbySymbolResolver("libminecraftpe.so", symbol_name);
+    if (ptr != nullptr)
+    {
+        printf("成功获取符号：%s的地址\n", symbol_name);
+        if (my_DobbyHook(ptr, hook, original) == 0)
+        {
+            printf("hook成功\n");
+        }
+        else
+        {
+            printf("hook失败\n");
+        }
+    }
+    else
+    {
+        printf("无法获取符号：%s的地址\n", symbol_name);
+    }
 }

@@ -5,8 +5,7 @@
 #include <utility>
 #include <vector>
 #include <memory>
-#include "includes/CydiaSubstrate.h"
-#include "includes/EXHookFR.hpp"
+#include "includes/EXHookFR.h"
 #include "headers/BlockPos.h"
 #include "headers/BlockSource.h"
 #include "headers/ItemStack.h"
@@ -14,7 +13,6 @@
 #include "headers/ItemInstance.h"
 #include "headers/CreativeItemCategory.h"
 #include "AllHeaders.h"
-
 
 #include "Jni2Native.hpp"
 class [[maybe_unused]] IconData
@@ -130,27 +128,26 @@ void EX_Item_useOn(void *ptr, ItemStack &itemstack, Actor &actor, int x, int y, 
     // }
     return base_Item_useOn(ptr, itemstack, actor, x, y, z, d, e, f, g);
 }
-WeakPtr<Item> (*base_registerItem)(std::string const &, short);
-WeakPtr<Item> EX_registerItem(std::string const &str, short num)
-{
+// WeakPtr<Item> (*base_registerItem)(std::string const &, short);
+// WeakPtr<Item> EX_registerItem(std::string const &str, short num)
+// {
 
-    return base_registerItem(str, num);
-}
+//     return base_registerItem(str, num);
+// }
 
 void (*base_Item_setCategory)(Item *, int);
 
-[[maybe_unused]] void EX_Item_setCategory([[maybe_unused]] uint32_t ptr, [[maybe_unused]] int num)
-{
-}
-// Item test;
+// [[maybe_unused]] void EX_Item_setCategory([[maybe_unused]] uint32_t ptr, [[maybe_unused]] int num)
+// {
+// }
 class Experiments;
-void * (*base_VanillaItems_registerItems)(void *, Experiments const &, bool);
-void * EX_VanillaItems_registerItems(void *ptr, Experiments const &e, bool b)
+void *(*base_VanillaItems_registerItems)(void *, Experiments const &, bool);
+void *EX_VanillaItems_registerItems(void *ptr, Experiments const &e, bool b)
 {
     auto obj = base_VanillaItems_registerItems(ptr, e, b);
     printf("base_VanillaItems_registerItems\n");
     Item *temp;
-    for (auto & i : itemsPoolArray)
+    for (auto &i : itemsPoolArray)
     {
         temp = fake_ItemRegistry_registerItemShared(i->getName(), (short &)(++fake_ItemRegistry_mMaxItemID)).get();
         i->setItemPtr(temp);
@@ -164,35 +161,35 @@ void EX_Item_setIcon(void *ptr, std::string const &str, short data)
     return base_Item_setIcon(ptr, str, data);
 }
 
-void (*base_Item_setIcon1)(void *, TextureUVCoordinateSet const &);
-void EX_Item_setIcon1(void *ptr, TextureUVCoordinateSet const &a)
-{
-    return base_Item_setIcon1(ptr, a);
-}
+// void (*base_Item_setIcon1)(void *, TextureUVCoordinateSet const &);
+// void EX_Item_setIcon1(void *ptr, TextureUVCoordinateSet const &a)
+// {
+//     return base_Item_setIcon1(ptr, a);
+// }
 
-//TextureUVCoordinateSet test;
-void (*base_Item_getTextureUVCoordinateSet)(void *, std::string, int);
-void EX_Item_getTextureUVCoordinateSet(void *ptr, std::string str, int a)
-{
-    return base_Item_getTextureUVCoordinateSet(ptr, std::move(str), a);
-}
-TextureUVCoordinateSet const &(*base_Item_getIcon)(Item *, ItemStackBase const &, int, bool);
-TextureUVCoordinateSet const &EX_Item_getIcon(Item *ptr, ItemStackBase const &a, int b, bool c)
-{
-    return base_Item_getIcon(ptr, a, b, c);
-}
-//
-void (*test11)(std::string, std::string, int);
-void test_(std::string str1, std::string str2, int i)
-{
-    return test11(std::move(str1), std::move(str2), i);
-}
+// TextureUVCoordinateSet test;
+// void (*base_Item_getTextureUVCoordinateSet)(void *, std::string, int);
+// void EX_Item_getTextureUVCoordinateSet(void *ptr, std::string str, int a)
+// {
+//     return base_Item_getTextureUVCoordinateSet(ptr, std::move(str), a);
+// }
+// TextureUVCoordinateSet const &(*base_Item_getIcon)(Item *, ItemStackBase const &, int, bool);
+// TextureUVCoordinateSet const &EX_Item_getIcon(Item *ptr, ItemStackBase const &a, int b, bool c)
+// {
+//     return base_Item_getIcon(ptr, a, b, c);
+// }
+
+// void (*test11)(std::string, std::string, int);
+// void test_(std::string str1, std::string str2, int i)
+// {
+//     return test11(std::move(str1), std::move(str2), i);
+// }
 void *(*base_VanillaItems_initClientData)(void *, Experiments const &);
 void *EX_VanillaItems_initClientData(void *ptr, Experiments const &e)
 {
     auto obj = base_VanillaItems_initClientData(ptr, e);
 
-    for (EX_Item * temp : itemsPoolArray)
+    for (EX_Item *temp : itemsPoolArray)
     {
         base_Item_setIcon(temp->getPtr(), temp->getIconName(), (short)temp->getIconData());
         base_Item_setCategory(temp->getPtr(), 4);
@@ -200,17 +197,17 @@ void *EX_VanillaItems_initClientData(void *ptr, Experiments const &e)
     }
     return obj;
 }
-void (*base_Item_addCreativeItem)(Item *, short);
-void EX_Item_addCreativeItem(Item *obj, short a)
+void *(*base_Item_addCreativeItem)(Item *, short);
+void *EX_Item_addCreativeItem(Item *obj, short a)
 {
     short id = fake_Item_getId(obj);
     if (itemsPoolMap.count(id))
     {
         if (itemsPoolMap[id]->isInCreative())
         {
-            base_Item_addCreativeItem(obj, 0);
+            return base_Item_addCreativeItem(obj, 0);
         }
-        return;
+        return nullptr;
     }
     return base_Item_addCreativeItem(obj, a);
 }
@@ -218,36 +215,35 @@ class ActorInfoRegistry;
 class BlockDefinitionGroup;
 class CreativeItemRegistry;
 class BaseGameVersion;
-uint32_t (*base_VanillaItems_serverInitCreativeItemsCallback)(void *, ActorInfoRegistry *, BlockDefinitionGroup *, CreativeItemRegistry *, bool, BaseGameVersion const &, Experiments const &);
-uint32_t EX_VanillaItems_serverInitCreativeItemsCallback(void *ptr, ActorInfoRegistry *a, BlockDefinitionGroup *b, CreativeItemRegistry *c, bool d, BaseGameVersion const &e, Experiments const &f)
+void *(*base_VanillaItems_serverInitCreativeItemsCallback)(void *, ActorInfoRegistry *, BlockDefinitionGroup *, CreativeItemRegistry *, bool, BaseGameVersion const &, Experiments const &);
+void *EX_VanillaItems_serverInitCreativeItemsCallback(void *ptr, ActorInfoRegistry *a, BlockDefinitionGroup *b, CreativeItemRegistry *c, bool d, BaseGameVersion const &e, Experiments const &f)
 {
-    uint32_t obj = base_VanillaItems_serverInitCreativeItemsCallback(ptr, a, b, c, d, e, f);
-    EX_Item *temp;
-    for (auto & i : itemsPoolArray)
-    {
-        temp = i;
+    auto obj = base_VanillaItems_serverInitCreativeItemsCallback(ptr, a, b, c, d, e, f);
 
+    for (EX_Item *temp : itemsPoolArray)
+    {
         base_Item_setCategory(temp->getPtr(), 4);
         std::cout << 111 << std::endl;
     }
     return obj;
 }
-void (*base_ItemStackBase)(void *, Item const &, int, int);
-void EX_ItemStackBase(void *ptr, Item const &obj, int a, int b)
-{
-    return base_ItemStackBase(ptr, obj, a, b);
-}
-class ResourceLocation
-{
-};
-void (*base_TextureUVCoordinateSet_TextureUVCoordinateSet)(void *, float, float, float, float, unsigned short, unsigned short, ResourceLocation, float, unsigned short);
-void EX_TextureUVCoordinateSet_TextureUVCoordinateSet(void *ptr, float a, float b, float c, float d, unsigned short e, unsigned short f, ResourceLocation g, float h, unsigned short i)
-{
-    base_TextureUVCoordinateSet_TextureUVCoordinateSet(ptr, a, b, c, d, e, f, g, h, i);
-}
+// void (*base_ItemStackBase)(void *, Item const &, int, int);
+// void EX_ItemStackBase(void *ptr, Item const &obj, int a, int b)
+// {
+//     return base_ItemStackBase(ptr, obj, a, b);
+// }
+// class ResourceLocation
+// {
+// };
+// void (*base_TextureUVCoordinateSet_TextureUVCoordinateSet)(void *, float, float, float, float, unsigned short, unsigned short, ResourceLocation, float, unsigned short);
+// void EX_TextureUVCoordinateSet_TextureUVCoordinateSet(void *ptr, float a, float b, float c, float d, unsigned short e, unsigned short f, ResourceLocation g, float h, unsigned short i)
+// {
+//     base_TextureUVCoordinateSet_TextureUVCoordinateSet(ptr, a, b, c, d, e, f, g, h, i);
+// }
 void EXHookFR::init()
 {
     // fake区
+
     fake_Actor_getRegion = (int (*)(Actor *))dlsym(this->MCHandle, "_ZNK5Actor9getRegionEv");
     fake_Actor_isSneaking = (bool (*)(Actor *))dlsym(this->MCHandle, "_ZNK5Actor10isSneakingEv");
     fake_BlockLegacy_getBlockItemId = (int (*)(BlockLegacy *))dlsym(this->MCHandle, "_ZNK11BlockLegacy14getBlockItemIdEv");
@@ -257,33 +253,24 @@ void EXHookFR::init()
     fake_ItemRegistry_registerItemShared = (WeakPtr<Item>(*)(const std::string &, short &))dlsym(this->MCHandle, "_ZN12ItemRegistry18registerItemSharedI4ItemJRsEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEEDpOT0_");
     fake_ItemStackBase_getId = (short (*)(ItemStackBase *))dlsym(this->MCHandle, "_ZNK13ItemStackBase5getIdEv");
     // hook区
-    void *ptr = (void *)dlsym(this->MCHandle, "_ZNK5Block7onPlaceER11BlockSourceRK8BlockPosRKS_");
-    MSHookFunction(ptr, (void *)&EX_Block_onPlace, (void **)&base_Block_onPlace);
-    ptr = (void *)dlsym(this->MCHandle, "_ZNK4Item5useOnER9ItemStackR5Actoriiihfff");
-    MSHookFunction(ptr, (void *)&EX_Item_useOn, (void **)&base_Item_useOn);
-    ptr = (void *)dlsym(this->MCHandle, "_ZN12ItemRegistry12registerItemI4ItemJEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEsDpOT0_");
-    MSHookFunction(ptr, (void *)&EX_registerItem, (void **)&base_registerItem);
-    ptr = (void *)dlsym(this->MCHandle, "_ZN12VanillaItems13registerItemsERK11Experimentsb");
-    MSHookFunction(ptr, (void *)&EX_VanillaItems_registerItems, (void **)&base_VanillaItems_registerItems);
-    ptr = (void *)dlsym(this->MCHandle, "_ZN12VanillaItems14initClientDataER11Experiments");
-    MSHookFunction(ptr, (void *)&EX_VanillaItems_initClientData, (void **)&base_VanillaItems_initClientData);
-    ptr = (void *)dlsym(this->MCHandle, "_ZN4Item7setIconERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEi");
-    MSHookFunction(ptr, (void *)&EX_Item_setIcon, (void **)&base_Item_setIcon);
-    ptr = (void *)dlsym(this->MCHandle, "_ZN4Item7setIconERK22TextureUVCoordinateSet");
-    MSHookFunction(ptr, (void *)&EX_Item_setIcon1, (void **)&base_Item_setIcon1);
-    ptr = (void *)dlsym(this->MCHandle, "_ZNK4Item7getIconERK13ItemStackBaseib");
-    MSHookFunction(ptr, (void *)&EX_Item_getIcon, (void **)&base_Item_getIcon);
-    ptr = (void *)dlsym(this->MCHandle, "_ZN13ItemStackBaseC2ERK4Itemii");
-    MSHookFunction(ptr, (void *)&EX_ItemStackBase, (void **)&base_ItemStackBase);
-    ptr = (void *)dlsym(this->MCHandle, "_ZN12VanillaItems31serverInitCreativeItemsCallbackEP17ActorInfoRegistryP20BlockDefinitionGroupP20CreativeItemRegistrybRK15BaseGameVersionRK11Experiments");
-    MSHookFunction(ptr, (void *)&EX_VanillaItems_serverInitCreativeItemsCallback, (void **)&base_VanillaItems_serverInitCreativeItemsCallback);
-    ptr = (void *)dlsym(this->MCHandle, "_ZN4Item15addCreativeItemEPS_s");
-    MSHookFunction(ptr, (void *)&EX_Item_addCreativeItem, (void **)&base_Item_addCreativeItem);
-    ptr = (void *)dlsym(this->MCHandle, "_ZN22TextureUVCoordinateSetC1Efffftt16ResourceLocationft");
-    MSHookFunction(ptr, (void *)&EX_TextureUVCoordinateSet_TextureUVCoordinateSet, (void **)&base_TextureUVCoordinateSet_TextureUVCoordinateSet);
-    ptr = (void *)dlsym(this->MCHandle, "_ZN4Item25getTextureUVCoordinateSetERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEi");
-    MSHookFunction(ptr, (void *)&EX_Item_getTextureUVCoordinateSet, (void **)&base_Item_getTextureUVCoordinateSet);
-    ptr = (void *)dlsym(this->MCHandle, "_Z15setIconIfLegacyRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEES7_i");
-    MSHookFunction(ptr, (void *)&test_, (void **)&test11);
+    InLineHook((void *)EX_Block_onPlace, (void **)&base_Block_onPlace, "_ZNK5Block7onPlaceER11BlockSourceRK8BlockPosRKS_");
+    InLineHook((void *)EX_Item_useOn, (void **)&base_Item_useOn, "_ZNK4Item5useOnER9ItemStackR5Actoriiihfff");
+    InLineHook((void *)EX_Item_useOn, (void **)&base_Item_useOn, "_ZN12ItemRegistry12registerItemI4ItemJEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEsDpOT0_");
+    InLineHook((void *)EX_VanillaItems_registerItems, (void **)&base_VanillaItems_registerItems, "_ZN12VanillaItems13registerItemsERK11Experimentsb");
+    InLineHook((void *)EX_VanillaItems_initClientData, (void **)&base_VanillaItems_initClientData, "_ZN12VanillaItems14initClientDataER11Experiments");
+    InLineHook((void *)EX_Item_setIcon, (void **)&base_Item_setIcon, "_ZN4Item7setIconERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEi");
+    //    ptr = (void *)dlsym(this->MCHandle, "_ZN4Item7setIconERK22TextureUVCoordinateSet");
+    //    MSHookFunction(ptr, (void *)&EX_Item_setIcon1, (void **)&base_Item_setIcon1);
+    // InLineHook((void *)EX_Item_getIcon, (void **)&base_Item_getIcon, "_ZNK4Item7getIconERK13ItemStackBaseib");
+    //    ptr = (void *)dlsym(this->MCHandle, "_ZN13ItemStackBaseC2ERK4Itemii");
+    //    MSHookFunction(ptr, (void *)&EX_ItemStackBase, (void **)&base_ItemStackBase);
+    InLineHook((void *)EX_VanillaItems_serverInitCreativeItemsCallback, (void **)&base_VanillaItems_serverInitCreativeItemsCallback, "_ZN12VanillaItems31serverInitCreativeItemsCallbackEP17ActorInfoRegistryP20BlockDefinitionGroupP20CreativeItemRegistrybRK15BaseGameVersionRK11Experiments");
+    InLineHook((void *)EX_Item_addCreativeItem, (void **)&base_Item_addCreativeItem, "_ZN4Item15addCreativeItemEPS_s");
+    //    ptr = (void *)dlsym(this->MCHandle, "_ZN22TextureUVCoordinateSetC1Efffftt16ResourceLocationft");
+    //    MSHookFunction(ptr, (void *)&EX_TextureUVCoordinateSet_TextureUVCoordinateSet, (void **)&base_TextureUVCoordinateSet_TextureUVCoordinateSet);
+    //    ptr = (void *)dlsym(this->MCHandle, "_ZN4Item25getTextureUVCoordinateSetERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEi");
+    //    MSHookFunction(ptr, (void *)&EX_Item_getTextureUVCoordinateSet, (void **)&base_Item_getTextureUVCoordinateSet);
+    //    ptr = (void *)dlsym(this->MCHandle, "_Z15setIconIfLegacyRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEES7_i");
+    //    MSHookFunction(ptr, (void *)&test_, (void **)&test11);
     base_Item_setCategory = (void (*)(Item *, int))dlsym(this->MCHandle, "_ZN4Item11setCategoryE20CreativeItemCategory");
 }

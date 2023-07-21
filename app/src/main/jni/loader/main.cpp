@@ -54,6 +54,10 @@ JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env,[[
                             RTLD_NOW, nullptr, (void *) processObj.getModules()[i].baseAddress);
                     //log::Toast("已取得句柄");
                     auto(*my_JNI_OnLoad)(JavaVM *, void *) =(jint (*)(JavaVM *, void *)) dlsym(handle,"JNI_OnLoad");
+                    auto(*hook_setDobbySymbolResolver)(void *) = (void (*)(void *))dlsym(handle, "setDobbySymbolResolver");
+                    auto(*hook_setDobbyHook)(void *) = (void (*)(void *))dlsym(handle, "setDobbyHook");
+                    hook_setDobbySymbolResolver((void *)DobbySymbolResolver);
+                    hook_setDobbyHook((void *)DobbyHook);
                     my_JNI_OnLoad(loaderVM, loaderPtr);
                     break;
                 }
