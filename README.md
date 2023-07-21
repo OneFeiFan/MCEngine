@@ -1,5 +1,5 @@
 # MCEngine
-一个基于LSPosed的Minecraftpe模块化启动器。现处于立项阶段，仅提供nativeMod功能，仅支持Minecraft基岩版1.6.201.
+一个基于LSPosed的Minecraftpe模块化启动器。现处于立项阶段，仅提供nativeMod功能，仅支持Minecraft基岩版1.16.201.
 ## 使用方式
 暂且无额外功能，按照一般LSPosed模块一样，勾选Minecraft启动即可。
 ## 模块仅供学习，请勿用于非法用途
