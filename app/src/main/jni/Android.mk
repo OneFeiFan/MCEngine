@@ -4,6 +4,7 @@ EXAMPLE_PATH := $(call my-dir)/example
 MCENGINE_PATH := $(call my-dir)/cpp
 LOCAL_PATH := $(LOADE_PATH)
 include $(CLEAR_VARS)
+LOCAL_CPP_FEATURES += exceptions
 LOCAL_C_INCLUDES += $(wildcard $(LOCAL_PATH)/includes/*)
 LOCAL_C_INCLUDES +=	$(wildcard $(LOCAL_PATH)/headers/*)
 #LOCAL_C_INCLUDES是储存项目头文件的路径，如果你增加路目录，也请在此修改

@@ -5,18 +5,18 @@
 #include <dlfcn.h>
 #include <unistd.h>
 #include <iostream>
-#include <string.h>
+#include <cstring>
 const char *linkerName;
 void *symbol = nullptr;
 JavaVM *loaderVM = nullptr;
 void * loaderPtr = nullptr;
 char *jstringToChar(JNIEnv *env, jstring jstr)
 {
-    char *rtn = NULL;
+    char *rtn = nullptr;
     jclass clsstring = env->FindClass("java/lang/String");
     jstring strencode = env->NewStringUTF("utf-8");
     jmethodID mid = env->GetMethodID(clsstring, "getBytes", "(Ljava/lang/String;)[B");
-    jbyteArray barr = (jbyteArray)env->CallObjectMethod(jstr, mid, strencode);
+    auto barr = (jbyteArray)env->CallObjectMethod(jstr, mid, strencode);
     jsize alen = env->GetArrayLength(barr);
     jbyte *ba = env->GetByteArrayElements(barr, JNI_FALSE);
     if (alen > 0)
@@ -51,23 +51,31 @@ extern "C"
     }
     JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env, jclass clazz, jstring dlpath)
     {
-        utils::ProcessView processObj;
-        int temp = processObj.readProcess(getpid());
-        if (symbol)
+        try
         {
-            void *(*my___loader_android_dlopen_ext)(const char *, int, void *, void *) = (void *(*)(const char *, int, void *, void *))symbol;
-            for (int i = 0; i < processObj.getModules().size(); ++i)
+            utils::ProcessView processObj;
+            int temp = processObj.readProcess(getpid());
+            if (symbol)
             {
-                if (processObj.getModules()[i].name == "libminecraftpe.so")
+                auto *(*my_android_dlopen_ext)(const char *, int, void *, void *) = (void *(*)(const char *, int, void *, void *))symbol;
+                for (int i = 0; i < processObj.getModules().size(); ++i)
                 {
-                    void *handle =  my___loader_android_dlopen_ext(strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libexample.so"), RTLD_NOW, nullptr, (void *)processObj.getModules()[i].baseAddress);
-                    //log::Toast("已取得句柄");
-                    jint (*my_JNI_OnLoad)(JavaVM *,void *)=(jint (*)(JavaVM *, void *))dlsym(handle,"JNI_OnLoad");
-                    my_JNI_OnLoad(loaderVM,loaderPtr);
-                    
-                    break;
+                    if (processObj.getModules()[i].name == "libminecraftpe.so")
+                    {
+                        void *handle =  my_android_dlopen_ext(strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libexample.so"), RTLD_NOW, nullptr, (void *)processObj.getModules()[i].baseAddress);
+                        //log::Toast("已取得句柄");
+                        auto (*my_JNI_OnLoad)(JavaVM *,void *)=(jint (*)(JavaVM *, void *))dlsym(handle,"JNI_OnLoad");
+                        my_JNI_OnLoad(loaderVM,loaderPtr);
+
+                        break;
+                    }
                 }
             }
         }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+
     }
 }
