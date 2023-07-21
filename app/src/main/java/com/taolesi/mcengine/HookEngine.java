@@ -20,6 +20,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 public class HookEngine implements IXposedHookLoadPackage {
     public static Context context;
     public static native void setDL(String DLPath);
+    public static native void define();
     private final String innerPackageName = "com.taolesi.mcengine";
     private String[] PERMISSIONS = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -44,7 +45,10 @@ public class HookEngine implements IXposedHookLoadPackage {
                     context.startActivity(intent);
                 }*/
                 Toast.makeText(context, "已取得Context", Toast.LENGTH_SHORT).show();
+                define();
                 Toast.makeText(context, "正在加载so文件", Toast.LENGTH_SHORT).show();
+                //System.loadLibrary("mcengine");
+                //define();
                 try {
                     System.loadLibrary("substrate");
                     Toast.makeText(context, "substrate.so加载完毕", Toast.LENGTH_SHORT).show();
@@ -81,6 +85,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                     throw new RuntimeException(e);
                 }
                 System.loadLibrary("example");
+                //define();
             }
         });
     }

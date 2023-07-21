@@ -7,7 +7,7 @@
 JavaVM* JavaAtach::jvm = nullptr;
 JNIEnv* JavaAtach::attach() {
     JNIEnv* env = nullptr;
-    int attachStatus = jvm->GetEnv((void**) &env, JNI_VERSION_1_4);
+    int attachStatus = jvm->GetEnv((void**) &env, JNI_VERSION_1_6);
     if (attachStatus == JNI_EDETACHED) {
         jvm -> AttachCurrentThread(&env, nullptr);
     }
