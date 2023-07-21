@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
+#include <utility>
 #include <vector>
 #include <memory>
 #include "includes/CydiaSubstrate.h"
@@ -16,23 +17,28 @@
 
 
 #include "Jni2Native.hpp"
-class IconData
+class [[maybe_unused]] IconData
 {
 private:
     const char *name = " ";
     int data = 0;
 
 public:
-    IconData(const char *name, int data);
-    const char *getName();
-    int getData();
+    [[maybe_unused]] IconData(const char *name, int data);
+
+    [[maybe_unused]] const char *getName();
+
+    [[maybe_unused]] [[nodiscard]] int getData() const;
 };
-IconData::IconData(const char *name, int data) : name(name), data(data) {}
-const char *IconData::getName()
+
+[[maybe_unused]] IconData::IconData(const char *name, int data) : name(name), data(data) {}
+
+[[maybe_unused]] const char *IconData::getName()
 {
     return this->name;
 }
-int IconData::getData()
+
+[[maybe_unused]] [[maybe_unused]] int IconData::getData() const
 {
     return this->data;
 }
@@ -47,27 +53,28 @@ private:
     Item *ptr;
 
 public:
-    EX_Item(const char *name, const char *iconName, const int iconData, const bool inCreative);
-    EX_Item(const char *name, const char *iconName, const int iconData, const bool inCreative, const CreativeItemCategory type);
+    EX_Item(const char *name, const char *iconName, int iconData, bool inCreative);
+    EX_Item(const char *name, const char *iconName, int iconData, bool inCreative, CreativeItemCategory type);
     void setItemPtr(Item *ptr);
-    const char *getName() const;
-    const char *getIconName() const;
-    int getIconData() const;
-    bool isInCreative() const;
-    CreativeItemCategory getType();
+    [[nodiscard]] const char *getName() const;
+    [[nodiscard]] const char *getIconName() const;
+    [[nodiscard]] int getIconData() const;
+    [[nodiscard]] bool isInCreative() const;
+
+    [[maybe_unused]] CreativeItemCategory getType();
     Item *getPtr();
 };
 EX_Item::EX_Item(const char *name, const char *iconName, const int iconData, const bool inCreative) : name(name), iconName(iconName), iconData(iconData), inCreative(inCreative)
 {
     this->ptr = nullptr;
-};
+}
 EX_Item::EX_Item(const char *name, const char *iconName, const int iconData, const bool inCreative, const CreativeItemCategory type) : name(name), iconName(iconName), iconData(iconData), inCreative(inCreative), type(type)
 {
     this->ptr = nullptr;
-};
-void EX_Item::setItemPtr(Item *ptr)
+}
+void EX_Item::setItemPtr(Item *ptr_)
 {
-    this->ptr = ptr;
+    this->ptr = ptr_;
 }
 const char *EX_Item::getName() const
 {
@@ -89,13 +96,14 @@ Item *EX_Item::getPtr()
 {
     return this->ptr;
 }
-CreativeItemCategory EX_Item::getType()
+
+[[maybe_unused]] CreativeItemCategory EX_Item::getType()
 {
     return this->type;
 }
 
-EX_Item *itemObj = new EX_Item("test", "apple", 0, 1);
-EX_Item *itemObj1 = new EX_Item("test1", "apple_golden", 0, 1, CreativeItemCategory::Items);
+EX_Item *itemObj = new EX_Item("test", "apple", 0, true);
+EX_Item *itemObj1 = new EX_Item("test1", "apple_golden", 0, true, CreativeItemCategory::Items);
 std::vector<EX_Item *> itemsPoolArray{itemObj, itemObj1};
 std::map<short, EX_Item *> itemsPoolMap;
 
@@ -109,6 +117,17 @@ void EX_Block_onPlace(void *ptr, BlockSource &blockSource, BlockPos const &pos, 
 void (*base_Item_useOn)(void *, ItemStack &, Actor &, int, int, int, unsigned char, float, float, float);
 void EX_Item_useOn(void *ptr, ItemStack &itemstack, Actor &actor, int x, int y, int z, unsigned char d, float e, float f, float g)
 {
+    // jclass CLASS = EXHookFR::hookerPtr->Class;
+    // BlockSource *Region = (BlockSource *)fake_Actor_getRegion(&actor);
+    // Block *block = Fake_BlockSource_getBlock(Region, x, y, z);
+    // int id = fake_BlockLegacy_getBlockItemId(((BlockLegacy *)*((uint32_t *)block + 2)));
+    // if (std::find(barrelIDPool.begin(), barrelIDPool.end(), id) != barrelIDPool.end() && !fake_Actor_isSneaking(&actor))
+    // {
+    //     if (std::find(forbiddenIDPool.begin(), forbiddenIDPool.end(), fake_ItemStackBase_getId((ItemStackBase *)&itemstack)) != forbiddenIDPool.end())
+    //     {
+    //         return;
+    //     }
+    // }
     return base_Item_useOn(ptr, itemstack, actor, x, y, z, d, e, f, g);
 }
 WeakPtr<Item> (*base_registerItem)(std::string const &, short);
@@ -119,22 +138,23 @@ WeakPtr<Item> EX_registerItem(std::string const &str, short num)
 }
 
 void (*base_Item_setCategory)(Item *, int);
-void EX_Item_setCategory(uint32_t ptr, int num)
+
+[[maybe_unused]] void EX_Item_setCategory([[maybe_unused]] uint32_t ptr, [[maybe_unused]] int num)
 {
 }
 // Item test;
 class Experiments;
-uint32_t (*base_VanillaItems_registerItems)(void *, Experiments const &, bool);
-uint32_t EX_VanillaItems_registerItems(void *ptr, Experiments const &e, bool b)
+void * (*base_VanillaItems_registerItems)(void *, Experiments const &, bool);
+void * EX_VanillaItems_registerItems(void *ptr, Experiments const &e, bool b)
 {
-    uint32_t obj = base_VanillaItems_registerItems(ptr, e, b);
+    auto obj = base_VanillaItems_registerItems(ptr, e, b);
     printf("base_VanillaItems_registerItems\n");
-    Item *temp = nullptr;
-    for (int i = 0; i < itemsPoolArray.size(); ++i)
+    Item *temp;
+    for (auto & i : itemsPoolArray)
     {
-        temp = fake_ItemRegistry_registerItemShared(itemsPoolArray[i]->getName(), (short &)(++fake_ItemRegistry_mMaxItemID)).get();
-        itemsPoolArray[i]->setItemPtr(temp);
-        itemsPoolMap.insert(std::pair<short &, EX_Item *>((short &)fake_ItemRegistry_mMaxItemID, itemsPoolArray[i]));
+        temp = fake_ItemRegistry_registerItemShared(i->getName(), (short &)(++fake_ItemRegistry_mMaxItemID)).get();
+        i->setItemPtr(temp);
+        itemsPoolMap.insert(std::pair<short &, EX_Item *>((short &)fake_ItemRegistry_mMaxItemID, i));
     }
     return obj;
 }
@@ -150,13 +170,11 @@ void EX_Item_setIcon1(void *ptr, TextureUVCoordinateSet const &a)
     return base_Item_setIcon1(ptr, a);
 }
 
-bool aa = 1;
-bool bb = 1;
-TextureUVCoordinateSet test;
+//TextureUVCoordinateSet test;
 void (*base_Item_getTextureUVCoordinateSet)(void *, std::string, int);
 void EX_Item_getTextureUVCoordinateSet(void *ptr, std::string str, int a)
 {
-    return base_Item_getTextureUVCoordinateSet(ptr, str, a);
+    return base_Item_getTextureUVCoordinateSet(ptr, std::move(str), a);
 }
 TextureUVCoordinateSet const &(*base_Item_getIcon)(Item *, ItemStackBase const &, int, bool);
 TextureUVCoordinateSet const &EX_Item_getIcon(Item *ptr, ItemStackBase const &a, int b, bool c)
@@ -167,19 +185,18 @@ TextureUVCoordinateSet const &EX_Item_getIcon(Item *ptr, ItemStackBase const &a,
 void (*test11)(std::string, std::string, int);
 void test_(std::string str1, std::string str2, int i)
 {
-    return test11(str1, str2, i);
+    return test11(std::move(str1), std::move(str2), i);
 }
-uint32_t (*base_VanillaItems_initClientData)(void *, Experiments const &);
-uint32_t EX_VanillaItems_initClientData(void *ptr, Experiments const &e)
+void *(*base_VanillaItems_initClientData)(void *, Experiments const &);
+void *EX_VanillaItems_initClientData(void *ptr, Experiments const &e)
 {
-    uint32_t obj = base_VanillaItems_initClientData(ptr, e);
-    EX_Item *temp = nullptr;
-    for (int i = 0; i < itemsPoolArray.size(); ++i)
+    auto obj = base_VanillaItems_initClientData(ptr, e);
+
+    for (EX_Item * temp : itemsPoolArray)
     {
-        temp = itemsPoolArray[i];
-        base_Item_setIcon(temp->getPtr(), temp->getIconName(), temp->getIconData());
+        base_Item_setIcon(temp->getPtr(), temp->getIconName(), (short)temp->getIconData());
         base_Item_setCategory(temp->getPtr(), 4);
-        std::cout << 111 << std::endl;
+        std::cout << temp->getPtr() << std::endl;
     }
     return obj;
 }
@@ -205,12 +222,12 @@ uint32_t (*base_VanillaItems_serverInitCreativeItemsCallback)(void *, ActorInfoR
 uint32_t EX_VanillaItems_serverInitCreativeItemsCallback(void *ptr, ActorInfoRegistry *a, BlockDefinitionGroup *b, CreativeItemRegistry *c, bool d, BaseGameVersion const &e, Experiments const &f)
 {
     uint32_t obj = base_VanillaItems_serverInitCreativeItemsCallback(ptr, a, b, c, d, e, f);
-    EX_Item *temp = nullptr;
-    for (int i = 0; i < itemsPoolArray.size(); ++i)
+    EX_Item *temp;
+    for (auto & i : itemsPoolArray)
     {
-        temp = itemsPoolArray[i];
+        temp = i;
 
-        base_Item_setCategory(temp->getPtr(), 2);
+        base_Item_setCategory(temp->getPtr(), 4);
         std::cout << 111 << std::endl;
     }
     return obj;
@@ -227,7 +244,7 @@ void (*base_TextureUVCoordinateSet_TextureUVCoordinateSet)(void *, float, float,
 void EX_TextureUVCoordinateSet_TextureUVCoordinateSet(void *ptr, float a, float b, float c, float d, unsigned short e, unsigned short f, ResourceLocation g, float h, unsigned short i)
 {
     base_TextureUVCoordinateSet_TextureUVCoordinateSet(ptr, a, b, c, d, e, f, g, h, i);
-};
+}
 void EXHookFR::init()
 {
     // fake区
