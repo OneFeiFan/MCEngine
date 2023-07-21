@@ -49,12 +49,12 @@ public class HookEngine implements IXposedHookLoadPackage {
                 Toast.makeText(context, "正在加载so文件", Toast.LENGTH_SHORT).show();
                 System.loadLibrary("mcengine");
                 define();
-                try {
-                    System.loadLibrary("substrate");
-                    Toast.makeText(context, "substrate.so加载完毕", Toast.LENGTH_SHORT).show();
-                } catch (UnsatisfiedLinkError e) {
-                    Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
-                }
+//                try {
+//                    System.loadLibrary("substrate");
+//                    Toast.makeText(context, "substrate.so加载完毕", Toast.LENGTH_SHORT).show();
+//                } catch (UnsatisfiedLinkError e) {
+//                    Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
+//                }
                 try {
                     System.loadLibrary("loader");
                     Toast.makeText(context, "loader.so加载完毕", Toast.LENGTH_SHORT).show();
@@ -84,7 +84,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                 } catch (PackageManager.NameNotFoundException e) {
                     throw new RuntimeException(e);
                 }
-                System.loadLibrary("example");
+                //System.loadLibrary("example");
                 //define();
             }
         });
