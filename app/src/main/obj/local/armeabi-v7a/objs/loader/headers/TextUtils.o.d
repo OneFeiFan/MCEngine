@@ -1,152 +1,152 @@
 D:/MCEngine/app/src/main/obj/local/armeabi-v7a/objs/loader/headers/TextUtils.o: \
-  D:/MCEngine/app/src/main/jni/loader/headers/TextUtils.cpp \
-  D:/MCEngine/app/src/main/jni/loader/headers/TextUtils.h \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/vector \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__config \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/iosfwd \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/wchar.h \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__bit_reference \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/bit \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/limits \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/type_traits \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cstddef \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/version \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__debug \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/algorithm \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/initializer_list \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cstring \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/string.h \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/utility \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__tuple \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cstdint \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/stdint.h \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/memory \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/typeinfo \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/exception \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cstdlib \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/stdlib.h \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/new \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/iterator \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__functional_base \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/tuple \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/stdexcept \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/atomic \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__threading_support \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/chrono \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/ctime \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/ratio \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/climits \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/limits.h \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/errno.h \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/functional \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__split_buffer \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/string_view \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__string \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cstdio \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/stdio.h \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/string \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cwchar \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cwctype \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cctype \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/ctype.h \
-  C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/wctype.h
+  D:\MCEngine\app\src\main\jni\loader\headers\TextUtils.cpp \
+  D:\MCEngine\app\src\main\jni\loader\headers\TextUtils.h \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\vector \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\__config \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\iosfwd \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\wchar.h \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\__bit_reference \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\bit \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\limits \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\type_traits \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\cstddef \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\version \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\__debug \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\algorithm \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\initializer_list \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\cstring \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\string.h \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\utility \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\__tuple \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\cstdint \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\stdint.h \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\memory \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\typeinfo \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\exception \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\cstdlib \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\stdlib.h \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\new \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\iterator \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\__functional_base \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\tuple \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\stdexcept \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\atomic \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\__threading_support \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\chrono \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\ctime \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\ratio \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\climits \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\limits.h \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\errno.h \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\functional \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\__split_buffer \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\string_view \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\__string \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\cstdio \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\stdio.h \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\string \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\cwchar \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\cwctype \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\cctype \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\ctype.h \
+  E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\wctype.h
 
-D:/MCEngine/app/src/main/jni/loader/headers/TextUtils.h:
+D:\MCEngine\app\src\main\jni\loader\headers\TextUtils.h:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/vector:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\vector:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__config:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\__config:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/iosfwd:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\iosfwd:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/wchar.h:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\wchar.h:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__bit_reference:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\__bit_reference:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/bit:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\bit:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/limits:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\limits:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/type_traits:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\type_traits:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cstddef:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\cstddef:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/version:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\version:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__debug:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\__debug:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/algorithm:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\algorithm:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/initializer_list:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\initializer_list:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cstring:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\cstring:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/string.h:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\string.h:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/utility:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\utility:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__tuple:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\__tuple:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cstdint:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\cstdint:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/stdint.h:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\stdint.h:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/memory:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\memory:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/typeinfo:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\typeinfo:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/exception:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\exception:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cstdlib:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\cstdlib:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/stdlib.h:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\stdlib.h:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/new:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\new:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/iterator:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\iterator:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__functional_base:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\__functional_base:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/tuple:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\tuple:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/stdexcept:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\stdexcept:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/atomic:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\atomic:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__threading_support:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\__threading_support:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/chrono:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\chrono:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/ctime:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\ctime:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/ratio:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\ratio:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/climits:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\climits:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/limits.h:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\limits.h:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/errno.h:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\errno.h:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/functional:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\functional:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__split_buffer:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\__split_buffer:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/string_view:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\string_view:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__string:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\__string:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cstdio:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\cstdio:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/stdio.h:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\stdio.h:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/string:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\string:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cwchar:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\cwchar:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cwctype:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\cwctype:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cctype:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\cctype:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/ctype.h:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\ctype.h:
 
-C:/Users/25843/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/wctype.h:
+E:\android-ndk-r23c\build\\..\sources\cxx-stl\llvm-libc++\include\wctype.h:
