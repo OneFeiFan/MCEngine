@@ -49,8 +49,14 @@ JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env,[[
             for (int i = 0; i < processObj.getModules().size(); ++i) {
                 if (processObj.getModules()[i].name == "libminecraftpe.so") {
                     void *handle = my_android_dlopen_ext(strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libexample.so"), RTLD_NOW, nullptr, (void *) processObj.getModules()[i].baseAddress);
-                    //log::Toast("已取得句柄");
-                    auto(*my_JNI_OnLoad)(JavaVM *, void *) =(jint (*)(JavaVM *, void *)) dlsym(handle,"JNI_OnLoad");
+                    void *mcengineHandle = my_android_dlopen_ext(strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libmcengine.so"), RTLD_NOW, nullptr, (void *) processObj.getModules()[i].baseAddress);
+
+                    auto(*mcengine_JNI_OnLoad)(JavaVM *, void *) = (void (*)(JavaVM *, void *))dlsym(mcengineHandle,"JNI_OnLoad");;
+                    mcengine_JNI_OnLoad(loaderVM, loaderPtr);
+                    auto(*Toast)(JNIEnv*,std::string) = (void (*)(JNIEnv*,std::string))dlsym(mcengineHandle,"log_Toast");;
+                    Toast(env, "已取得句柄");
+
+                    auto(*my_JNI_OnLoad)(JavaVM *, void *) = (jint (*)(JavaVM *, void *)) dlsym(handle,"JNI_OnLoad");
                     auto(*hook_setDobbySymbolResolver)(void *) = (void (*)(void *))dlsym(handle, "setDobbySymbolResolver");
                     auto(*hook_setDobbyHook)(void *) = (void (*)(void *))dlsym(handle, "setDobbyHook");
                     hook_setDobbySymbolResolver((void *)DobbySymbolResolver);

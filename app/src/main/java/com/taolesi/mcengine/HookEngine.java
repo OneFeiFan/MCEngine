@@ -53,7 +53,8 @@ public class HookEngine implements IXposedHookLoadPackage {
 //                }
                 try {
                     System.loadLibrary("loader");
-                    Toast.makeText(context, "loader.so加载完毕", Toast.LENGTH_SHORT).show();
+                    Toast("loader.so加载完毕");
+                    //Toast.makeText(context, "loader.so加载完毕", Toast.LENGTH_SHORT).show();
                 } catch (UnsatisfiedLinkError e) {
                     Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
                 }
@@ -71,7 +72,6 @@ public class HookEngine implements IXposedHookLoadPackage {
                         Toast.makeText(context, "开始", Toast.LENGTH_SHORT).show();
                         applicationInfo = packageManager.getApplicationInfo("com.taolesi.mcengine", 0);
                         try {
-
                             ApplicationInfo finalApplicationInfo = applicationInfo;
                             ((Activity)context).runOnUiThread(new Runnable() {
                                 @Override
@@ -93,12 +93,6 @@ public class HookEngine implements IXposedHookLoadPackage {
     }
     public static void Toast(String str) {
         Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
-        ((Activity)context).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
     public static void Log(String claz, int nummber) {
 

@@ -146,6 +146,7 @@ void *EX_VanillaItems_registerItems(void *ptr, Experiments const &e, bool b)
 {
     auto obj = base_VanillaItems_registerItems(ptr, e, b);
     printf("base_VanillaItems_registerItems\n");
+    //log::Toast("注册物品");
     Item *temp;
     for (auto &i : itemsPoolArray)
     {

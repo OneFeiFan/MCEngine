@@ -8,13 +8,17 @@
 #include "log.h"
 #include "NativeEngine.h"
 
-extern "C"
+
+extern "C"{
 JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *unused) {
     JavaAtach::init(vm);
     return JNI_VERSION_1_6;
 }
-
-extern "C" JNIEXPORT void JNICALL
+JNIEXPORT void JNICALL
 Java_com_taolesi_mcengine_HookEngine_define(JNIEnv *env, jclass clazz) {
     NativeEngine::HookEngineClass(env);
+}
+void log_Toast(JNIEnv* env, std::string str) {
+    log::Toast(env, str);
+}
 }
