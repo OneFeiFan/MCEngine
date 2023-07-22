@@ -37,11 +37,11 @@ public class HookEngine implements IXposedHookLoadPackage {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
                 context = (Context) param.thisObject;
-                Toast.makeText(context, "已取得Context", Toast.LENGTH_SHORT).show();
-                Toast.makeText(context, "正在加载so文件", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "已取得Context", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "正在加载so文件", Toast.LENGTH_SHORT).show();
                 try{
                     System.loadLibrary("mcengine");
-                    Toast.makeText(context, "mcengine.so加载完毕", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "mcengine.so加载完毕", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 }
@@ -53,7 +53,7 @@ public class HookEngine implements IXposedHookLoadPackage {
 //                }
                 try {
                     System.loadLibrary("loader");
-                    Toast("loader.so加载完毕");
+                    //Toast("loader.so加载完毕");
                     //Toast.makeText(context, "loader.so加载完毕", Toast.LENGTH_SHORT).show();
                 } catch (UnsatisfiedLinkError e) {
                     Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
@@ -67,9 +67,9 @@ public class HookEngine implements IXposedHookLoadPackage {
                 }
                 ApplicationInfo applicationInfo = null;
                 try {
-                    Toast.makeText(context, "测试", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "测试", Toast.LENGTH_SHORT).show();
                     if (packageManager != null) {
-                        Toast.makeText(context, "开始", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "开始", Toast.LENGTH_SHORT).show();
                         applicationInfo = packageManager.getApplicationInfo("com.taolesi.mcengine", 0);
                         try {
                             ApplicationInfo finalApplicationInfo = applicationInfo;
@@ -83,7 +83,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                         } catch (Exception e) {
                             Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                         }
-                        Toast.makeText(context, "结束", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "结束", Toast.LENGTH_SHORT).show();
                     }
                 } catch (PackageManager.NameNotFoundException e) {
                     throw new RuntimeException(e);
