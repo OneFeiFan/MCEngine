@@ -5,11 +5,11 @@
 inline void *(*my_DobbySymbolResolver)(const char *image_name, const char *symbol_name);
 inline int (*my_DobbyHook)(void *, void *, void *);
 void InLineHook(void *hook, void *original, const char *symbol_name);
-
+void FakeNative(void **fake_fun,const char *symbol_name);
 class EXHookFR
 {
 private:
-    void *MCHandle;
+    [[maybe_unused]] void *MCHandle;
 
 public:
     static EXHookFR *hookerPtr;

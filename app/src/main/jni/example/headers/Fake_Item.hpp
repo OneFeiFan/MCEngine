@@ -149,7 +149,7 @@ public:
     Item(std::string const &, short);
     //  void setIsMirroredArt(bool);
     //  void resetId(short);
-    const char *getCommandName() const;
+
     //  void getFrameCount() const;
     //  void setCreativeGroup(std::__ndk1::basic_string<char, std::__ndk1::char_traits<char>, std::__ndk1::allocator<char> > const&);
     //  void reloadIcon();
@@ -241,4 +241,6 @@ public:
 //
 // fake区域
 short (*fake_Item_getId)(Item *);
+const char *(*fake_Item_getCommandName)(Item *);
+void (*fake_Item_setCategory)(Item *, CreativeItemCategory);
 #endif

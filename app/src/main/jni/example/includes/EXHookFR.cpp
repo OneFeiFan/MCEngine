@@ -1,5 +1,6 @@
 #include "EXHookFR.h"
 #include <cstdio>
+#include <iostream>
 EXHookFR *EXHookFR::hookerPtr;
 JavaVM *EXHookFR::jvm;
 [[maybe_unused]] jclass EXHookFR::Class;
@@ -33,5 +34,19 @@ void InLineHook(void *hook, void *original, const char *symbol_name)
     else
     {
         printf("无法获取符号：%s的地址\n", symbol_name);
+    }
+}
+void FakeNative(void **fake_fun,const char *symbol_name)
+{
+    if(fake_fun){
+        void *symbol = my_DobbySymbolResolver("libminecraftpe.so",symbol_name);
+        if(symbol!= nullptr){
+            printf("成功获取符号：%s的地址\n",symbol_name);
+            *fake_fun = symbol;
+            printf("fake成功\n");
+        }else{
+            printf("未能获取符号：%s的地址\n",symbol_name);
+            printf("fake失败\n");
+        }
     }
 }
