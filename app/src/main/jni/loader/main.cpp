@@ -11,7 +11,8 @@ void *symbol = nullptr;
 JavaVM *loaderVM = nullptr;
 void *loaderPtr = nullptr;
 
-char *jstringToChar(JNIEnv *env, jstring jstr) {
+char *jstringToChar(JNIEnv *env, jstring jstr)
+{
     char *rtn = nullptr;
     jclass class_string = env->FindClass("java/lang/String");
     jstring strencode = env->NewStringUTF("utf-8");
@@ -19,7 +20,7 @@ char *jstringToChar(JNIEnv *env, jstring jstr) {
     auto barr = (jbyteArray) env->CallObjectMethod(jstr, mid, strencode);
     jsize alen = env->GetArrayLength(barr);
     jbyte *ba = env->GetByteArrayElements(barr, JNI_FALSE);
-    if (alen > 0) {
+    if(alen > 0){
         rtn = (char *) malloc(alen + 1);
         memcpy(rtn, ba, alen);
         rtn[alen] = 0;
@@ -29,46 +30,48 @@ char *jstringToChar(JNIEnv *env, jstring jstr) {
 }
 
 
-extern "C"
+extern "C" {
+JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *ptr)
 {
-
-JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *ptr) {
     freopen("/storage/emulated/0/tmp/log.txt", "w", stdout);
-        //linkerName = "linker64";
+    //linkerName = "linker64";
     loaderVM = vm;
     loaderPtr = ptr;
     symbol = DobbySymbolResolver("linker", "__loader_android_dlopen_ext");
     return JNI_VERSION_1_6;
 }
-JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env,[[maybe_unused]] jclass clazz,jstring dlpath) {
-    try {
+JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env, [[maybe_unused]] jclass clazz, jstring dlpath)
+{
+    try{
         utils::ProcessView processObj;
         [[maybe_unused]] int temp = processObj.readProcess(getpid());
-        if (symbol) {
-            auto *(*my_android_dlopen_ext)(const char *, int, void *, void *) = (void *(*)(const char *,int, void *,void *)) symbol;
-            for (int i = 0; i < processObj.getModules().size(); ++i) {
-                if (processObj.getModules()[i].name == "libminecraftpe.so") {
+        if(symbol){
+            auto *(*my_android_dlopen_ext)(const char *, int, void *, void *) = (void *(*)(const char *, int, void *, void *)) symbol;
+            for(int i = 0; i < processObj.getModules().size(); ++i){
+                if(processObj.getModules()[i].name == "libminecraftpe.so"){
                     void *handle = my_android_dlopen_ext(strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libexample.so"), RTLD_NOW, nullptr, (void *) processObj.getModules()[i].baseAddress);
                     void *mcengineHandle = dlopen("libmcengine.so", RTLD_NOW | RTLD_NOLOAD);
+                    auto (*Toast)(std::string) = (void (*)(std::string)) dlsym(mcengineHandle, "log_Toast");
+                    //
+                    if(handle){
+                        Toast("成功加载native核心");
+                        auto (*my_JNI_OnLoad)(JavaVM *, void *) = (jint (*)(JavaVM *, void *)) dlsym(handle, "JNI_OnLoad");
+                        auto (*hook_setDobbySymbolResolver)(void *) = (void (*)(void *)) dlsym(handle, "setDobbySymbolResolver");
+                        auto (*hook_setDobbyHook)(void *) = (void (*)(void *)) dlsym(handle, "setDobbyHook");
 
-                    //auto(*mcengine_JNI_OnLoad)(JavaVM *, void *) = (void (*)(JavaVM *, void *))dlsym(mcengineHandle,"JNI_OnLoad");;
-                    //mcengine_JNI_OnLoad(loaderVM, loaderPtr);
-                    auto(*Toast)(std::string) = (void (*)(std::string))dlsym(mcengineHandle, "log_Toast");
-                    Toast("已取得句柄");
-
-                    auto(*my_JNI_OnLoad)(JavaVM *, void *) = (jint (*)(JavaVM *, void *)) dlsym(handle,"JNI_OnLoad");
-                    auto(*hook_setDobbySymbolResolver)(void *) = (void (*)(void *))dlsym(handle, "setDobbySymbolResolver");
-                    auto(*hook_setDobbyHook)(void *) = (void (*)(void *))dlsym(handle, "setDobbyHook");
-
-                    hook_setDobbySymbolResolver((void *)DobbySymbolResolver);
-                    hook_setDobbyHook((void *)DobbyHook);
-                    my_JNI_OnLoad(loaderVM, loaderPtr);
+                        hook_setDobbySymbolResolver((void *) DobbySymbolResolver);
+                        hook_setDobbyHook((void *) DobbyHook);
+                        //首先进行Dobby方法传递，然后才能初始化
+                        my_JNI_OnLoad(loaderVM, loaderPtr);
+                    }else {
+                        Toast("未能加载native核心");
+                    }
                     break;
                 }
             }
         }
     }
-    catch (const std::exception &e) {
+    catch(const std::exception &e){
         std::cerr << e.what() << '\n';
     }
 

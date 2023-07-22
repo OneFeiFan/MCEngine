@@ -41,7 +41,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                 //Toast.makeText(context, "正在加载so文件", Toast.LENGTH_SHORT).show();
                 try{
                     System.loadLibrary("mcengine");
-                    //Toast.makeText(context, "mcengine.so加载完毕", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "mcengine.so加载完毕", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 }
@@ -61,7 +61,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                 PackageManager packageManager = null;
                 try {
                     packageManager = context.getPackageManager();
-                    Toast.makeText(context, packageManager.toString(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, packageManager.toString(), Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 }
