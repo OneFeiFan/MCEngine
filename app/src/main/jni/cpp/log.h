@@ -13,6 +13,6 @@ public:
     static void LogError(char*, std::string);
     static std::string JStringTransfer(jstring jStr);
     static char* jstringToChar(jstring jstr);
-    static void Toast(JNIEnv* env, std::string str);
+    static void Toast(std::string str);
 };
 #endif

@@ -18,7 +18,7 @@ JNIEXPORT void JNICALL
 Java_com_taolesi_mcengine_HookEngine_define(JNIEnv *env, jclass clazz) {
     NativeEngine::HookEngineClass(env);
 }
-void log_Toast(JNIEnv* env, std::string str) {
-    log::Toast(env, str);
+void log_Toast(std::string str) {
+    log::Toast(str);
 }
 }

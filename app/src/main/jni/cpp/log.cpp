@@ -46,12 +46,12 @@ char* log::jstringToChar(jstring jstr) {
     return rtn;
 }
 
-void log::Toast(JNIEnv* env, std::string str) {
-    /*env = JavaAtach::attach();
+void log::Toast(std::string str) {
+    JNIEnv* env = JavaAtach::attach();
     jclass HookEngineptr = env->FindClass("com/taolesi/mcengine/HookEngine");
     jmethodID id = env -> GetStaticMethodID(HookEngineptr, "Toast", "(Ljava/lang/String;)V");
     const char* _charName = str.c_str();
     jstring _jName = env -> NewStringUTF(_charName);
-    env -> CallStaticVoidMethod(HookEngineptr, id, _jName);*/
+    env -> CallStaticVoidMethod(HookEngineptr, id, _jName);
 }
 #endif
