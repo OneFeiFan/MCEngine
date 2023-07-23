@@ -2,7 +2,7 @@
 #define _JAVAATACH_CPP
 
 #include <jni.h>
-#include "JavaAtach.h"
+#include "includes/JavaAtach.h"
 
 JavaVM* JavaAtach::jvm = nullptr;
 JNIEnv* JavaAtach::attach() {

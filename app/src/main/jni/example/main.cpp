@@ -263,6 +263,7 @@ void *EX_VanillaItems_serverInitCreativeItemsCallback(void *ptr, ActorInfoRegist
 // {
 //     base_TextureUVCoordinateSet_TextureUVCoordinateSet(ptr, a, b, c, d, e, f, g, h, i);
 // }
+
 void EXHookFR::init()
 {
     // fake区

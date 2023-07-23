@@ -6,6 +6,7 @@ LOCAL_PATH := $(MCENGINE_PATH)
 include $(CLEAR_VARS)
 LOCAL_C_INCLUDES += $(wildcard $(LOCAL_PATH)/includes/*)
 LOCAL_C_INCLUDES +=	$(wildcard $(LOCAL_PATH)/headers/*)
+LOCAL_CPPFLAGS += -fexceptions
 LOCAL_CPP_EXTENSION := .cpp .cc
 LOCAL_MODULE    := mcengine
 SRC_FILS := $(wildcard $(LOCAL_PATH)/*/*.c $(LOCAL_PATH)/*/*.cpp $(LOCAL_PATH)/*.cpp $(LOCAL_PATH)/*/*/*.cpp $(LOCAL_PATH)/*/*/*/*.cpp $(LOCAL_PATH)/*/*/*/*/*.cpp)

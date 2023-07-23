@@ -3,22 +3,38 @@
 #include <cstring>
 #include <malloc.h>
 #include <c++/v1/string>
-
-#include "JavaAtach.h"
-#include "log.h"
-#include "NativeEngine.h"
-
+#include <filesystem>
+#include <iostream>
+#include "includes/JavaAtach.h"
+#include "includes/log.h"
+#include "includes/NativeEngine.h"
+#include <unistd.h>
+#include <iostream>
 
 extern "C" {
-JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *unused) {
+JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *unused)
+{
     JavaAtach::init(vm);
     return JNI_VERSION_1_6;
 }
 JNIEXPORT void JNICALL
-Java_com_taolesi_mcengine_HookEngine_define(JNIEnv *env, jclass clazz) {
+Java_com_taolesi_mcengine_HookEngine_define(JNIEnv *env, jclass clazz)
+{
     NativeEngine::HookEngineClass(env);
 }
-void log_Toast(std::string str) {
+void log_Toast(std::string str)
+{
     log::Toast(str);
 }
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_taolesi_mcengine_HookEngine_copyToEx(JNIEnv *env, jclass clazz, jstring res, jstring output)
+{
+    try {
+        std::filesystem::copy_file(log::jstringToChar(res), log::jstringToChar(output));
+    } catch(const std::exception &e){
+        remove(log::jstringToChar(output));
+        std::filesystem::copy_file(log::jstringToChar(res), log::jstringToChar(output));
+    }
 }
