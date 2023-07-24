@@ -6,18 +6,18 @@
 #include <iostream>
 #include <cstring>
 #include <filesystem>
-#include <stdio.h>
+#include <cstdio>
 #include "headers/miniz.h"
 #include <string>
 #include <fstream>
 #include <iostream>
 #include <filesystem>
-#include <sys/stat.h> 　
+#include <sys/stat.h>
 #include <sys/types.h>
 void UnZip(const char *s_Test_archive_filename)
 {
     mz_bool status;
-    mz_zip_archive *zip_archive = new mz_zip_archive();
+    auto *zip_archive = new mz_zip_archive();
     void *p;
     namespace fs = std::filesystem;
     //memset(&zip_archive, 0, sizeof(zip_archive));
@@ -49,7 +49,7 @@ void UnZip(const char *s_Test_archive_filename)
                 std::cout<<direction.c_str()<<std::endl;
             }
             std::ofstream ofs(path, std::ios::out | std::ios::binary);
-            ofs.write((const char *) p, file_stat.m_uncomp_size);
+            ofs.write((const char *) p, (int)file_stat.m_uncomp_size);
             ofs.close();
             mz_free(p);
         }
@@ -101,7 +101,7 @@ JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env, [
             auto *(*my_android_dlopen_ext)(const char *, int, void *, void *) = (void *(*)(const char *, int, void *, void *)) symbol;
             for(int i = 0; i < processObj.getModules().size(); ++i){
                 if(processObj.getModules()[i].name == "libminecraftpe.so"){
-                    void *handle = my_android_dlopen_ext(strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libexample.so"), RTLD_NOW, nullptr, (void *) processObj.getModules()[i].baseAddress);
+                    void *handle = my_android_dlopen_ext(strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libnativecore.so"), RTLD_NOW, nullptr, (void *) processObj.getModules()[i].baseAddress);
                     void *mcengineHandle = dlopen("libmcengine.so", RTLD_NOW | RTLD_NOLOAD);
                     auto (*Toast)(std::string) = (void (*)(std::string)) dlsym(mcengineHandle, "log_Toast");
                     //

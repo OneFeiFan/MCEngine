@@ -1,3 +1,4 @@
+#pragma once
 #ifndef EX_FAKE_ITEM_HPP
 #define EX_FAKE_ITEM_HPP
 #include <stdint.h>
@@ -240,7 +241,7 @@ public:
 };
 //
 // fake区域
-short (*fake_Item_getId)(Item *);
-const char *(*fake_Item_getCommandName)(Item *);
-void (*fake_Item_setCategory)(Item *, CreativeItemCategory);
+static short (*fake_Item_getId)(Item *);
+static const char *(*fake_Item_getCommandName)(Item *);
+static void (*fake_Item_setCategory)(Item *, CreativeItemCategory);
 #endif
