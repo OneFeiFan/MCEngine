@@ -7,12 +7,18 @@
 
 #include <jni.h>
 
-class log {
+class log
+{
 public:
     static void writeFile();
-    static void LogError(char*, std::string);
+
+    static void LogError(char *, std::string);
+
     static std::string JStringTransfer(jstring jStr);
-    static char* jstringToChar(jstring jstr);
+
+    static char *jstringToChar(jstring jstr);
+
     static void Toast(std::string str);
 };
+
 #endif

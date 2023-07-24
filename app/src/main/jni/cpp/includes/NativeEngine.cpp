@@ -3,15 +3,18 @@
 #include <cstdarg>
 #include <cstdlib>
 
-#include "NativeEngine.h"
+#include "includes/NativeEngine.h"
 #include <c++/v1/string>
 
 jclass NativeEngine::HookEngineptr = nullptr;
 
-jclass NativeEngine::HookEngineClass() {
+jclass NativeEngine::HookEngineClass()
+{
     return HookEngineptr;
 }
-void NativeEngine::HookEngineClass(JNIEnv* env) {
+
+void NativeEngine::HookEngineClass(JNIEnv *env)
+{
     jclass tempRef = env->FindClass("com/taolesi/mcengine/HookEngine");
     HookEngineptr = static_cast<jclass>(env->NewGlobalRef(tempRef));
     env->DeleteLocalRef(tempRef);
