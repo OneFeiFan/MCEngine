@@ -12,8 +12,10 @@ Apache License 2.0,Android Open Source Project
 GPL-3.0 License,Copyright (C) 2021 LSPosed
 ### [Dobby](https://github.com/jmpews/Dobby)
 Apache License 2.0,jmpews
-### [QAuxiliary](https://github.com/cinit/QAuxiliary)
-,cinit
+### [miniz](https://github.com/richgel999/miniz)
+MIT License,richgel999
+## 鸣谢
+感谢[cinit](https://github.com/cinit),提供的技术支持。
 ## 许可证
 此内容是根据MIT许可证发布的。
 请参阅[LICENSE.txt](LICENSE.txt)文件。
