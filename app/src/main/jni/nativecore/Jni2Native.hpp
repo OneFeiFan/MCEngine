@@ -28,7 +28,7 @@ extern "C"
             hooker.init();
             // printf("加载成功");
         }
-        dlclose(handle);
+
         return JNI_VERSION_1_6;
     }
 [[maybe_unused]] void setDobbySymbolResolver(void *symbol)

@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <cstdio>
 #include "headers/miniz.h"
+#include "includes/lua.hpp"
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -46,7 +47,6 @@ void UnZip(const char *s_Test_archive_filename)
             fs::path direction = path.parent_path();
             if(!fs::exists(direction)){
                 fs::create_directories(direction);
-                std::cout<<direction.c_str()<<std::endl;
             }
             std::ofstream ofs(path, std::ios::out | std::ios::binary);
             ofs.write((const char *) p, (int)file_stat.m_uncomp_size);
@@ -82,6 +82,13 @@ char *jstringToChar(JNIEnv *env, jstring jstr)
 
 
 extern "C" {
+    int add (lua_State *L){
+        int a = lua_tointeger(L,1);
+        int b = lua_tointeger(L,2);
+        int result = a + b;
+        lua_pushinteger(L,result);
+        return 1;
+    }
 JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *ptr)
 {
     freopen("/storage/emulated/0/tmp/log1.txt", "w", stdout);
@@ -104,9 +111,24 @@ JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env, [
                     void *handle = my_android_dlopen_ext(strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libnativecore.so"), RTLD_NOW, nullptr, (void *) processObj.getModules()[i].baseAddress);
                     void *mcengineHandle = dlopen("libmcengine.so", RTLD_NOW | RTLD_NOLOAD);
                     auto (*Toast)(std::string) = (void (*)(std::string)) dlsym(mcengineHandle, "log_Toast");
-                    //
+                    std::cout<<strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libnativecore.so")<<std::endl;
                     if(handle){
                         Toast("成功加载native核心");
+                        Toast("成功加载native核心");
+                        lua_State* L = luaL_newstate();
+                        luaL_openlibs(L);
+                        lua_pushcfunction(L,add);
+                        lua_setglobal(L,"add");
+                        // 加载并执行 Lua 脚本文件
+                        if (luaL_dofile(L, "/storage/emulated/0/tmp/script.lua") != LUA_OK) {
+                            printf("Failed to load and execute script.lua: %s\n", lua_tostring(L, -1));
+                            lua_close(L);
+
+                        }else{
+                            printf("成功");
+                        }
+
+                        lua_close(L);
                         auto (*my_JNI_OnLoad)(JavaVM *, void *) = (jint (*)(JavaVM *, void *)) dlsym(handle, "JNI_OnLoad");
                         auto (*hook_setDobbySymbolResolver)(void *) = (void (*)(void *)) dlsym(handle, "setDobbySymbolResolver");
                         auto (*hook_setDobbyHook)(void *) = (void (*)(void *)) dlsym(handle, "setDobbyHook");
@@ -116,6 +138,7 @@ JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env, [
                         //首先进行Dobby方法传递，然后才能初始化
                         my_JNI_OnLoad(loaderVM, loaderPtr);
                     }else {
+                        Toast("未能加载native核心");
                         Toast("未能加载native核心");
                     }
                     break;
