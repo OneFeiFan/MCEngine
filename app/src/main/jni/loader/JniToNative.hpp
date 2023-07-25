@@ -92,7 +92,7 @@ JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env, j
 //                        }
 //
 //                        lua_close(L);
-                        auto (*NC_NativeCoreLoad)(JavaVM *, void *,void **) = (void (*)(JavaVM *, void *,void **)) dlsym(NC_handle, "NativeCoreLoad");
+                        auto (*NC_NativeCoreLoad)(void **) = (void (*)(void **)) dlsym(NC_handle, "NativeCoreLoad");
                         auto (*NC_setDobbySymbolResolver)(void *) = (void (*)(void *)) dlsym(NC_handle, "setDobbySymbolResolver");
                         auto (*NC_setDobbyHook)(void *) = (void (*)(void *)) dlsym(NC_handle, "setDobbyHook");
                         NC_setDobbySymbolResolver((void *) DobbySymbolResolver);
@@ -102,7 +102,7 @@ JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env, j
                         NC_FakeNative = (void (*)(void **, const char *)) dlsym(NC_handle, "FakeNative");
                         //将native中的两个方法拿到此处，确保方法在此处调用的同时，又可让对面dobby获得mc句柄
                         void *MC_handle  = nullptr;
-                        NC_NativeCoreLoad(loaderVM, loaderPtr,(void **)&MC_handle);
+                        NC_NativeCoreLoad((void **)&MC_handle);
                         //std::cout<<MC_handle<<std::endl;
                         if(MC_handle != nullptr){
                             Toast("成功加载native核心");
@@ -130,7 +130,7 @@ JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env, j
 
 }
 JNIEXPORT void JNICALL
-Java_com_taolesi_mcengine_NativeItem_createItem(JNIEnv *env, jclass clazz, jstring jname, jstring jiconName, jint jindex, jboolean is2category, jint jtype)
+Java_com_taolesi_mcengine_NativeItem_createItem(JNIEnv *env, [[maybe_unused]] jclass clazz, jstring jname, jstring jiconName, jint jindex, jboolean is2category, jint jtype)
 {
     const char *name = jstringToChar(env, jname);
     const char *iconName = jstringToChar(env, jiconName);

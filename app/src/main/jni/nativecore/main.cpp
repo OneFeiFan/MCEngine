@@ -8,7 +8,7 @@ static int (*NC_DobbyHook)(void *, void *, void *);
 
 extern "C"
 {
-void NativeCoreLoad(JavaVM *vm, void *a, void **ptr)
+[[maybe_unused]] void NativeCoreLoad(void **ptr)
 {
     freopen("/storage/emulated/0/tmp/loglog.txt", "w", stdout);
     void *handle = dlopen("libminecraftpe.so", RTLD_NOW | RTLD_NOLOAD); // RTLD_DEFAULT;//
@@ -28,7 +28,7 @@ void NativeCoreLoad(JavaVM *vm, void *a, void **ptr)
     NC_DobbyHook = (int (*)(void *, void *, void *)) symbol;
 }
 
-void InLineHook(void *hook, void *original, const char *symbol_name)
+[[maybe_unused]] void InLineHook(void *hook, void *original, const char *symbol_name)
 {
     void *ptr = NC_DobbySymbolResolver("libminecraftpe.so", symbol_name);
     if(ptr != nullptr){
@@ -43,7 +43,7 @@ void InLineHook(void *hook, void *original, const char *symbol_name)
     }
 }
 
-void FakeNative(void **fake_fun, const char *symbol_name)
+[[maybe_unused]] void FakeNative(void **fake_fun, const char *symbol_name)
 {
     if(fake_fun){
         void *symbol = NC_DobbySymbolResolver("libminecraftpe.so", symbol_name);

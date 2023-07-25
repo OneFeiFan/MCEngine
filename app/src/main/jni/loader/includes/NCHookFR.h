@@ -17,7 +17,7 @@ public:
 
 public:
     NCHookFR(void *handle);
-    void init();
+    static void init();
     static JNIEnv *getENV();
 };
 #endif
