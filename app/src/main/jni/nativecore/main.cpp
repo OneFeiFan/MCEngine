@@ -127,8 +127,12 @@ void *NC_VanillaItems_initClientData(void *ptr, Experiments const &e)
 {
     auto obj = base_VanillaItems_initClientData(ptr, e);
 
-    for(NC_Items *temp: itemsPoolArray){
-        base_Item_setIcon(temp->getPtr(), temp->getIconName(), (short) temp->getIconData());
+    try {
+        for(NC_Items *temp: itemsPoolArray){
+            base_Item_setIcon(temp->getPtr(), temp->getIconName(), (short) temp->getIconData());
+        }
+    } catch(const std::exception &e){
+        std::cerr << e.what() << '\n';
     }
     return obj;
 }
@@ -213,5 +217,33 @@ void EXHookFR::init()
     //    MSHookFunction(ptr, (void *)&EX_Item_getTextureUVCoordinateSet, (void **)&base_Item_getTextureUVCoordinateSet);
     //    ptr = (void *)dlsym(this->MCHandle, "_Z15setIconIfLegacyRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEES7_i");
     //    MSHookFunction(ptr, (void *)&test_, (void **)&test11);
+}
+char *jstringToChar(JNIEnv *env, jstring jstr)
+{
+    char *rtn = nullptr;
+    jclass class_string = env->FindClass("java/lang/String");
+    jstring strencode = env->NewStringUTF("utf-8");
+    jmethodID mid = env->GetMethodID(class_string, "getBytes", "(Ljava/lang/String;)[B");
+    auto barr = (jbyteArray) env->CallObjectMethod(jstr, mid, strencode);
+    jsize alen = env->GetArrayLength(barr);
+    jbyte *ba = env->GetByteArrayElements(barr, JNI_FALSE);
+    if(alen > 0){
+        rtn = (char *) malloc(alen + 1);
+        memcpy(rtn, ba, alen);
+        rtn[alen] = 0;
+    }
+    env->ReleaseByteArrayElements(barr, ba, 0);
+    return rtn;
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_taolesi_mcengine_NativeItem_createItem(JNIEnv *env, jclass clazz, jstring name, jstring icon, jint index, jboolean add_to_category, jint type)
+{
+    try{
+        NC_Items *itemObj = new NC_Items(jstringToChar(env, name), jstringToChar(env, icon), index, add_to_category, (CreativeItemCategory) type);
+        itemsPoolArray.push_back(itemObj);
 
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << '\n';
+    }
 }

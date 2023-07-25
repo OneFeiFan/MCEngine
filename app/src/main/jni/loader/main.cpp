@@ -15,6 +15,7 @@
 #include <filesystem>
 #include <sys/stat.h>
 #include <sys/types.h>
+
 void UnZip(const char *s_Test_archive_filename)
 {
     mz_bool status;
@@ -49,7 +50,7 @@ void UnZip(const char *s_Test_archive_filename)
                 fs::create_directories(direction);
             }
             std::ofstream ofs(path, std::ios::out | std::ios::binary);
-            ofs.write((const char *) p, (int)file_stat.m_uncomp_size);
+            ofs.write((const char *) p, (int) file_stat.m_uncomp_size);
             ofs.close();
             mz_free(p);
         }
@@ -61,6 +62,8 @@ void UnZip(const char *s_Test_archive_filename)
 void *symbol = nullptr;
 JavaVM *loaderVM = nullptr;
 void *loaderPtr = nullptr;
+void *handle;
+void *mcengineHandle;
 
 char *jstringToChar(JNIEnv *env, jstring jstr)
 {
@@ -82,13 +85,14 @@ char *jstringToChar(JNIEnv *env, jstring jstr)
 
 
 extern "C" {
-    int add (lua_State *L){
-        int a = lua_tointeger(L,1);
-        int b = lua_tointeger(L,2);
-        int result = a + b;
-        lua_pushinteger(L,result);
-        return 1;
-    }
+int add(lua_State *L)
+{
+    int a = lua_tointeger(L, 1);
+    int b = lua_tointeger(L, 2);
+    int result = a + b;
+    lua_pushinteger(L, result);
+    return 1;
+}
 JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *ptr)
 {
     freopen("/storage/emulated/0/tmp/log1.txt", "w", stdout);
@@ -98,7 +102,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *ptr)
     symbol = DobbySymbolResolver("linker", "__loader_android_dlopen_ext");
     return JNI_VERSION_1_6;
 }
-JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env, [[maybe_unused]] jclass clazz, jstring dlpath)
+JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env, jobject clazz, jstring dlpath)
 {
     UnZip(jstringToChar(env, dlpath));
     try{
@@ -108,23 +112,22 @@ JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env, [
             auto *(*my_android_dlopen_ext)(const char *, int, void *, void *) = (void *(*)(const char *, int, void *, void *)) symbol;
             for(int i = 0; i < processObj.getModules().size(); ++i){
                 if(processObj.getModules()[i].name == "libminecraftpe.so"){
-                    void *handle = my_android_dlopen_ext(strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libnativecore.so"), RTLD_NOW, nullptr, (void *) processObj.getModules()[i].baseAddress);
-                    void *mcengineHandle = dlopen("libmcengine.so", RTLD_NOW | RTLD_NOLOAD);
+                    handle = my_android_dlopen_ext(strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libnativecore.so"), RTLD_NOW, nullptr, (void *) processObj.getModules()[i].baseAddress);
+                    mcengineHandle = dlopen("libmcengine.so", RTLD_NOW | RTLD_NOLOAD);
                     auto (*Toast)(std::string) = (void (*)(std::string)) dlsym(mcengineHandle, "log_Toast");
-                    std::cout<<strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libnativecore.so")<<std::endl;
+                    std::cout << strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libnativecore.so") << std::endl;
                     if(handle){
                         Toast("成功加载native核心");
-                        Toast("成功加载native核心");
-                        lua_State* L = luaL_newstate();
+                        lua_State *L = luaL_newstate();
                         luaL_openlibs(L);
-                        lua_pushcfunction(L,add);
-                        lua_setglobal(L,"add");
+                        lua_pushcfunction(L, add);
+                        lua_setglobal(L, "add");
                         // 加载并执行 Lua 脚本文件
-                        if (luaL_dofile(L, "/storage/emulated/0/tmp/script.lua") != LUA_OK) {
+                        if(luaL_dofile(L, "/storage/emulated/0/tmp/script.lua") != LUA_OK){
                             printf("Failed to load and execute script.lua: %s\n", lua_tostring(L, -1));
                             lua_close(L);
 
-                        }else{
+                        }else {
                             printf("成功");
                         }
 
@@ -137,8 +140,12 @@ JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env, [
                         hook_setDobbyHook((void *) DobbyHook);
                         //首先进行Dobby方法传递，然后才能初始化
                         my_JNI_OnLoad(loaderVM, loaderPtr);
+
+                        jclass HookEngineptr = env->FindClass("com/taolesi/mcengine/HookEngine");
+                        jmethodID id = env->GetMethodID(HookEngineptr, "runCoreJS", "()V");
+                        env->CallVoidMethod(clazz, id);
+
                     }else {
-                        Toast("未能加载native核心");
                         Toast("未能加载native核心");
                     }
                     break;
@@ -150,5 +157,11 @@ JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env, [
         std::cerr << e.what() << '\n';
     }
 
+}
+JNIEXPORT void JNICALL
+Java_com_taolesi_mcengine_NativeItem_createItem(JNIEnv *env, jclass clazz, jstring name, jstring icon, jint index, jboolean add_to_category, jint type)
+{
+    auto (*Java_com_taolesi_mcengine_NativeItem_createItem_modify)(JNIEnv*, jclass, jstring, jstring, jint, jboolean, jint) = (void (*)(JNIEnv*, jclass, jstring, jstring, jint, jboolean, jint)) dlsym(handle, "Java_com_taolesi_mcengine_NativeItem_createItem");
+    Java_com_taolesi_mcengine_NativeItem_createItem_modify(env, clazz, name, icon, index, add_to_category, type);
 }
 }

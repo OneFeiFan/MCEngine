@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi;
 
 import com.quickjs.JSContext;
 import com.quickjs.QuickJS;
+import com.quickjs.QuickJSScriptException;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -22,9 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.Reader;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
@@ -38,10 +37,13 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class HookEngine implements IXposedHookLoadPackage {
     public static Context context;
+    public static String sourceDir;
+    public static String ExternalCacheDir;
 
-    public static native void setDL(String DLPath);
+    public native void setDL(String DLPath);
 
     public static native void define();
+
     public static native void copyToEx(String res, String output);
 
     private final String innerPackageName = "com.taolesi.mcengine";
@@ -94,15 +96,11 @@ public class HookEngine implements IXposedHookLoadPackage {
                     if (packageManager != null) {
                         applicationInfo = packageManager.getApplicationInfo("com.taolesi.mcengine", 0);
                         try {
-                            ApplicationInfo finalApplicationInfo = applicationInfo;
-                            ((Activity) context).runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    setDL(finalApplicationInfo.sourceDir);
-                                    define();
-                                    runCoreJS(finalApplicationInfo.sourceDir, context.getExternalCacheDir().toString());
-                                }
-                            });
+                            sourceDir = applicationInfo.sourceDir;
+                            ExternalCacheDir = context.getExternalCacheDir().toString();
+                            define();
+                            setDL(applicationInfo.sourceDir);
+                            //runCoreJS();
                         } catch (Exception e) {
                             Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                         }
@@ -114,22 +112,25 @@ public class HookEngine implements IXposedHookLoadPackage {
         });
     }
 
-    public void runCoreJS(String res, String output) {
-        //Toast(context.getExternalCacheDir().toString());
-        copyToEx(res, output+"/base.apk");
-        unzip(output+"/base.apk", output+"/base");
-        //Toast(output);
-        QuickJS quickJS = QuickJS.createRuntimeWithEventQueue();
-        JSContext quickJS_context = quickJS.createContext();
-        quickJS_context.addJavascriptInterface(this, "HookEngine");
-        quickJS_context.executeScript(JsonToObjTest1(output+"/base/assets/main.js"),"main.js");
-        //quickJS_context.executeScript("HookEngine.Toast('Hello World')", null);
-        quickJS_context.close();
-        quickJS.close();
-        //Toast("js成功加载");
+    public void runCoreJS() {
+        try {
+            copyToEx(sourceDir, ExternalCacheDir + "/base.apk");
+            unzip(ExternalCacheDir + "/base.apk", ExternalCacheDir + "/base");
+            QuickJS quickJS = QuickJS.createRuntimeWithEventQueue();
+            JSContext quickJS_context = quickJS.createContext();
+            quickJS_context.addJavascriptInterface(this, "HookEngine");
+            quickJS_context.addJavascriptInterface(new Examination(), "Examination");
+            quickJS_context.addJavascriptInterface(new NativeItem(), "NativeItem");
+            quickJS_context.executeScript(JsonToObjTest1(ExternalCacheDir + "/base/assets/main.js"), "main.js");
+            quickJS_context.close();
+            quickJS.close();
+        } catch (QuickJSScriptException e) {
+            Toast(e.toString());
+        }
+
     }
 
-    public void unzip(String res, String output) {
+    public static void unzip(String res, String output) {
         //targetPath输出文件路径
         File targetFile = new File(output);
         // 如果目录不存在，则创建
@@ -144,7 +145,6 @@ public class HookEngine implements IXposedHookLoadPackage {
             System.out.println("file nums:" + zipFile.size());
             Enumeration enumeration = zipFile.entries();
             while (enumeration.hasMoreElements()) {
-                //依次获取压缩包内的文件实体对象
                 ZipEntry entry = (ZipEntry) enumeration.nextElement();
                 System.out.println("this file size:" + entry.getSize());
                 String name = entry.getName();
@@ -152,7 +152,6 @@ public class HookEngine implements IXposedHookLoadPackage {
                     continue;
                 }
                 try (BufferedInputStream inputStream = new BufferedInputStream(zipFile.getInputStream(entry))) {
-                    // 需要判断文件所在的目录是否存在，处理压缩包里面有文件夹的情况
                     String outName = output + "/" + name;
                     File outFile = new File(outName);
                     File tempFile = new File(outName.substring(0, outName.lastIndexOf("/")));
@@ -175,7 +174,8 @@ public class HookEngine implements IXposedHookLoadPackage {
             Toast(e.toString());
         }
     }
-    public String JsonToObjTest1(String src) {
+
+    public static String JsonToObjTest1(String src) {
         try {
             File jsonFile = new File(src);
             FileReader fileReader = new FileReader(jsonFile);
