@@ -1,8 +1,8 @@
 //
 // Created by 30225 on 2023/7/24.
 //
-#include "NC_items.h"
-
+#include "NC_items.hpp"
+#include <iostream>
 
 NC_Items::NC_Items(const char *name, const char *iconName, const int iconData, const bool inCreative) : name(name), iconName(iconName), iconData(iconData), inCreative(inCreative)
 {
@@ -58,6 +58,3 @@ CreativeItemCategory NC_Items::getType()
 {
     return this->type;
 }
-
-NC_Items *itemObj = new NC_Items("test", "apple", 0, true, CreativeItemCategory::Equipment);
-NC_Items *itemObj1 = new NC_Items("test1", "apple_golden", 0, true, CreativeItemCategory::Items);

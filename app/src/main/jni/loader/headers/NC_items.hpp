@@ -2,12 +2,12 @@
 // Created by 30225 on 2023/7/24.
 //
 
-#ifndef MCENGINE_NC_ITEMS_H
-#define MCENGINE_NC_ITEMS_H
+#ifndef MCENGINE_NC_ITEMS_HPP
+#define MCENGINE_NC_ITEMS_HPP
 #include <map>
 #include <vector>
 #include "CreativeItemCategory.h"
-#include "headers/Fake_Item.hpp"
+#include "Fake_Item.hpp"
 
 class NC_Items
 {
@@ -42,6 +42,6 @@ public:
 
     Item *getPtr();
 };
-static std::vector<NC_Items *> itemsPoolArray;
-static std::map<short, NC_Items *> itemsPoolMap;
-#endif //MCENGINE_NC_ITEMS_H
+inline std::vector<NC_Items *> itemsPoolArray;
+inline std::map<short, NC_Items *> itemsPoolMap;
+#endif //MCENGINE_NC_ITEMS_HPP

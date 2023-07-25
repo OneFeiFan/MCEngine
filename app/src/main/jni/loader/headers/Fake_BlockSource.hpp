@@ -13,5 +13,5 @@ public:
 
 };//
 // fake区域
-Block * (*fake_BlockSource_getBlock)(BlockSource *,int,int,int);
+static Block * (*fake_BlockSource_getBlock)(BlockSource *,int,int,int);
 #endif

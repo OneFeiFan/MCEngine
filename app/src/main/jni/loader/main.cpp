@@ -1,167 +1,178 @@
-#include "headers/ProcessView.h"
-#include "includes/dobby.h"
-#include <jni.h>
-#include <dlfcn.h>
-#include <unistd.h>
+#include "includes/NCHookFR.h"
+#include "JniToNative.hpp"
 #include <iostream>
 #include <cstring>
-#include <filesystem>
-#include <cstdio>
-#include "headers/miniz.h"
-#include "includes/lua.hpp"
-#include <string>
-#include <fstream>
-#include <iostream>
-#include <filesystem>
-#include <sys/stat.h>
-#include <sys/types.h>
+#include "headers/NC_items.hpp"
+#include "headers/Fake_Actor.hpp"
+#include "headers/Fake_BlockSource.hpp"
+#include "headers/Fake_BlockLegacy.hpp"
+#include "headers/Fake_ItemStackBase.hpp"
+#include "headers/Fake_ItemRegistry.hpp"
+#include "headers/Fake_Item.hpp"
+#include "headers/CreativeItemCategory.h"
+class CreativeItemRegistry;
 
-void UnZip(const char *s_Test_archive_filename)
+void (*base_Block_onPlace)(void *, BlockSource &, BlockPos const &, Block const &);
+
+void NC_Block_onPlace(void *ptr, BlockSource &blockSource, BlockPos const &pos, Block const &block)
 {
-    mz_bool status;
-    auto *zip_archive = new mz_zip_archive();
-    void *p;
-    namespace fs = std::filesystem;
-    //memset(&zip_archive, 0, sizeof(zip_archive));
-    status = mz_zip_reader_init_file(zip_archive, s_Test_archive_filename, 0);
-    if(!status){
-        printf("mz_zip_reader_init_file() failed!\n");
-        return;
+    // jclass CLASS = EXHookFR::hookerPtr->Class;
+    // invokeCallback(CLASS, "onBlockPlace", "(JJ)V", (jlong)&blockSource, (jlong)&pos);
+    return base_Block_onPlace(ptr, blockSource, pos, block);
+}
+
+void (*base_Item_useOn)(void *, ItemStack &, Actor &, int, int, int, unsigned char, float, float, float);
+
+void NC_Item_useOn(void *ptr, ItemStack &itemstack, Actor &actor, int x, int y, int z, unsigned char d, float e, float f, float g)
+{
+    // jclass CLASS = EXHookFR::hookerPtr->Class;
+    // BlockSource *Region = (BlockSource *)fake_Actor_getRegion(&actor);
+    // Block *block = Fake_BlockSource_getBlock(Region, x, y, z);
+    // int id = fake_BlockLegacy_getBlockItemId(((BlockLegacy *)*((uint32_t *)block + 2)));
+    // if (std::find(barrelIDPool.begin(), barrelIDPool.end(), id) != barrelIDPool.end() && !fake_Actor_isSneaking(&actor))
+    // {
+    //     if (std::find(forbiddenIDPool.begin(), forbiddenIDPool.end(), fake_ItemStackBase_getId((ItemStackBase *)&itemstack)) != forbiddenIDPool.end())
+    //     {
+    //         return;
+    //     }
+    // }
+    return base_Item_useOn(ptr, itemstack, actor, x, y, z, d, e, f, g);
+}
+// WeakPtr<Item> (*base_registerItem)(std::string const &, short);
+// WeakPtr<Item> EX_registerItem(std::string const &str, short num)
+// {
+
+//     return base_registerItem(str, num);
+// }
+class Experiments;
+
+void *(*base_VanillaItems_registerItems)(void *, Experiments const &, bool);
+
+void *NC_VanillaItems_registerItems(void *ptr, Experiments const &e, bool b)
+{
+    printf("base_VanillaItems_registerItems\n");
+    //log::Toast("注册物品");
+    Item *temp;
+    for(auto &i: itemsPoolArray){
+        temp = fake_ItemRegistry_registerItemShared(i->getName(), (short &) (++fake_ItemRegistry_mMaxItemID)).get();
+        i->setItemPtr(temp);
+        itemsPoolMap.insert(std::pair<short &, NC_Items *>((short &) fake_ItemRegistry_mMaxItemID, i));
+        fake_Item_setCategory(temp, i->getType());
     }
-    fs::remove_all("/data/data/com.mojang.minecraftpe/MCEngine/");
-    for(int i = 0; i < (int) mz_zip_reader_get_num_files(zip_archive); ++i){
-        mz_zip_archive_file_stat file_stat;
-        if(!mz_zip_reader_file_stat(zip_archive, i, &file_stat)){
-            printf("mz_zip_reader_file_stat() failed!\n");
-            mz_zip_reader_end(zip_archive);
-            return;
-        }
-        if(!mz_zip_reader_is_file_a_directory(zip_archive, i)){
-            p = mz_zip_reader_extract_file_to_heap(zip_archive, file_stat.m_filename, &file_stat.m_uncomp_size, 0);
-            if(!p){
-                printf("mz_zip_reader_extract_file_to_heap() failed!\n");
-                mz_zip_reader_end(zip_archive);
-                return;
-            }
-            std::string directoryName("/data/data/com.mojang.minecraftpe/MCEngine/");
-            fs::path path(directoryName + file_stat.m_filename);
-            fs::path direction = path.parent_path();
-            if(!fs::exists(direction)){
-                fs::create_directories(direction);
-            }
-            std::ofstream ofs(path, std::ios::out | std::ios::binary);
-            ofs.write((const char *) p, (int) file_stat.m_uncomp_size);
-            ofs.close();
-            mz_free(p);
-        }
-    }
-    mz_zip_reader_end(zip_archive);
+
+    return base_VanillaItems_registerItems(ptr, e, b);
 }
 
-//const char *linkerName;
-void *symbol = nullptr;
-JavaVM *loaderVM = nullptr;
-void *loaderPtr = nullptr;
-void *handle;
-void *mcengineHandle;
+void (*base_Item_setIcon)(void *, std::string const &, short);
 
-char *jstringToChar(JNIEnv *env, jstring jstr)
+void NC_Item_setIcon(void *ptr, std::string const &str, short data)
 {
-    char *rtn = nullptr;
-    jclass class_string = env->FindClass("java/lang/String");
-    jstring strencode = env->NewStringUTF("utf-8");
-    jmethodID mid = env->GetMethodID(class_string, "getBytes", "(Ljava/lang/String;)[B");
-    auto barr = (jbyteArray) env->CallObjectMethod(jstr, mid, strencode);
-    jsize alen = env->GetArrayLength(barr);
-    jbyte *ba = env->GetByteArrayElements(barr, JNI_FALSE);
-    if(alen > 0){
-        rtn = (char *) malloc(alen + 1);
-        memcpy(rtn, ba, alen);
-        rtn[alen] = 0;
-    }
-    env->ReleaseByteArrayElements(barr, ba, 0);
-    return rtn;
+    return base_Item_setIcon(ptr, str, data);
 }
 
+// void (*base_Item_setIcon1)(void *, TextureUVCoordinateSet const &);
+// void EX_Item_setIcon1(void *ptr, TextureUVCoordinateSet const &a)
+// {
+//     return base_Item_setIcon1(ptr, a);
+// }
 
-extern "C" {
-int add(lua_State *L)
+// TextureUVCoordinateSet test;
+// void (*base_Item_getTextureUVCoordinateSet)(void *, std::string, int);
+// void EX_Item_getTextureUVCoordinateSet(void *ptr, std::string str, int a)
+// {
+//     return base_Item_getTextureUVCoordinateSet(ptr, std::move(str), a);
+// }
+// TextureUVCoordinateSet const &(*base_Item_getIcon)(Item *, ItemStackBase const &, int, bool);
+// TextureUVCoordinateSet const &EX_Item_getIcon(Item *ptr, ItemStackBase const &a, int b, bool c)
+// {
+//     return base_Item_getIcon(ptr, a, b, c);
+// }
+
+// void (*test11)(std::string, std::string, int);
+// void test_(std::string str1, std::string str2, int i)
+// {
+//     return test11(std::move(str1), std::move(str2), i);
+// }
+void *(*base_VanillaItems_initClientData)(void *, Experiments const &);
+
+void *NC_VanillaItems_initClientData(void *ptr, Experiments const &e)
 {
-    int a = lua_tointeger(L, 1);
-    int b = lua_tointeger(L, 2);
-    int result = a + b;
-    lua_pushinteger(L, result);
-    return 1;
-}
-JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *ptr)
-{
-    freopen("/storage/emulated/0/tmp/log1.txt", "w", stdout);
-    //linkerName = "linker64";
-    loaderVM = vm;
-    loaderPtr = ptr;
-    symbol = DobbySymbolResolver("linker", "__loader_android_dlopen_ext");
-    return JNI_VERSION_1_6;
-}
-JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env, jobject clazz, jstring dlpath)
-{
-    UnZip(jstringToChar(env, dlpath));
+    auto obj = base_VanillaItems_initClientData(ptr, e);
+
     try{
-        utils::ProcessView processObj;
-        [[maybe_unused]] int temp = processObj.readProcess(getpid());
-        if(symbol){
-            auto *(*my_android_dlopen_ext)(const char *, int, void *, void *) = (void *(*)(const char *, int, void *, void *)) symbol;
-            for(int i = 0; i < processObj.getModules().size(); ++i){
-                if(processObj.getModules()[i].name == "libminecraftpe.so"){
-                    handle = my_android_dlopen_ext(strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libnativecore.so"), RTLD_NOW, nullptr, (void *) processObj.getModules()[i].baseAddress);
-                    mcengineHandle = dlopen("libmcengine.so", RTLD_NOW | RTLD_NOLOAD);
-                    auto (*Toast)(std::string) = (void (*)(std::string)) dlsym(mcengineHandle, "log_Toast");
-                    std::cout << strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libnativecore.so") << std::endl;
-                    if(handle){
-                        Toast("成功加载native核心");
-                        lua_State *L = luaL_newstate();
-                        luaL_openlibs(L);
-                        lua_pushcfunction(L, add);
-                        lua_setglobal(L, "add");
-                        // 加载并执行 Lua 脚本文件
-                        if(luaL_dofile(L, "/storage/emulated/0/tmp/script.lua") != LUA_OK){
-                            printf("Failed to load and execute script.lua: %s\n", lua_tostring(L, -1));
-                            lua_close(L);
-
-                        }else {
-                            printf("成功");
-                        }
-
-                        lua_close(L);
-                        auto (*my_JNI_OnLoad)(JavaVM *, void *) = (jint (*)(JavaVM *, void *)) dlsym(handle, "JNI_OnLoad");
-                        auto (*hook_setDobbySymbolResolver)(void *) = (void (*)(void *)) dlsym(handle, "setDobbySymbolResolver");
-                        auto (*hook_setDobbyHook)(void *) = (void (*)(void *)) dlsym(handle, "setDobbyHook");
-
-                        hook_setDobbySymbolResolver((void *) DobbySymbolResolver);
-                        hook_setDobbyHook((void *) DobbyHook);
-                        //首先进行Dobby方法传递，然后才能初始化
-                        my_JNI_OnLoad(loaderVM, loaderPtr);
-
-                        jclass HookEngineptr = env->FindClass("com/taolesi/mcengine/HookEngine");
-                        jmethodID id = env->GetMethodID(HookEngineptr, "runCoreJS", "()V");
-                        env->CallVoidMethod(clazz, id);
-
-                    }else {
-                        Toast("未能加载native核心");
-                    }
-                    break;
-                }
-            }
+        for(NC_Items *temp: itemsPoolArray){
+            base_Item_setIcon(temp->getPtr(), temp->getIconName(), (short) temp->getIconData());
         }
-    }
-    catch(const std::exception &e){
+    }catch(const std::exception &e){
         std::cerr << e.what() << '\n';
     }
+    return obj;
+}
 
-}
-JNIEXPORT void JNICALL
-Java_com_taolesi_mcengine_NativeItem_createItem(JNIEnv *env, jclass clazz, jstring name, jstring icon, jint index, jboolean add_to_category, jint type)
+void *(*base_Item_addCreativeItem)(Item *, short);
+
+void *NC_Item_addCreativeItem(Item *obj, short a)
 {
-    auto (*Java_com_taolesi_mcengine_NativeItem_createItem_modify)(JNIEnv*, jclass, jstring, jstring, jint, jboolean, jint) = (void (*)(JNIEnv*, jclass, jstring, jstring, jint, jboolean, jint)) dlsym(handle, "Java_com_taolesi_mcengine_NativeItem_createItem");
-    Java_com_taolesi_mcengine_NativeItem_createItem_modify(env, clazz, name, icon, index, add_to_category, type);
+    short id = fake_Item_getId(obj);
+    if(itemsPoolMap.count(id)){
+        if(itemsPoolMap[id]->isInCreative()){
+            return base_Item_addCreativeItem(obj, 0);
+        }
+        return nullptr;
+    }
+    return base_Item_addCreativeItem(obj, a);
 }
+
+class ActorInfoRegistry;
+
+class BlockDefinitionGroup;
+
+
+class BaseGameVersion;
+
+void *(*base_VanillaItems_serverInitCreativeItemsCallback)(void *, ActorInfoRegistry *, BlockDefinitionGroup *, CreativeItemRegistry *, bool, BaseGameVersion const &, Experiments const &);
+
+void *NC_VanillaItems_serverInitCreativeItemsCallback(void *ptr, ActorInfoRegistry *a, BlockDefinitionGroup *b, CreativeItemRegistry *c, bool d, BaseGameVersion const &e, Experiments const &f)
+{
+    auto obj = base_VanillaItems_serverInitCreativeItemsCallback(ptr, a, b, c, d, e, f);
+
+    for(NC_Items *temp: itemsPoolArray){
+        std::cout << 111 << std::endl;
+    }
+    return obj;
+}
+
+void NCHookFR::init()
+{
+    // fake区
+    NC_FakeNative((void **) &fake_Actor_getRegion, "_ZNK5Actor9getRegionEv");
+    NC_FakeNative((void **) &fake_Actor_isSneaking, "_ZNK5Actor10isSneakingEv");
+    NC_FakeNative((void **) &fake_BlockLegacy_getBlockItemId, "_ZNK11BlockLegacy14getBlockItemIdEv");
+    NC_FakeNative((void **) &fake_BlockSource_getBlock, "_ZNK11BlockSource8getBlockEiii");
+    NC_FakeNative((void **) &fake_Item_getId, "_ZNK4Item5getIdEv");
+    NC_FakeNative((void **) &fake_ItemRegistry_mMaxItemID, "_ZN12ItemRegistry10mMaxItemIDE");
+    NC_FakeNative((void **) &fake_ItemRegistry_registerItemShared, "_ZN12ItemRegistry18registerItemSharedI4ItemJRsEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEEDpOT0_");
+    NC_FakeNative((void **) &fake_ItemStackBase_getId, "_ZNK13ItemStackBase5getIdEv");
+    NC_FakeNative((void **) &fake_Item_getCommandName, "_ZNK4Item14getCommandNameEv");
+    NC_FakeNative((void **) &fake_Item_setCategory, "_ZN4Item11setCategoryE20CreativeItemCategory");
+    // hook区
+    NC_InLineHook((void *) NC_Block_onPlace, (void **) &base_Block_onPlace, "_ZNK5Block7onPlaceER11BlockSourceRK8BlockPosRKS_");
+    NC_InLineHook((void *) NC_Item_useOn, (void **) &base_Item_useOn, "_ZNK4Item5useOnER9ItemStackR5Actoriiihfff");
+    //InLineHook((void *) NC_Item_useOn, (void **) &base_Item_useOn, "_ZN12ItemRegistry12registerItemI4ItemJEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEsDpOT0_");
+    NC_InLineHook((void *) NC_VanillaItems_registerItems, (void **) &base_VanillaItems_registerItems, "_ZN12VanillaItems13registerItemsERK11Experimentsb");
+    NC_InLineHook((void *) NC_VanillaItems_initClientData, (void **) &base_VanillaItems_initClientData, "_ZN12VanillaItems14initClientDataER11Experiments");
+    NC_InLineHook((void *) NC_Item_setIcon, (void **) &base_Item_setIcon, "_ZN4Item7setIconERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEi");
+    //    ptr = (void *)dlsym(this->MCHandle, "_ZN4Item7setIconERK22TextureUVCoordinateSet");
+    //    MSHookFunction(ptr, (void *)&EX_Item_setIcon1, (void **)&base_Item_setIcon1);
+    // InLineHook((void *)EX_Item_getIcon, (void **)&base_Item_getIcon, "_ZNK4Item7getIconERK13ItemStackBaseib");
+    //    ptr = (void *)dlsym(this->MCHandle, "_ZN13ItemStackBaseC2ERK4Itemii");
+    //    MSHookFunction(ptr, (void *)&EX_ItemStackBase, (void **)&base_ItemStackBase);
+    NC_InLineHook((void *) NC_VanillaItems_serverInitCreativeItemsCallback, (void **) &base_VanillaItems_serverInitCreativeItemsCallback, "_ZN12VanillaItems31serverInitCreativeItemsCallbackEP17ActorInfoRegistryP20BlockDefinitionGroupP20CreativeItemRegistrybRK15BaseGameVersionRK11Experiments");
+    NC_InLineHook((void *) NC_Item_addCreativeItem, (void **) &base_Item_addCreativeItem, "_ZN4Item15addCreativeItemEPS_s");
+    //    ptr = (void *)dlsym(this->MCHandle, "_ZN22TextureUVCoordinateSetC1Efffftt16ResourceLocationft");
+    //    MSHookFunction(ptr, (void *)&EX_TextureUVCoordinateSet_TextureUVCoordinateSet, (void **)&base_TextureUVCoordinateSet_TextureUVCoordinateSet);
+    //    ptr = (void *)dlsym(this->MCHandle, "_ZN4Item25getTextureUVCoordinateSetERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEi");
+    //    MSHookFunction(ptr, (void *)&EX_Item_getTextureUVCoordinateSet, (void **)&base_Item_getTextureUVCoordinateSet);
+    //    ptr = (void *)dlsym(this->MCHandle, "_Z15setIconIfLegacyRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEES7_i");
+    //    MSHookFunction(ptr, (void *)&test_, (void **)&test11);
 }

@@ -12,5 +12,5 @@ public:
 	void setAuxValue(short);
 	Item *getItem() const;
 };//
-short (*fake_ItemStackBase_getId)(ItemStackBase *);
+static short (*fake_ItemStackBase_getId)(ItemStackBase *);
 #endif

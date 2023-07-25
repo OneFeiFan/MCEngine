@@ -8,5 +8,5 @@ public:
     int getBlockItemId() const;
 }; //
 // fake区域
-int (*fake_BlockLegacy_getBlockItemId)(BlockLegacy *);
+static int (*fake_BlockLegacy_getBlockItemId)(BlockLegacy *);
 #endif
