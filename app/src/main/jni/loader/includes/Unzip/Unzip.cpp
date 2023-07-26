@@ -2,7 +2,7 @@
 // Created by 30225 on 2023/7/25.
 //
 #include "Unzip.h"
-#include "headers/miniz.h"
+#include "miniz.h"
 #include <filesystem>
 #include <fstream>
 

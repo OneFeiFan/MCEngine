@@ -12,12 +12,12 @@
 #include <dlfcn.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "headers/ProcessView.h"
+#include "includes/QA/ProcessView.h"
 #include "includes/dobby.h"
-#include "includes/Unzip.h"
-#include "includes/lua.hpp"
-#include "includes/NCHookFR.h"
-#include "headers/NC_items.hpp"
+#include "includes/Unzip/Unzip.h"
+#include "includes/lua/lua.hpp"
+#include "includes/NC_HookFR/NCHookFR.h"
+#include "includes/NC_Items/NC_items.h"
 
 //const char *linkerName;
 void *symbol = nullptr;

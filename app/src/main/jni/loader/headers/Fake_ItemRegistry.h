@@ -1,9 +1,12 @@
 #ifndef EX_Fake_ITEMREGISTRY_HPP
 #define EX_Fake_ITEMREGISTRY_HPP
+
 #include <string>
 #include <dlfcn.h>
 #include "sharedptr.h"
+
 class Item;
+
 class ItemRegistry
 {
 public:
@@ -51,9 +54,11 @@ public:
     //  void registerLegacyMapping(std::__ndk1::basic_string<char, std::__ndk1::char_traits<char>, std::__ndk1::allocator<char> > const&, std::__ndk1::basic_string<char, std::__ndk1::char_traits<char>, std::__ndk1::allocator<char> > const&, BaseGameVersion const&);
     //  void initCreativeItemsServer(ActorInfoRegistry*, BlockDefinitionGroup*, bool, BaseGameVersion const&, Experiments const&, std::__ndk1::function<void (ActorInfoRegistry*, BlockDefinitionGroup*, CreativeItemRegistry*, bool, BaseGameVersion const&, Experiments const&)>);
     static SharedPtr<Item> getItem(short);
+
     int getMaxItemID();
+
     // WeakPtr<Item> ItemRegistry::registerItemShared<Item, short&>(std::string const& name, short& id);
-    template <typename ItemType, typename... Args>
+    template<typename ItemType, typename... Args>
     static WeakPtr<ItemType> registerItemShared(const std::string &itemName, Args &&...args);
 
 public:
@@ -74,8 +79,11 @@ public:
     static ItemRegistry *mItemAliasLookupMap;
     static ItemRegistry *mServerInitializingCreativeItems;
 };
+
 //
 // fake区域
-static ItemRegistry *(*fake_ItemRegistry_mMaxItemID);
-static WeakPtr<Item> (*fake_ItemRegistry_registerItemShared)( std::string const&,short &);
-#endif 
+extern ItemRegistry *(*fake_ItemRegistry_mMaxItemID);
+
+extern WeakPtr<Item> (*fake_ItemRegistry_registerItemShared)(std::string const &, short &);
+
+#endif

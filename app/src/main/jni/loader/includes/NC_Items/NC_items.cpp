@@ -1,9 +1,9 @@
 //
-// Created by 30225 on 2023/7/24.
+// Created by 30225 on 2023/7/26.
 //
-#include "NC_items.hpp"
-#include <iostream>
-
+#include "NC_items.h"
+std::vector<NC_Items *> itemsPoolArray;
+std::map<short, NC_Items *> itemsPoolMap;
 NC_Items::NC_Items(const char *name, const char *iconName, const int iconData, const bool inCreative) : name(name), iconName(iconName), iconData(iconData), inCreative(inCreative)
 {
     this->ptr = nullptr;

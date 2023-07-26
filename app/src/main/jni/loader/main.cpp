@@ -1,15 +1,17 @@
-#include "includes/NCHookFR.h"
+#include "includes/NC_HookFR/NCHookFR.h"
 #include "JniToNative.hpp"
 #include <iostream>
 #include <cstring>
-#include "headers/NC_items.hpp"
+#include "includes/NC_Items/NC_items.h"
 #include "headers/Fake_Actor.hpp"
 #include "headers/Fake_BlockSource.hpp"
 #include "headers/Fake_BlockLegacy.hpp"
 #include "headers/Fake_ItemStackBase.hpp"
-#include "headers/Fake_ItemRegistry.hpp"
-#include "headers/Fake_Item.hpp"
+#include "headers/Fake_ItemRegistry.h"
+#include "headers/Fake_Item.h"
 #include "headers/CreativeItemCategory.h"
+#include "headers/Fake_VanillaItems.h"
+
 class CreativeItemRegistry;
 
 void (*base_Block_onPlace)(void *, BlockSource &, BlockPos const &, Block const &);
@@ -21,54 +23,16 @@ void NC_Block_onPlace(void *ptr, BlockSource &blockSource, BlockPos const &pos, 
     return base_Block_onPlace(ptr, blockSource, pos, block);
 }
 
-void (*base_Item_useOn)(void *, ItemStack &, Actor &, int, int, int, unsigned char, float, float, float);
 
-void NC_Item_useOn(void *ptr, ItemStack &itemstack, Actor &actor, int x, int y, int z, unsigned char d, float e, float f, float g)
-{
-    // jclass CLASS = EXHookFR::hookerPtr->Class;
-    // BlockSource *Region = (BlockSource *)fake_Actor_getRegion(&actor);
-    // Block *block = Fake_BlockSource_getBlock(Region, x, y, z);
-    // int id = fake_BlockLegacy_getBlockItemId(((BlockLegacy *)*((uint32_t *)block + 2)));
-    // if (std::find(barrelIDPool.begin(), barrelIDPool.end(), id) != barrelIDPool.end() && !fake_Actor_isSneaking(&actor))
-    // {
-    //     if (std::find(forbiddenIDPool.begin(), forbiddenIDPool.end(), fake_ItemStackBase_getId((ItemStackBase *)&itemstack)) != forbiddenIDPool.end())
-    //     {
-    //         return;
-    //     }
-    // }
-    return base_Item_useOn(ptr, itemstack, actor, x, y, z, d, e, f, g);
-}
 // WeakPtr<Item> (*base_registerItem)(std::string const &, short);
 // WeakPtr<Item> EX_registerItem(std::string const &str, short num)
 // {
 
 //     return base_registerItem(str, num);
 // }
-class Experiments;
 
-void *(*base_VanillaItems_registerItems)(void *, Experiments const &, bool);
 
-void *NC_VanillaItems_registerItems(void *ptr, Experiments const &e, bool b)
-{
-    printf("base_VanillaItems_registerItems\n");
-    //log::Toast("注册物品");
-    Item *temp;
-    for(auto &i: itemsPoolArray){
-        temp = fake_ItemRegistry_registerItemShared(i->getName(), (short &) (++fake_ItemRegistry_mMaxItemID)).get();
-        i->setItemPtr(temp);
-        itemsPoolMap.insert(std::pair<short &, NC_Items *>((short &) fake_ItemRegistry_mMaxItemID, i));
-        fake_Item_setCategory(temp, i->getType());
-    }
 
-    return base_VanillaItems_registerItems(ptr, e, b);
-}
-
-void (*base_Item_setIcon)(void *, std::string const &, short);
-
-void NC_Item_setIcon(void *ptr, std::string const &str, short data)
-{
-    return base_Item_setIcon(ptr, str, data);
-}
 
 // void (*base_Item_setIcon1)(void *, TextureUVCoordinateSet const &);
 // void EX_Item_setIcon1(void *ptr, TextureUVCoordinateSet const &a)
@@ -93,54 +57,11 @@ void NC_Item_setIcon(void *ptr, std::string const &str, short data)
 // {
 //     return test11(std::move(str1), std::move(str2), i);
 // }
-void *(*base_VanillaItems_initClientData)(void *, Experiments const &);
-
-void *NC_VanillaItems_initClientData(void *ptr, Experiments const &e)
-{
-    auto obj = base_VanillaItems_initClientData(ptr, e);
-
-    try{
-        for(NC_Items *temp: itemsPoolArray){
-            base_Item_setIcon(temp->getPtr(), temp->getIconName(), (short) temp->getIconData());
-        }
-    }catch(const std::exception &e){
-        std::cerr << e.what() << '\n';
-    }
-    return obj;
-}
-
-void *(*base_Item_addCreativeItem)(Item *, short);
-
-void *NC_Item_addCreativeItem(Item *obj, short a)
-{
-    short id = fake_Item_getId(obj);
-    if(itemsPoolMap.count(id)){
-        if(itemsPoolMap[id]->isInCreative()){
-            return base_Item_addCreativeItem(obj, 0);
-        }
-        return nullptr;
-    }
-    return base_Item_addCreativeItem(obj, a);
-}
-
-class ActorInfoRegistry;
-
-class BlockDefinitionGroup;
 
 
-class BaseGameVersion;
 
-void *(*base_VanillaItems_serverInitCreativeItemsCallback)(void *, ActorInfoRegistry *, BlockDefinitionGroup *, CreativeItemRegistry *, bool, BaseGameVersion const &, Experiments const &);
 
-void *NC_VanillaItems_serverInitCreativeItemsCallback(void *ptr, ActorInfoRegistry *a, BlockDefinitionGroup *b, CreativeItemRegistry *c, bool d, BaseGameVersion const &e, Experiments const &f)
-{
-    auto obj = base_VanillaItems_serverInitCreativeItemsCallback(ptr, a, b, c, d, e, f);
 
-    for(NC_Items *temp: itemsPoolArray){
-        std::cout << 111 << std::endl;
-    }
-    return obj;
-}
 
 void NCHookFR::init()
 {
