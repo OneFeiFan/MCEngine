@@ -71,12 +71,14 @@ JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env, j
         [[maybe_unused]] int temp = processObj.readProcess(getpid());
         if(symbol){
             auto *(*my_android_dlopen_ext)(const char *, int, void *, void *) = (void *(*)(const char *, int, void *, void *)) symbol;
-            for(int i = 0; i < processObj.getModules().size(); ++i){
-                if(processObj.getModules()[i].name == "libminecraftpe.so"){
-                    NC_handle = my_android_dlopen_ext(strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libnativecore.so"), RTLD_NOW, nullptr, (void *) processObj.getModules()[i].baseAddress);
+            auto modules = processObj.getModules();
+            for(int i = 0; i < modules.size(); ++i){
+                auto module = processObj.getModules()[i];
+                if(module.name == "libminecraftpe.so"){
+                    NC_handle = my_android_dlopen_ext(strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libnativecore.so"), RTLD_NOW, nullptr, (void *) module.baseAddress);
+                    std::cout << module.name << std::endl;
                     mcengineHandle = dlopen("libmcengine.so", RTLD_NOW | RTLD_NOLOAD);
                     auto (*Toast)(std::string) = (void (*)(std::string)) dlsym(mcengineHandle, "log_Toast");
-                    std::cout << strcat(jstringToChar(env, dlpath), "!/lib/armeabi-v7a/libnativecore.so") << std::endl;
                     if(NC_handle){
 //                        lua_State *L = luaL_newstate();
 //                        luaL_openlibs(L);
