@@ -1,6 +1,7 @@
 //
 // Created by 30225 on 2023/7/26.
 //
+#include <iostream>
 #include "NC_items.h"
 
 std::vector<NC_Items *> normalItemsPoolArray;
