@@ -134,35 +134,15 @@ Java_com_taolesi_mcengine_NativeItem_createItem(JNIEnv *env, [[maybe_unused]] jc
 {
     const char *name = jstringToChar(env, jname);
     const char *iconName = jstringToChar(env, jiconName);
-    CreativeItemCategory type;
-    switch(jtype){
-        case 0: type = CreativeItemCategory::All_3;
-            break;
-        case 1:type = CreativeItemCategory::Construction;
-            break;
-        case 2:type = CreativeItemCategory::Nature;
-            break;
-        case 3:type = CreativeItemCategory::Equipment;
-            break;
-        case 4:type = CreativeItemCategory::Items;
-            break;
-        case 5:type = CreativeItemCategory::ItemCommandOnly;
-            break;
-        case 6:type = CreativeItemCategory::Undefined_10;
-            break;
-        case 7:type = CreativeItemCategory::NUM_CATEGORIES;
-            break;
-        default:type = CreativeItemCategory::Construction;
-            break;
-    };
-    NC_Items::createNormalNCIObj(name, iconName, jindex, is2category, type);
+    NC_Items::createNormalNCIObj(name, iconName, jindex, is2category,(CreativeItemCategory) jtype);
 }
-
+JNIEXPORT void JNICALL
+Java_com_taolesi_mcengine_NativeItem_createFood(JNIEnv *env, jclass clazz, jstring jname, jstring jicon, jint index, jboolean add_to_category, jint type, jstring jfood_data)
+{
+    const char *name = jstringToChar(env, jname);
+    const char *iconName = jstringToChar(env, jicon);
+    const char *food_data = jstringToChar(env, jfood_data);
+    NC_Items::createFoodNCIObj(name, iconName, index, add_to_category, (CreativeItemCategory) type, food_data);
 }
-#endif //MCENGINE_JNI2NATIVE_1HPP
-//#define invokeCallback(CallbackClass, name, signature, args...)                \
-//    {                                                                          \
-//        JNIEnv *env = EXHookFR::hookerPtr->getENV();                           \
-//        jmethodID id = env->GetStaticMethodID(CallbackClass, name, signature); \
-//        env->CallStaticVoidMethod(CallbackClass, id, ##args);                  \
-//    };
+}
+#endif

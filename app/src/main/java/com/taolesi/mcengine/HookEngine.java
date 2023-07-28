@@ -117,15 +117,15 @@ public class HookEngine implements IXposedHookLoadPackage {
         try {
             copyToEx(sourceDir, ExternalCacheDir + "/base.apk");
             unzip(ExternalCacheDir + "/base.apk", ExternalCacheDir + "/base");
-            runQuickJS(JsonToObjTest1(ExternalCacheDir + "/base/assets/main.js"));
-            /*QuickJS quickJS = QuickJS.createRuntimeWithEventQueue();
+            //runQuickJS(JsonToObjTest1(ExternalCacheDir + "/base/assets/main.js"));
+            QuickJS quickJS = QuickJS.createRuntimeWithEventQueue();
             JSContext quickJS_context = quickJS.createContext();
             quickJS_context.addJavascriptInterface(this, "HookEngine");
             quickJS_context.addJavascriptInterface(new Examination(), "Examination");
             quickJS_context.addJavascriptInterface(new NativeItem(), "NativeItem");
             quickJS_context.executeScript(JsonToObjTest1(ExternalCacheDir + "/base/assets/main.js"), "main.js");
             quickJS_context.close();
-            quickJS.close();*/
+            quickJS.close();
         } catch (QuickJSScriptException e) {
             Toast(e.toString());
         }
