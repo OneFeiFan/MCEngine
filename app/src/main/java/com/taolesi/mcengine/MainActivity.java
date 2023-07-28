@@ -1,16 +1,22 @@
 package com.taolesi.mcengine;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -50,6 +56,18 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        FloatingActionButton launchButton = (FloatingActionButton) findViewById(R.id.floatingActionButton2);
+        launchButton.setOnClickListener(v -> {
+            try {
+                Intent intent = new Intent();
+                intent.setClassName("com.mojang.minecraftpe", "com.mojang.minecraftpe.MainActivity");
+                startActivity(intent);
+            } catch (ActivityNotFoundException exception) {
+                Toast.makeText(MainActivity.this, "启动MC失败", Toast.LENGTH_SHORT);
+            }
+        });
+
         /*if (modLists.length == 0) {
 
         }*/
