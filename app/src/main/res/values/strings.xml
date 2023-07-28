@@ -11,4 +11,10 @@
     <string name="previous">Previous</string>
     <string name="nomods">没有模组</string>
     <string name="about_app_front">一个基于LSPosed的Minecraftpe模块化启动器。\n现处于立项阶段，仅提供nativeMod功能。\n仅支持Minecraft基岩版1.16.201。</string>
+    <string name="browser_about">跳转</string>
+    <string name="about_github_Android">Android: \nApache License 2.0, Android Open Source Project.\nhttps://source.android.google.cn/license?hl=zh-cn</string>
+    <string name="about_github_LSPosed">LSPosed: \nGPL-3.0 License,Copyright © 2021 LSPosed.\nhttps://github.com/LSPosed/LSPosed</string>
+    <string name="about_github_Dobby">Dobby: \nApache License 2.0,jmpews.\nhttps://github.com/jmpews/Dobby</string>
+    <string name="about_github_miniz">miniz: \nMIT License,richgel999.\nhttps://github.com/richgel999/miniz</string>
+    <string name="about_thanks">鸣谢: \n感谢cinit,提供的技术支持.</string>
 </resources>
