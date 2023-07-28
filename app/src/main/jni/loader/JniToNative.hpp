@@ -101,8 +101,8 @@ JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_setDL(JNIEnv *env, j
                         NC_InLineHook = (void (*)(void *, void *, const char *)) dlsym(NC_handle, "InLineHook");
                         NC_FakeNative = (void (*)(void **, const char *)) dlsym(NC_handle, "FakeNative");
                         //将native中的两个方法拿到此处，确保方法在此处调用的同时，又可让对面dobby获得mc句柄
-                        void *MC_handle  = nullptr;
-                        NC_NativeCoreLoad((void **)&MC_handle);
+                        void *MC_handle = nullptr;
+                        NC_NativeCoreLoad((void **) &MC_handle);
                         //std::cout<<MC_handle<<std::endl;
                         if(MC_handle != nullptr){
                             Toast("成功加载native核心");
@@ -138,33 +138,26 @@ Java_com_taolesi_mcengine_NativeItem_createItem(JNIEnv *env, [[maybe_unused]] jc
     switch(jtype){
         case 0: type = CreativeItemCategory::All_3;
             break;
-        case 1:
-            type = CreativeItemCategory::Construction;
+        case 1:type = CreativeItemCategory::Construction;
             break;
-        case 2:
-            type = CreativeItemCategory::Nature;
+        case 2:type = CreativeItemCategory::Nature;
             break;
-        case 3:
-            type = CreativeItemCategory::Equipment;
+        case 3:type = CreativeItemCategory::Equipment;
             break;
-        case 4:
-            type = CreativeItemCategory::Items;
+        case 4:type = CreativeItemCategory::Items;
             break;
-        case 5:
-            type = CreativeItemCategory::ItemCommandOnly;
+        case 5:type = CreativeItemCategory::ItemCommandOnly;
             break;
-        case 6:
-            type = CreativeItemCategory::Undefined_10;
+        case 6:type = CreativeItemCategory::Undefined_10;
             break;
-        case 7:
-            type = CreativeItemCategory::NUM_CATEGORIES;
+        case 7:type = CreativeItemCategory::NUM_CATEGORIES;
             break;
-        default:
-            type = CreativeItemCategory::Construction;
+        default:type = CreativeItemCategory::Construction;
             break;
     };
     NC_Items::createNormalNCIObj(name, iconName, jindex, is2category, type);
 }
+
 }
 #endif //MCENGINE_JNI2NATIVE_1HPP
 //#define invokeCallback(CallbackClass, name, signature, args...)                \

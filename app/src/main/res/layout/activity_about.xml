@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AboutActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="-16dp"
+        tools:layout_editor_absoluteY="-16dp">
+
+        <TextView
+            android:id="@+id/about_app"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="350dp"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/about_app_front"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="380dp"
+            android:layout_marginEnd="50dp"
+            android:text="@string/about_app_front"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display4"
+            android:textSize="9sp"
+            app:autoSizeTextType="none"
+            tools:ignore="SmallSp" />
+
+        <ImageView
+            android:id="@+id/about_app_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="250dp"
+            android:src="@mipmap/ic_launcher_round" />
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
