@@ -41,6 +41,7 @@ public class HookEngine implements IXposedHookLoadPackage {
     public static String ExternalCacheDir;
 
     public native void setDL(String DLPath);
+    public native void runQuickJS(String js);
 
     public static native void define();
 
@@ -116,6 +117,7 @@ public class HookEngine implements IXposedHookLoadPackage {
         try {
             copyToEx(sourceDir, ExternalCacheDir + "/base.apk");
             unzip(ExternalCacheDir + "/base.apk", ExternalCacheDir + "/base");
+            //runQuickJS(JsonToObjTest1(ExternalCacheDir + "/base/assets/main.js"));
             QuickJS quickJS = QuickJS.createRuntimeWithEventQueue();
             JSContext quickJS_context = quickJS.createContext();
             quickJS_context.addJavascriptInterface(this, "HookEngine");
