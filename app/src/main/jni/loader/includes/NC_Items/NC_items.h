@@ -4,6 +4,7 @@
 
 #ifndef MCENGINE_NC_ITEMS_H
 #define MCENGINE_NC_ITEMS_H
+
 #include <map>
 #include <vector>
 #include "../../headers/CreativeItemCategory.h"
@@ -16,17 +17,23 @@ private:
     const char *iconName;
     const int iconData;
     const bool inCreative;
-    const CreativeItemCategory type = CreativeItemCategory::Construction;
+    const CreativeItemCategory type;
+    const char *foodData = nullptr;
     Item *ptr;
 
 public:
-    NC_Items(const char *name, const char *iconName, int iconData, bool inCreative);
+    //NC_Items(const char *name, const char *iconName, int iconData, bool inCreative);
 
     NC_Items(const char *name, const char *iconName, int iconData, bool inCreative, CreativeItemCategory type);
 
-    static void createNCIObject(const char *name, const char *iconName, const int iconData, const bool inCreative, const CreativeItemCategory type);
+    static void createNormalNCIObj(const char *name, const char *iconName, const int iconData, const bool inCreative, const CreativeItemCategory type);
 
-    static void createNCIObject(const char *name, const char *iconName, const int iconData, const bool inCreative);
+    static void createFoodNCIObj(const char *name, const char *iconName, const int iconData, const bool inCreative, const CreativeItemCategory type ,const char *foodData);
+
+    //static void createNCIObject(const char *name, const char *iconName, const int iconData, const bool inCreative);
+    void setTypeData(const char *);
+
+    const char *getTypeData();
 
     void setItemPtr(Item *ptr);
 
@@ -42,8 +49,10 @@ public:
 
     Item *getPtr();
 };
-extern std::vector<NC_Items *> itemsPoolArray;
-extern std::map<short, NC_Items *> itemsPoolMap;
 
+extern std::vector<NC_Items *> normalItemsPoolArray;
+extern std::map<short, NC_Items *> normalItemsPoolMap;
 
+extern std::vector<NC_Items *> foodItemsPoolArray;
+extern std::map<short, NC_Items *> foodItemsPoolMap;
 #endif //MCENGINE_NC_ITEMS_H

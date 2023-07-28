@@ -11,6 +11,9 @@
 #include "headers/Fake_Item.h"
 #include "headers/CreativeItemCategory.h"
 #include "headers/Fake_VanillaItems.h"
+#include "headers/Fake_HashedString.h"
+#include "headers/Fake_Json_Value.h"
+#include "headers/fake_FoodItemComponentLegacy.h"
 
 class CreativeItemRegistry;
 
@@ -76,6 +79,22 @@ void NCHookFR::init()
     NC_FakeNative((void **) &fake_ItemStackBase_getId, "_ZNK13ItemStackBase5getIdEv");
     NC_FakeNative((void **) &fake_Item_getCommandName, "_ZNK4Item14getCommandNameEv");
     NC_FakeNative((void **) &fake_Item_setCategory, "_ZN4Item11setCategoryE20CreativeItemCategory");
+    NC_FakeNative((void **) &fake_HashedString_c_str, "_ZNK12HashedString5c_strEv");
+    NC_FakeNative((void **) &fake_HashedString_HashedString, "_ZN12HashedStringC2EPKc");
+    NC_FakeNative((void **) &fake_Item_isFood, "_ZNK4Item6isFoodEv");
+    NC_FakeNative((void **) &fake_Item_addTag, "_ZN4Item6addTagERK12HashedString");
+    NC_FakeNative((void **) &fake_Json_Value_size, "_ZNK4Json5Value4sizeEv");
+    NC_FakeNative((void **) &fake_Json_Value_asCString, "_ZNK4Json5Value9asCStringEv");
+    NC_FakeNative((void **) &fake_Json_Value_getMemberNames, "_ZNK4Json5Value14getMemberNamesEv");
+    NC_FakeNative((void **) &fake_Json_Value_resolveReference, "_ZN4Json5Value16resolveReferenceEPKcb");
+    NC_FakeNative((void **) &fake_Json_Value_toStyledString, "_ZNK4Json5Value14toStyledStringEv");
+    NC_FakeNative((void **) &fake_Item_initClient, "_ZN4Item10initClientERN4Json5ValueES2_");
+    NC_FakeNative((void **) &fake_FoodSaturationFromString, "_Z24FoodSaturationFromStringRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE");
+    NC_FakeNative((void **) &fake_UseAnimationFromString, "_Z22UseAnimationFromStringRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE");
+    //NC_FakeNative((void **) &fake_FoodItemComponentLegacy, "_ZN23FoodItemComponentLegacyC2ER4Item");
+
+
+//
     // hook区
     NC_InLineHook((void *) NC_Block_onPlace, (void **) &base_Block_onPlace, "_ZNK5Block7onPlaceER11BlockSourceRK8BlockPosRKS_");
     NC_InLineHook((void *) NC_Item_useOn, (void **) &base_Item_useOn, "_ZNK4Item5useOnER9ItemStackR5Actoriiihfff");
@@ -90,6 +109,11 @@ void NCHookFR::init()
     //    MSHookFunction(ptr, (void *)&EX_ItemStackBase, (void **)&base_ItemStackBase);
     NC_InLineHook((void *) NC_VanillaItems_serverInitCreativeItemsCallback, (void **) &base_VanillaItems_serverInitCreativeItemsCallback, "_ZN12VanillaItems31serverInitCreativeItemsCallbackEP17ActorInfoRegistryP20BlockDefinitionGroupP20CreativeItemRegistrybRK15BaseGameVersionRK11Experiments");
     NC_InLineHook((void *) NC_Item_addCreativeItem, (void **) &base_Item_addCreativeItem, "_ZN4Item15addCreativeItemEPS_s");
+    NC_InLineHook((void *) NC_Item_addTag, (void **) &base_Item_addTag, "_ZN4Item6addTagERK12HashedString");
+    NC_InLineHook((void *) NC_Item_initServer, (void **) &base_Item_initServer, "_ZN4Item10initServerERN4Json5ValueE");
+    NC_InLineHook((void *) NC_Json_Value_Value, (void **) &base_Json_Value_Value, "_ZN4Json5ValueC1EPKcS2_");
+    NC_InLineHook((void *) NC_Item_initClient, (void **) &base_Item_initClient, "_ZN4Item10initClientERN4Json5ValueES2_");
+
     //    ptr = (void *)dlsym(this->MCHandle, "_ZN22TextureUVCoordinateSetC1Efffftt16ResourceLocationft");
     //    MSHookFunction(ptr, (void *)&EX_TextureUVCoordinateSet_TextureUVCoordinateSet, (void **)&base_TextureUVCoordinateSet_TextureUVCoordinateSet);
     //    ptr = (void *)dlsym(this->MCHandle, "_ZN4Item25getTextureUVCoordinateSetERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEi");

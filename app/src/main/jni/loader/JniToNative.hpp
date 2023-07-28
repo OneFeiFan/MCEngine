@@ -163,7 +163,7 @@ Java_com_taolesi_mcengine_NativeItem_createItem(JNIEnv *env, [[maybe_unused]] jc
             type = CreativeItemCategory::Construction;
             break;
     };
-    NC_Items::createNCIObject(name, iconName, jindex, is2category, type);
+    NC_Items::createNormalNCIObj(name, iconName, jindex, is2category, type);
 }
 }
 #endif //MCENGINE_JNI2NATIVE_1HPP
