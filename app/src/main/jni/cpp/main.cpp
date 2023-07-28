@@ -12,28 +12,23 @@
 #include <iostream>
 
 extern "C" {
-JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *unused)
-{
-    JavaAtach::init(vm);
-    return JNI_VERSION_1_6;
+    JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *unused) {
+        JavaAtach::init(vm);
+        return JNI_VERSION_1_6;
+    }
+    JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_define(JNIEnv *env, jclass clazz) {
+        NativeEngine::HookEngineClass(env);
+    }
+    void log_Toast(std::string str) {
+        log::Toast(str);
+    }
 }
-JNIEXPORT void JNICALL
-Java_com_taolesi_mcengine_HookEngine_define(JNIEnv *env, jclass clazz)
-{
-    NativeEngine::HookEngineClass(env);
-}
-void log_Toast(std::string str)
-{
-    log::Toast(str);
-}
-}
+
 extern "C"
-JNIEXPORT void JNICALL
-Java_com_taolesi_mcengine_HookEngine_copyToEx(JNIEnv *env, jclass clazz, jstring res, jstring output)
-{
+JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_copyToEx(JNIEnv *env, jclass clazz, jstring res, jstring output) {
     try {
         std::filesystem::copy_file(log::jstringToChar(res), log::jstringToChar(output));
-    } catch(const std::exception &e){
+    } catch (const std::exception &e) {
         remove(log::jstringToChar(output));
         std::filesystem::copy_file(log::jstringToChar(res), log::jstringToChar(output));
     }
