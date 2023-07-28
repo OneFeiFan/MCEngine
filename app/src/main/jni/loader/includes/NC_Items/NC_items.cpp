@@ -5,10 +5,10 @@
 #include "NC_items.h"
 
 std::vector<NC_Items *> normalItemsPoolArray;
-std::map<short, NC_Items *> normalItemsPoolMap;
+
 
 std::vector<NC_Items *> foodItemsPoolArray;
-std::map<short, NC_Items *> foodItemsPoolMap;
+
 //NC_Items::NC_Items(const char *name, const char *iconName, const int iconData, const bool inCreative) : name(name), iconName(iconName), iconData(iconData), inCreative(inCreative)
 //{
 //    this->ptr = nullptr;

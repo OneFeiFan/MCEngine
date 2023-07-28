@@ -36,19 +36,19 @@ void *(*base_Item_addCreativeItem)(Item *, short);
 
 void *NC_Item_addCreativeItem(Item *obj, short a)
 {
-    short id = fake_Item_getId(obj);
-    if(normalItemsPoolMap.count(id)){
-        if(normalItemsPoolMap[id]->isInCreative()){
-            return base_Item_addCreativeItem(obj, 0);
-        }
-        return nullptr;
-    }
-    if(foodItemsPoolMap.count(id)){
-        if(foodItemsPoolMap[id]->isInCreative()){
-            return base_Item_addCreativeItem(obj, 0);
-        }
-        return nullptr;
-    }
+//    short id = fake_Item_getId(obj);
+//    if(normalItemsPoolMap.count(id)){
+//        if(normalItemsPoolMap[id]->isInCreative()){
+//            return base_Item_addCreativeItem(obj, 0);
+//        }
+//        return nullptr;
+//    }
+//    if(foodItemsPoolMap.count(id)){
+//        if(foodItemsPoolMap[id]->isInCreative()){
+//            return base_Item_addCreativeItem(obj, 0);
+//        }
+//        return nullptr;
+//    }
     return base_Item_addCreativeItem(obj, a);
 }
 

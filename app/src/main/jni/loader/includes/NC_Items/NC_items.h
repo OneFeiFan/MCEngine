@@ -51,8 +51,8 @@ public:
 };
 
 extern std::vector<NC_Items *> normalItemsPoolArray;
-extern std::map<short, NC_Items *> normalItemsPoolMap;
+//extern std::map<short, NC_Items *> normalItemsPoolMap;
 
 extern std::vector<NC_Items *> foodItemsPoolArray;
-extern std::map<short, NC_Items *> foodItemsPoolMap;
+//extern std::map<short, NC_Items *> foodItemsPoolMap;
 #endif //MCENGINE_NC_ITEMS_H
