@@ -7,4 +7,4 @@ HookEngine.Toast("js加载成功");
   }
 }*/
 NativeItem.createItem("test", "apple", 0, true, 0);
-NativeItem.createFoodItem("testFood", "apple", 0, true, 0, 32, 6);
+NativeItem.createFoodItem("testFood", "apple", 0, true, 1, 32, 2,"poor");

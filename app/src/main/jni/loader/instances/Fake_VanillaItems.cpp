@@ -29,18 +29,19 @@ void *NC_VanillaItems_registerItems(void *ptr, Experiments const &e, bool b)
         //fake_Item_addTag(temp,test);
     }
     for(auto &NC_ItemPtr: foodItemsPoolArray){
-        Json::Value value;// = new Json::Value();
-        Json::Reader reader;// = new Json::Reader();
+        Json::Value *value = new Json::Value();
+        Json::Reader *reader = new Json::Reader();
         itemPtr = fake_ItemRegistry_registerItemShared(NC_ItemPtr->getName(), (short &) (++fake_ItemRegistry_mMaxItemID)).get();
         NC_ItemPtr->setItemPtr(itemPtr);
         foodItemsPoolMap.insert(std::pair<short &, NC_Items *>((short &) fake_ItemRegistry_mMaxItemID, NC_ItemPtr));
         fake_Item_setCategory(itemPtr, NC_ItemPtr->getType());
-        reader.parse(NC_ItemPtr->getTypeData(), value);
-        base_Item_initServer(itemPtr, value);
+        std::cout<<NC_ItemPtr->getTypeData()<<std::endl;
+        reader->parse(NC_ItemPtr->getTypeData(), *value);
+        const char * saturationLevel = (*value)["components"]["minecraft:food"]["saturation_modifier"].asCString();
+        base_Item_initServer(itemPtr, *value);
         FoodItemComponentLegacy *fooderPtr = (FoodItemComponentLegacy *) *((uint32_t *) itemPtr + 66);//获取Item中和食物有关对象的地址
         *((uint8_t *) itemPtr + 22) = fake_UseAnimationFromString("eat");//写入使用动画
-        std::cout<<value["components"]["minecraft:food"]["saturation_modifier"].asCString()<<std::endl;
-        *((uint32_t *) fooderPtr + 3) = fake_FoodSaturationFromString(value["components"]["minecraft:food"]["saturation_modifier"].asCString());//写入营养值
+        *((uint32_t *) fooderPtr + 3) = fake_FoodSaturationFromString(saturationLevel);//写入营养值
     }
     return base_VanillaItems_registerItems(ptr, e, b);
 }
