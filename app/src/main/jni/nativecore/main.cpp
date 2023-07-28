@@ -6,57 +6,50 @@ static void *(*NC_DobbySymbolResolver)(const char *image_name, const char *symbo
 
 static int (*NC_DobbyHook)(void *, void *, void *);
 
-extern "C"
-{
-[[maybe_unused]] void NativeCoreLoad(void **ptr)
-{
-    freopen("/storage/emulated/0/tmp/loglog.txt", "w", stdout);
-    void *handle = dlopen("libminecraftpe.so", RTLD_NOW | RTLD_NOLOAD); // RTLD_DEFAULT;//
-    if(ptr){
-        *ptr = handle;
-    }
-}
-
-
-[[maybe_unused]] void setDobbySymbolResolver(void *symbol)
-{
-    NC_DobbySymbolResolver = (void *(*)(const char *, const char *)) symbol;
-}
-
-[[maybe_unused]] void setDobbyHook(void *symbol)
-{
-    NC_DobbyHook = (int (*)(void *, void *, void *)) symbol;
-}
-
-[[maybe_unused]] void InLineHook(void *hook, void *original, const char *symbol_name)
-{
-    void *ptr = NC_DobbySymbolResolver("libminecraftpe.so", symbol_name);
-    if(ptr != nullptr){
-        printf("成功获取符号：%s的地址\n", symbol_name);
-        if(NC_DobbyHook(ptr, hook, original) == 0){
-            printf("hook成功\n");
-        }else {
-            printf("hook失败\n");
+extern "C" {
+    [[maybe_unused]] void NativeCoreLoad(void **ptr) {
+        freopen("/storage/emulated/0/tmp/loglog.txt", "w", stdout);
+        void *handle = dlopen("libminecraftpe.so", RTLD_NOW | RTLD_NOLOAD); // RTLD_DEFAULT;
+        if (ptr) {
+            *ptr = handle;
         }
-    }else {
-        printf("无法获取符号：%s的地址\n", symbol_name);
     }
-}
 
-[[maybe_unused]] void FakeNative(void **fake_fun, const char *symbol_name)
-{
-    if(fake_fun){
-        void *symbol = NC_DobbySymbolResolver("libminecraftpe.so", symbol_name);
-        if(symbol != nullptr){
+    [[maybe_unused]] void setDobbySymbolResolver(void *symbol) {
+        NC_DobbySymbolResolver = (void *(*)(const char *, const char *)) symbol;
+    }
+
+    [[maybe_unused]] void setDobbyHook(void *symbol) {
+        NC_DobbyHook = (int (*)(void *, void *, void *)) symbol;
+    }
+
+    [[maybe_unused]] void InLineHook(void *hook, void *original, const char *symbol_name) {
+        void *ptr = NC_DobbySymbolResolver("libminecraftpe.so", symbol_name);
+        if (ptr != nullptr) {
             printf("成功获取符号：%s的地址\n", symbol_name);
-            *fake_fun = symbol;
-            printf("fake成功\n");
-        }else {
-            printf("未能获取符号：%s的地址\n", symbol_name);
-            printf("fake失败\n");
+            if (NC_DobbyHook(ptr, hook, original) == 0) {
+                printf("hook成功\n");
+            } else {
+                printf("hook失败\n");
+            }
+        } else {
+            printf("无法获取符号：%s的地址\n", symbol_name);
         }
     }
-}
+
+    [[maybe_unused]] void FakeNative(void **fake_fun, const char *symbol_name) {
+        if (fake_fun) {
+            void *symbol = NC_DobbySymbolResolver("libminecraftpe.so", symbol_name);
+            if (symbol != nullptr) {
+                printf("成功获取符号：%s的地址\n", symbol_name);
+                *fake_fun = symbol;
+                printf("fake成功\n");
+            } else {
+                printf("未能获取符号：%s的地址\n", symbol_name);
+                printf("fake失败\n");
+            }
+        }
+    }
 
 }
 
