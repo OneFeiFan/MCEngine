@@ -100,8 +100,8 @@ public class HookEngine implements IXposedHookLoadPackage {
                         try {
                             sourceDir = applicationInfo.sourceDir;
                             ExternalCacheDir = context.getExternalCacheDir().toString();
-                            System.load(sourceDir + "!/lib/arm/libmcengine.so");
-                            System.load(sourceDir + "!/lib/arm/libloader.so");
+                            System.load(sourceDir + "!/lib/armeabi-v7a/libmcengine.so");
+                            System.load(sourceDir + "!/lib/armeabi-v7a/libloader.so");
                             //Toast(sourceDir + "!/lib/armeabi-v7a/libmcengine.so");
                             define();
                             setDL(applicationInfo.sourceDir);
