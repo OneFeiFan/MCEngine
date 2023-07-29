@@ -68,5 +68,4 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation 'com.guolindev.permissionx:permissionx:1.7.1'
-    implementation 'com.github.inksnow:fileselect:1.0.1'
 }
