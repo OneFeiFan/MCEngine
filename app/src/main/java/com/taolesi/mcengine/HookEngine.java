@@ -1,13 +1,18 @@
 package com.taolesi.mcengine;
 
+import static android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION;
+import static com.taolesi.mcengine.QUESTCODE.REQUESTPERMISSION;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
@@ -53,14 +58,15 @@ public class HookEngine implements IXposedHookLoadPackage {
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
     private final String[] PERMISSIONS_33 = {
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.MANAGE_EXTERNAL_STORAGE
+            Manifest.permission.READ_MEDIA_AUDIO,
+            Manifest.permission.READ_MEDIA_IMAGES,
+            Manifest.permission.READ_MEDIA_VIDEO,
+            //Manifest.permission.MANAGE_EXTERNAL_STORAGE
     };
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     public void requestPermissions_33(Context ctx) {
-        ((Activity) ctx).requestPermissions(PERMISSIONS_33, 20);
+        ((Activity) ctx).requestPermissions(PERMISSIONS_33, REQUESTPERMISSION.ordinal());
     }
 
     @Override
@@ -74,9 +80,14 @@ public class HookEngine implements IXposedHookLoadPackage {
                 context = (Context) param.thisObject;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     requestPermissions_33(context);
+                    /*if (!Environment.isExternalStorageManager()) {
+                        Intent request = new Intent(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                        ((Activity) context).startActivityForResult(request, REQUESTPERMISSION.ordinal());
+                    }*/
                 } else {
-                    ((Activity) context).requestPermissions(PERMISSIONS, 20);
+                    ((Activity) context).requestPermissions(PERMISSIONS, REQUESTPERMISSION.ordinal());
                 }
+
                 /*try {
                     System.loadLibrary("mcengine");
                 } catch (Exception e) {
@@ -87,6 +98,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                 } catch (UnsatisfiedLinkError e) {
                     Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
                 }*/
+
                 PackageManager packageManager = null;
                 try {
                     packageManager = context.getPackageManager();
@@ -122,7 +134,7 @@ public class HookEngine implements IXposedHookLoadPackage {
         try {
             copyToEx(sourceDir, ExternalCacheDir + "/base.apk");
             unzip(ExternalCacheDir + "/base.apk", ExternalCacheDir + "/base");
-            //runQuickJS(JsonToObjTest1(ExternalCacheDir + "/base/assets/main.js"));
+
             QuickJS quickJS = QuickJS.createRuntimeWithEventQueue();
             JSContext quickJS_context = quickJS.createContext();
             quickJS_context.addJavascriptInterface(this, "HookEngine");
@@ -132,6 +144,17 @@ public class HookEngine implements IXposedHookLoadPackage {
                 quickJS_context.executeScript(JsonToObjTest1(ExternalCacheDir + "/base/assets/main.js"), "main.js");
             } catch (QuickJSScriptException e) {
                 throw new RuntimeException(e);
+            }
+            String path = Environment.getExternalStorageDirectory() + "/tmp/mods/";
+            File mods = new File(path);
+            File[] mod = mods.listFiles();
+            for (File mod_private : mod) {
+                try {
+                    quickJS_context.executeScript(JsonToObjTest1(mod_private.getPath() + "/main.js"), mod_private.getPath() + "main.js");
+                } catch (QuickJSScriptException e) {
+                    throw new RuntimeException(e);
+                }
+                //Toast(mod_private.getPath());
             }
             quickJS_context.close();
             quickJS.close();
