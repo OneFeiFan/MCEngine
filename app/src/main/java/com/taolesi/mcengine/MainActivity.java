@@ -96,8 +96,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         FloatingActionButton openFileButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
-        openFileButton.setOnClickListener(v -> {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
 
+        openFileButton.setOnClickListener(v -> {
+            /*registerForActivityResult(new ActivityResultContracts.GetContent(), result -> {
+            }).launch(null);*/
+            startActivityForResult(intent, 1);
         });
     }
     @Override
@@ -105,5 +110,14 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            Uri file = data.getData();
+            Toast.makeText(this, file.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 }

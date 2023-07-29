@@ -1,6 +1,7 @@
 package com.taolesi.mcengine;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -66,6 +67,7 @@ public class HookEngine implements IXposedHookLoadPackage {
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
         if (!loadPackageParam.packageName.equals("com.mojang.minecraftpe")) return;
         XposedHelpers.findAndHookMethod(Activity.class, "onCreate", Bundle.class, new XC_MethodHook() {
+            @SuppressLint("UnsafeDynamicallyLoadedCode")
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
@@ -75,7 +77,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                 } else {
                     ((Activity) context).requestPermissions(PERMISSIONS, 20);
                 }
-                try {
+                /*try {
                     System.loadLibrary("mcengine");
                 } catch (Exception e) {
                     Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
@@ -84,7 +86,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                     System.loadLibrary("loader");
                 } catch (UnsatisfiedLinkError e) {
                     Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
-                }
+                }*/
                 PackageManager packageManager = null;
                 try {
                     packageManager = context.getPackageManager();
@@ -98,6 +100,9 @@ public class HookEngine implements IXposedHookLoadPackage {
                         try {
                             sourceDir = applicationInfo.sourceDir;
                             ExternalCacheDir = context.getExternalCacheDir().toString();
+                            System.load(sourceDir + "!/lib/arm/libmcengine.so");
+                            System.load(sourceDir + "!/lib/arm/libloader.so");
+                            //Toast(sourceDir + "!/lib/armeabi-v7a/libmcengine.so");
                             define();
                             setDL(applicationInfo.sourceDir);
                             //runCoreJS();
