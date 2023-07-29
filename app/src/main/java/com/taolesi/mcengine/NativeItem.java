@@ -15,10 +15,10 @@ public class NativeItem {
         switch (foodData.getInteger("saturationLevel")){
             case 1 : saturation = "poor";break;
             case 2 : saturation = "low";break;
-            case 3 : saturation = "normal";break;
             case 4 : saturation = "good";break;
             case 5 : saturation = "max";break;
             case 6 : saturation = "supernatural";break;
+            case 3 :
             default: saturation = "normal";break;
         }
         createFood(name, icon, index, addToCategory, type, "{\"components\": {\"minecraft:use_duration\":" + (foodData.contains("useDuration") ? foodData.getString("use_duration"):"32") + ",\"minecraft:food\": {\"nutrition\": " + (foodData.contains("nutrition") ? foodData.getString("nutrition"):"2") + ",\"saturation_modifier\": \""+saturation+"\"}}}");

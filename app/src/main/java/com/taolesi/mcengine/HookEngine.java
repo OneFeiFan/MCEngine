@@ -41,7 +41,6 @@ public class HookEngine implements IXposedHookLoadPackage {
     public static String ExternalCacheDir;
 
     public native void setDL(String DLPath);
-    public native void runQuickJS(String js);
 
     public static native void define();
 
@@ -123,7 +122,11 @@ public class HookEngine implements IXposedHookLoadPackage {
             quickJS_context.addJavascriptInterface(this, "HookEngine");
             quickJS_context.addJavascriptInterface(new Examination(), "Examination");
             quickJS_context.addJavascriptInterface(new NativeItem(), "NativeItem");
-            quickJS_context.executeScript(JsonToObjTest1(ExternalCacheDir + "/base/assets/main.js"), "main.js");
+            try {
+                quickJS_context.executeScript(JsonToObjTest1(ExternalCacheDir + "/base/assets/main.js"), "main.js");
+            } catch (QuickJSScriptException e) {
+                throw new RuntimeException(e);
+            }
             quickJS_context.close();
             quickJS.close();
         } catch (QuickJSScriptException e) {
