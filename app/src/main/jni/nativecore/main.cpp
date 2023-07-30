@@ -10,6 +10,7 @@ extern "C" {
     [[maybe_unused]] void NativeCoreLoad(void **ptr) {
         freopen("/storage/emulated/0/tmp/loglog.txt", "w", stdout);
         void *handle = dlopen("libminecraftpe.so", RTLD_NOW | RTLD_NOLOAD); // RTLD_DEFAULT;
+        std::cout<<1111<<":"<<handle<<"\n";
         if (ptr) {
             *ptr = handle;
         }

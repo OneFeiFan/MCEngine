@@ -16,7 +16,7 @@ extern "C" {
         JavaAtach::init(vm);
         return JNI_VERSION_1_6;
     }
-    JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_define(JNIEnv *env, jclass clazz) {
+    JNIEXPORT void JNICALL Java_com_taolesi_mcengine_Loader_define(JNIEnv *env, jclass clazz) {
         NativeEngine::HookEngineClass(env);
     }
     void log_Toast(std::string str) {
@@ -25,7 +25,7 @@ extern "C" {
 }
 
 extern "C"
-JNIEXPORT void JNICALL Java_com_taolesi_mcengine_HookEngine_copyToEx(JNIEnv *env, jclass clazz, jstring res, jstring output) {
+JNIEXPORT void JNICALL Java_com_taolesi_mcengine_Loader_copyToEx(JNIEnv *env, jclass clazz, jstring res, jstring output) {
     try {
         std::filesystem::copy_file(log::jstringToChar(res), log::jstringToChar(output));
     } catch (const std::exception &e) {

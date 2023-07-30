@@ -1,4 +1,4 @@
-#include "includes/NC_HookFR/NCHookFR.h"
+//#include "includes/NC_HookFR/NCHookFR.h"
 #include "JniToNative.hpp"
 #include <iostream>
 #include <cstring>
@@ -25,16 +25,6 @@ void NC_Block_onPlace(void *ptr, BlockSource &blockSource, BlockPos const &pos, 
     // invokeCallback(CLASS, "onBlockPlace", "(JJ)V", (jlong)&blockSource, (jlong)&pos);
     return base_Block_onPlace(ptr, blockSource, pos, block);
 }
-
-
-// WeakPtr<Item> (*base_registerItem)(std::string const &, short);
-// WeakPtr<Item> EX_registerItem(std::string const &str, short num)
-// {
-
-//     return base_registerItem(str, num);
-// }
-
-
 
 
 // void (*base_Item_setIcon1)(void *, TextureUVCoordinateSet const &);
@@ -110,13 +100,13 @@ void NCHookFR::init()
     NC_InLineHook((void *) NC_Item_addCreativeItem, (void **) &base_Item_addCreativeItem, "_ZN4Item15addCreativeItemEPS_s");
     //NC_InLineHook((void *) NC_Item_addTag, (void **) &base_Item_addTag, "_ZN4Item6addTagERK12HashedString");//大概没大用
     NC_InLineHook((void *) NC_Item_initServer, (void **) &base_Item_initServer, "_ZN4Item10initServerERN4Json5ValueE");
-    //NC_InLineHook((void *) NC_Json_Value_Value, (void **) &base_Json_Value_Value, "_ZN4Json5ValueC1EPKcS2_");//这个方法不调用
-    //NC_InLineHook((void *) NC_Item_initClient, (void **) &base_Item_initClient, "_ZN4Item10initClientERN4Json5ValueES2_");//无用
+    NC_InLineHook((void *) NC_Json_Value_Value, (void **) &base_Json_Value_Value, "_ZN4Json5ValueC1EPKcS2_");//这个方法不调用
+    NC_InLineHook((void *) NC_Item_initClient, (void **) &base_Item_initClient, "_ZN4Item10initClientERN4Json5ValueES2_");//无用
 
-    //    ptr = (void *)dlsym(this->MCHandle, "_ZN22TextureUVCoordinateSetC1Efffftt16ResourceLocationft");
-    //    MSHookFunction(ptr, (void *)&EX_TextureUVCoordinateSet_TextureUVCoordinateSet, (void **)&base_TextureUVCoordinateSet_TextureUVCoordinateSet);
-    //    ptr = (void *)dlsym(this->MCHandle, "_ZN4Item25getTextureUVCoordinateSetERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEi");
-    //    MSHookFunction(ptr, (void *)&EX_Item_getTextureUVCoordinateSet, (void **)&base_Item_getTextureUVCoordinateSet);
-    //    ptr = (void *)dlsym(this->MCHandle, "_Z15setIconIfLegacyRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEES7_i");
-    //    MSHookFunction(ptr, (void *)&test_, (void **)&test11);
+//        ptr = (void *)dlsym(this->MCHandle, "_ZN22TextureUVCoordinateSetC1Efffftt16ResourceLocationft");
+//        MSHookFunction(ptr, (void *)&EX_TextureUVCoordinateSet_TextureUVCoordinateSet, (void **)&base_TextureUVCoordinateSet_TextureUVCoordinateSet);
+//        ptr = (void *)dlsym(this->MCHandle, "_ZN4Item25getTextureUVCoordinateSetERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEi");
+//        MSHookFunction(ptr, (void *)&EX_Item_getTextureUVCoordinateSet, (void **)&base_Item_getTextureUVCoordinateSet);
+//        ptr = (void *)dlsym(this->MCHandle, "_Z15setIconIfLegacyRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEES7_i");
+//        MSHookFunction(ptr, (void *)&test_, (void **)&test11);
 }

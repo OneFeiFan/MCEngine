@@ -23,6 +23,12 @@
       <option name="ALIGN_INIT_LIST_IN_COLUMNS" value="false" />
       <option name="SPACE_BEFORE_NAMESPACE_LBRACE" value="false" />
     </Objective-C>
+    <files>
+      <extensions>
+        <pair source="cpp" header="hpp" fileNamingConvention="NONE" />
+        <pair source="c" header="h" fileNamingConvention="NONE" />
+      </extensions>
+    </files>
     <codeStyleSettings language="ObjectiveC">
       <option name="CLASS_BRACE_STYLE" value="5" />
       <option name="ALIGN_MULTILINE_BINARY_OPERATION" value="false" />

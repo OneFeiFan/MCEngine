@@ -3,8 +3,9 @@
 
 #include <jni.h>
 
-static void (*NC_InLineHook)(void *, void *, const char *);
-static void (*NC_FakeNative)(void **,const char *);
+extern void NC_InLineHook(void *, void **, const char *);
+extern void NC_FakeNative(void **,const char *);
+extern char * mcNativeDir;
 class NCHookFR
 {
 private:
@@ -16,7 +17,7 @@ public:
     [[maybe_unused]] static jclass Class;
 
 public:
-    NCHookFR(void *handle);
+    NCHookFR();
     static void init();
     static JNIEnv *getENV();
 };

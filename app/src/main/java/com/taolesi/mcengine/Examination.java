@@ -1,6 +1,6 @@
 package com.taolesi.mcengine;
 
-import static com.taolesi.mcengine.HookEngine.Toast;
+import static com.taolesi.mcengine.Loader.Toast;
 
 import android.webkit.JavascriptInterface;
 
