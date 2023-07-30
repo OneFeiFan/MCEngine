@@ -1,11 +1,15 @@
 package com.taolesi.mcengine;
 
+
+import static android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION;
+import static com.taolesi.mcengine.FileTools.unzip;
 import static com.taolesi.mcengine.QUESTCODE.REQUESTPERMISSION;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -14,7 +18,9 @@ import android.os.Environment;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 
 import com.quickjs.JSContext;
 import com.quickjs.QuickJS;
@@ -78,153 +84,64 @@ public class HookEngine implements IXposedHookLoadPackage {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
+                boolean isOwnPermission = true;
                 setTargetActivity((Activity) param.thisObject);
+                //储存activity
                 setTargetContext(getTargetActivity().getApplicationContext());
-
-
-                Loader tester = new Loader();
-                QuickJS quickJS = QuickJS.createRuntimeWithEventQueue();
-
-
+                //储存Context(这样写是某种好习惯
+                if (Build.VERSION.SDK_INT >= 30) {
+                    String[] permissions = {
+                            Manifest.permission.READ_MEDIA_AUDIO,
+                            Manifest.permission.READ_MEDIA_IMAGES,
+                            Manifest.permission.READ_MEDIA_VIDEO,
+                    };
+                    //验证是否许可权限
+                    for (String str : permissions) {
+                        if (ActivityCompat.checkSelfPermission(getTargetContext(), str) != PackageManager.PERMISSION_GRANTED) {
+                            //申请权限
+                            ActivityCompat.requestPermissions(getTargetActivity(),permissions, 101);
+                            isOwnPermission = false;
+                        }
+                    }
+                } else {
+                    String[] permissions = {
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    };
+                    //验证是否许可权限
+                    for (String str : permissions) {
+                        if (ActivityCompat.checkSelfPermission(getTargetContext(), str) != PackageManager.PERMISSION_GRANTED) {
+                            //申请权限
+                            ActivityCompat.requestPermissions(getTargetActivity(),permissions, 101);
+                            isOwnPermission = false;
+                        }
+                    }
+                }
+//                if(!isOwnPermission){
+//                    Toast.makeText(getTargetContext(), "MC没有文件读写权限,模块未成功运行,请在授权后重启MC", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getTargetContext(), "MC没有文件读写权限,模块未成功运行,请在授权后重启MC", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 ApplicationInfo info = getTargetContext().getPackageManager().getApplicationInfo("com.taolesi.mcengine", 0);
-                ApplicationInfo info2 = getTargetContext().getPackageManager().getApplicationInfo("com.mojang.minecraftpe", 0);
-                String path = new File(info.sourceDir).getAbsolutePath();
+                //模块的信息
+                ApplicationInfo mcInfo = getTargetContext().getPackageManager().getApplicationInfo("com.mojang.minecraftpe", 0);
+                //mc的信息
+                String path = new File(info.sourceDir).getAbsolutePath();//模块base.apk的目录
                 String entry = "com.taolesi.mcengine.Loader";
                 String fun = "init";
                 // 重定向lib目录 让load找到正确的加载
-                String lib = info2.nativeLibraryDir;
-                String output = getTargetContext().getDir("cache_dex", 0).getAbsolutePath();
+                String mcLib = mcInfo.nativeLibraryDir;//mc的lib路径
+                String mcFileDir = getTargetContext().getFilesDir().getAbsolutePath();
+                unzip(getTargetContext(),path, mcFileDir+"/base");//将base.apk解压到mc的data的files下面
+                String newLibDir = mcFileDir+"/base/lib/armeabi-v7a/";//模块的新lib路径
+                String output = getTargetContext().getDir("cache_dex", 0).getAbsolutePath();//不懂
                 ClassLoader loader = getTargetContext().getClassLoader();
-                DexClassLoader newLoader = new DexClassLoader(path, output, lib, loader);
+                DexClassLoader newLoader = new DexClassLoader(path, output, newLibDir, loader);
+                SoLibraryPatcher.patchNativeLibraryDir(newLoader, mcLib);//重定向lib目录
                 Class clazz = newLoader.loadClass(entry);
-                Method method = clazz.getDeclaredMethod(fun, Context.class, String.class);
-                method.invoke(null, getTargetContext(), path);
-                Toast.makeText(getTargetContext(), "5555", Toast.LENGTH_LONG).show();
-                tester.runCoreJS(getTargetContext(),quickJS);
-
-
+                Method method = clazz.getDeclaredMethod(fun, Context.class, String.class, String.class);
+                    method.invoke(null, getTargetContext(), path, mcLib);//调用
             }
         });
     }
-
-    // 迁移到其它类里区
-//
-//    public void runCoreJS() {
-//        try {
-//            copyToEx(sourceDir, ExternalCacheDir + "/base.apk");
-//            unzip(ExternalCacheDir + "/base.apk", ExternalCacheDir + "/base");
-//
-//            QuickJS quickJS = QuickJS.createRuntimeWithEventQueue();
-//            JSContext quickJS_context = quickJS.createContext();
-//            quickJS_context.addJavascriptInterface(this, "HookEngine");
-//            quickJS_context.addJavascriptInterface(new Examination(), "Examination");
-//            quickJS_context.addJavascriptInterface(new NativeItem(), "NativeItem");
-//            try {
-//                quickJS_context.executeScript(JsonToObjTest1(ExternalCacheDir + "/base/assets/main.js"), "main.js");
-//            } catch (QuickJSScriptException e) {
-//                throw new RuntimeException(e);
-//            }
-//            String path = Environment.getExternalStorageDirectory() + "/tmp/mods/";
-//            File mods = new File(path);
-//            File[] mod = mods.listFiles();
-//            for (File mod_private : mod) {
-//                try {
-//                    quickJS_context.executeScript(JsonToObjTest1(mod_private.getPath() + "/main.js"), mod_private.getPath() + "main.js");
-//                } catch (QuickJSScriptException e) {
-//                    throw new RuntimeException(e);
-//                }
-//                //Toast(mod_private.getPath());
-//            }
-//            quickJS_context.close();
-//            quickJS.close();
-//        } catch (QuickJSScriptException e) {
-//            Toast(e.toString());
-//        }
-//
-//    }
-//
-//    public static void unzip(String res, String output) {
-//        //targetPath输出文件路径
-//        File targetFile = new File(output);
-//        // 如果目录不存在，则创建
-//        if (!targetFile.exists()) {
-//            targetFile.mkdirs();
-//        } else {
-//            targetFile.delete();
-//            targetFile.mkdirs();
-//        }
-//        //sourcePath压缩包文件路径
-//        try (ZipFile zipFile = new ZipFile(new File(res))) {
-//            System.out.println("file nums:" + zipFile.size());
-//            Enumeration enumeration = zipFile.entries();
-//            while (enumeration.hasMoreElements()) {
-//                ZipEntry entry = (ZipEntry) enumeration.nextElement();
-//                System.out.println("this file size:" + entry.getSize());
-//                String name = entry.getName();
-//                if (entry.isDirectory()) {
-//                    continue;
-//                }
-//                try (BufferedInputStream inputStream = new BufferedInputStream(zipFile.getInputStream(entry))) {
-//                    String outName = output + "/" + name;
-//                    File outFile = new File(outName);
-//                    File tempFile = new File(outName.substring(0, outName.lastIndexOf("/")));
-//                    if (!tempFile.exists()) {
-//                        tempFile.mkdirs();
-//                    }
-//                    try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outFile))) {
-//                        int len;
-//                        byte[] buffer = new byte[1024];
-//                        while ((len = inputStream.read(buffer)) > 0) {
-//                            outputStream.write(buffer, 0, len);
-//                        }
-//                    }
-//
-//                }
-//
-//            }
-//
-//        } catch (Exception e) {
-//            Toast(e.toString());
-//        }
-//    }
-//
-//    public static String JsonToObjTest1(String src) {
-//        try {
-//            File jsonFile = new File(src);
-//            FileReader fileReader = new FileReader(jsonFile);
-//            Reader reader = new InputStreamReader(new FileInputStream(jsonFile), "utf-8");
-//            StringBuffer sb = new StringBuffer();
-//            while (true) {
-//                int ch = reader.read();
-//                if (ch != -1) {
-//                    sb.append((char) ch);
-//                } else {
-//                    fileReader.close();
-//                    reader.close();
-//                    String jsonStr = sb.toString();
-//                    return jsonStr;
-//                }
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return e.toString();
-//        }
-//    }
-//
-//    @JavascriptInterface
-//    public static void Toast(String str) {
-//        Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
-//    }
-//
-//    public static void Log(String claz, int nummber) {
-//
-//    }
-//
-//    public static void Log(String claz, float nummber) {
-//
-//    }
-//
-//    public static void Log(String claz, String str) {
-//
-//    }
 }

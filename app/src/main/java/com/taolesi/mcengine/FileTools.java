@@ -60,6 +60,28 @@ public class FileTools {
             Toast.makeText(ctx, e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
+    public static String JsonToObjTest(String src) {
+        try {
+            File jsonFile = new File(src);
+            FileReader fileReader = new FileReader(jsonFile);
+            Reader reader = new InputStreamReader(new FileInputStream(jsonFile), "utf-8");
+            StringBuffer sb = new StringBuffer();
+            while (true) {
+                int ch = reader.read();
+                if (ch != -1) {
+                    sb.append((char) ch);
+                } else {
+                    fileReader.close();
+                    reader.close();
+                    String jsonStr = sb.toString();
+                    return jsonStr;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return e.toString();
+        }
+    }
     public static String readJsonFile(String fileName) {
         String jsonStr = "";
         try {

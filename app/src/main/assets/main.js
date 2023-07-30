@@ -1,4 +1,4 @@
-//Loader.Toast("js加载成功");
+Loader.Toast("js加载成功");
 /*for (var i = 0; i < 2000; i++) {
   try {
      NativeItem.createItems("test" + i, "apple", 0, true, 1);

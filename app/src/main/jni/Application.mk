@@ -1,5 +1,5 @@
 NDK_TOOLCHAIN_VERSION := clang
-APP_STL := c++_shared
+APP_STL := c++_static
 #APP_STL指连接方式
 APP_PLATFORM := android-20
 #APP_PLATFORM定义使用的ndk库函数版本号

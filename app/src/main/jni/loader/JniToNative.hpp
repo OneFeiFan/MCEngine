@@ -11,14 +11,14 @@
 #include <jni.h>
 #include <unistd.h>
 #include <dlfcn.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+//#include <sys/stat.h>
+//#include <sys/types.h>
 #include "tester/android.hpp"
 #include "tester/log.hpp"
-#include "includes/QA/ProcessView.h"
+//#include "includes/QA/ProcessView.h"
 #include "includes/dobby.h"
-#include "includes/Unzip/Unzip.h"
-#include "includes/lua/lua.hpp"
+//#include "includes/Unzip/Unzip.h"
+//#include "includes/lua/lua.hpp"
 #include "includes/NC_HookFR/NCHookFR.h"
 #include "includes/NC_Items/NC_items.h"
 
@@ -66,14 +66,20 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
     android::setJavaVM(vm);
     JNIEnv *env = android::getJNIEnv();
 
-//    const char *a = android::getExternalFilePath(android::getJNIEnv(), "", android::getApplicationContext(android::getJNIEnv()));
-//    std::string b = std::string(a) + "/c01log.log";
-//    Logger::instance = new Logger(b.c_str());
+    const char *a = android::getExternalFilePath(android::getJNIEnv(), "", android::getApplicationContext(android::getJNIEnv()));
+    std::string b = std::string(a) + "/c01log.log";
+    Logger::instance = new Logger(b.c_str());
+
+    Logger::instance->log("log sys init success.");
+//    void*ptr=dlopen("libminecraftpe.so", RTLD_LAZY);
 //
-//    Logger::instance->log("log sys init success.");
+//    Logger::instance->log("ptr = "+std::to_string(reinterpret_cast<uintptr_t>(ptr)));
+
+
+
 //// 这边留一个log的使用例子
     void *mcHandleFake = DobbySymbolResolver("libminecraftpe.so", "_ZNK5Actor9getRegionEv");
-
+    android::showToast(env, android::charArrToJstring(env, std::to_string(reinterpret_cast<uintptr_t>(mcHandleFake)).c_str()));
             if(mcHandleFake){
 //            lua_State *L = luaL_newstate();
 //            luaL_openlibs(L);
