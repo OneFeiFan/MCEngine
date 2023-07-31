@@ -59,6 +59,7 @@ public class HookEngine implements IXposedHookLoadPackage {
     public static void setTargetActivity(Activity target_activity) {
         HookEngine.targetActivity = target_activity;
     }
+
     public static Activity targetActivity;
 
     public static Context getTargetContext() {
@@ -76,6 +77,7 @@ public class HookEngine implements IXposedHookLoadPackage {
 //
 
     }
+
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
         if (!loadPackageParam.packageName.equals("com.mojang.minecraftpe")) return;
@@ -87,7 +89,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                 boolean isOwnPermission = true;
                 setTargetActivity((Activity) param.thisObject);
                 //储存activity
-                setTargetContext(getTargetActivity().getApplicationContext());
+                setTargetContext(getTargetActivity());
                 //储存Context(这样写是某种好习惯
                 if (Build.VERSION.SDK_INT >= 30) {
                     String[] permissions = {
@@ -99,7 +101,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                     for (String str : permissions) {
                         if (ActivityCompat.checkSelfPermission(getTargetContext(), str) != PackageManager.PERMISSION_GRANTED) {
                             //申请权限
-                            ActivityCompat.requestPermissions(getTargetActivity(),permissions, 101);
+                            ActivityCompat.requestPermissions(getTargetActivity(), permissions, 101);
                             isOwnPermission = false;
                         }
                     }
@@ -112,7 +114,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                     for (String str : permissions) {
                         if (ActivityCompat.checkSelfPermission(getTargetContext(), str) != PackageManager.PERMISSION_GRANTED) {
                             //申请权限
-                            ActivityCompat.requestPermissions(getTargetActivity(),permissions, 101);
+                            ActivityCompat.requestPermissions(getTargetActivity(), permissions, 101);
                             isOwnPermission = false;
                         }
                     }
@@ -132,15 +134,15 @@ public class HookEngine implements IXposedHookLoadPackage {
                 // 重定向lib目录 让load找到正确的加载
                 String mcLib = mcInfo.nativeLibraryDir;//mc的lib路径
                 String mcFileDir = getTargetContext().getFilesDir().getAbsolutePath();
-                unzip(getTargetContext(),path, mcFileDir+"/base");//将base.apk解压到mc的data的files下面
-                String newLibDir = mcFileDir+"/base/lib/armeabi-v7a/";//模块的新lib路径
+                unzip(getTargetContext(), path, mcFileDir + "/base");//将base.apk解压到mc的data的files下面
+                String newLibDir = mcFileDir + "/base/lib/armeabi-v7a/";//模块的新lib路径
                 String output = getTargetContext().getDir("cache_dex", 0).getAbsolutePath();//不懂
                 ClassLoader loader = getTargetContext().getClassLoader();
                 DexClassLoader newLoader = new DexClassLoader(path, output, newLibDir, loader);
                 SoLibraryPatcher.patchNativeLibraryDir(newLoader, mcLib);//重定向lib目录
                 Class clazz = newLoader.loadClass(entry);
                 Method method = clazz.getDeclaredMethod(fun, Context.class, String.class, String.class);
-                    method.invoke(null, getTargetContext(), path, mcLib);//调用
+                method.invoke(null, getTargetContext(), path, mcLib);//调用
             }
         });
     }
