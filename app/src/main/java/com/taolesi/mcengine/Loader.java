@@ -3,12 +3,25 @@ package com.taolesi.mcengine;
 import static com.taolesi.mcengine.FileTools.JsonToObjTest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.AssetManager;
+import android.os.Environment;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
+
+import com.quickjs.JSArray;
 import com.quickjs.JSContext;
+import com.quickjs.JSFunction;
+import com.quickjs.JSObject;
+import com.quickjs.JSValue;
+import com.quickjs.JavaConstructorCallback;
+import com.quickjs.JavaVoidCallback;
 import com.quickjs.QuickJS;
 import com.quickjs.QuickJSScriptException;
+
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 
 
 public class Loader {
@@ -47,6 +60,10 @@ public class Loader {
     public static void Toast(String str) {
         Toast.makeText(context_, str, Toast.LENGTH_SHORT).show();
     }
+    /*@JavascriptInterface
+    public static JSObject getNewLoader() {
+        return (JSObject) new Loader();
+    }*/
 
     public static void Log(String claz, int nummber) {
 

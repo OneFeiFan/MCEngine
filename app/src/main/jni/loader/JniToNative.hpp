@@ -128,20 +128,20 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 ////        std::cerr << e.what() << '\n';
 ////    }
 //}
-JNIEXPORT void JNICALL Java_com_taolesi_mcengine_NativeItem_createItem(JNIEnv *env, jclass clazz, jstring jname, jstring jiconName, jint jindex, jboolean is2category, jint jtype)
+JNIEXPORT jlong* JNICALL Java_com_taolesi_mcengine_NativeItem_createItem(JNIEnv *env, jclass clazz, jstring jname, jstring jiconName, jint jindex, jboolean is2category, jint jtype)
 {
     //android::showToast(env, android::charArrToJstring(env, "11223"));
     const char *name = android::jstringToCharArr(env, jname);
     const char *iconName = android::jstringToCharArr(env, jiconName);
-    NC_Items::createNormalNCIObj(name, iconName, jindex, is2category, (CreativeItemCategory) jtype);
+    return (jlong*) NC_Items::createNormalNCIObj(name, iconName, jindex, is2category, (CreativeItemCategory) jtype);
 }
-JNIEXPORT void JNICALL Java_com_taolesi_mcengine_NativeItem_createFood(JNIEnv *env, jclass clazz, jstring jname, jstring jicon, jint index, jboolean add_to_category, jint type, jstring jfood_data)
+JNIEXPORT jlong* JNICALL Java_com_taolesi_mcengine_NativeItem_createFood(JNIEnv *env, jclass clazz, jstring jname, jstring jicon, jint index, jboolean add_to_category, jint type, jstring jfood_data)
 {
     //android::showToast(env, android::charArrToJstring(env, "444"));
     const char *name = android::jstringToCharArr(env, jname);
     const char *iconName = android::jstringToCharArr(env, jicon);
     const char *food_data = android::jstringToCharArr(env, jfood_data);
-    NC_Items::createFoodNCIObj(name, iconName, index, add_to_category, (CreativeItemCategory) type, food_data);
+    return (jlong*) NC_Items::createFoodNCIObj(name, iconName, index, add_to_category, (CreativeItemCategory) type, food_data);
 }
 }
 

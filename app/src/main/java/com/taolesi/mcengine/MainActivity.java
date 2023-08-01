@@ -8,11 +8,13 @@ import static com.taolesi.mcengine.QUESTCODE.REQUESTPERMISSIONMCDATA;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -120,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
         openFileButton.setOnClickListener(v -> {
             startActivityForResult(intent, OPENFILE.ordinal());
         });
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -181,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPENFILE.ordinal()) {
+            if (data == null) return;
             Uri file = data.getData();
             String path;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -211,13 +215,9 @@ public class MainActivity extends AppCompatActivity {
             boolean out = true;
             if (out) {
                 unzip(this, path, Environment.getExternalStorageDirectory() + "/tmp/mods/" + name);
-            }else {
+            } else {
                 unzip(this, path, getExternalCacheDir() + "/mods/" + name);
             }
-            //Toast.makeText(this, modInfo, Toast.LENGTH_SHORT).show();
-            //unzip(this, path, Environment.getExternalStorageDirectory() + "/tmp/mods/" + name);
-            //File s = new File(getExternalCacheDir() + "/temp");
-            //s.delete();
         }
         if (requestCode == REQUESTPERMISSIONMCDATA.ordinal()) {
 

@@ -24,15 +24,19 @@ NC_Items::NC_Items(const char *name, const char *iconName, const int iconData, c
 //    itemsPoolArray.push_back(new NC_Items(name,iconName,iconData,inCreative));
 //}
 
-void NC_Items::createNormalNCIObj(const char *name, const char *iconName, const int iconData, const bool inCreative, const CreativeItemCategory type)
+NC_Items* NC_Items::createNormalNCIObj(const char *name, const char *iconName, const int iconData, const bool inCreative, const CreativeItemCategory type)
 {
-    normalItemsPoolArray.emplace_back(new NC_Items(name, iconName, iconData, inCreative, type));
+    NC_Items* item = new NC_Items(name, iconName, iconData, inCreative, type);
+    normalItemsPoolArray.emplace_back(item);
+    return item;
 }
 
-void NC_Items::createFoodNCIObj(const char *name, const char *iconName, const int iconData, const bool inCreative, const CreativeItemCategory type, const char *foodData)
+NC_Items* NC_Items::createFoodNCIObj(const char *name, const char *iconName, const int iconData, const bool inCreative, const CreativeItemCategory type, const char *foodData)
 {
-    foodItemsPoolArray.emplace_back(new NC_Items(name, iconName, iconData, inCreative, type));
+    NC_Items* item = new NC_Items(name, iconName, iconData, inCreative, type);
+    foodItemsPoolArray.emplace_back(item);
     foodItemsPoolArray.back()->setTypeData(foodData);
+    return item;
 }
 
 void NC_Items::setTypeData(const char *data)

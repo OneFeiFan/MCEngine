@@ -26,9 +26,9 @@ public:
 
     NC_Items(const char *name, const char *iconName, int iconData, bool inCreative, CreativeItemCategory type);
 
-    static void createNormalNCIObj(const char *name, const char *iconName, const int iconData, const bool inCreative, const CreativeItemCategory type);
+    static NC_Items* createNormalNCIObj(const char *name, const char *iconName, const int iconData, const bool inCreative, const CreativeItemCategory type);
 
-    static void createFoodNCIObj(const char *name, const char *iconName, const int iconData, const bool inCreative, const CreativeItemCategory type ,const char *foodData);
+    static NC_Items* createFoodNCIObj(const char *name, const char *iconName, const int iconData, const bool inCreative, const CreativeItemCategory type ,const char *foodData);
 
     //static void createNCIObject(const char *name, const char *iconName, const int iconData, const bool inCreative);
     void setTypeData(const char *);
