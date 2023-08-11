@@ -54,12 +54,6 @@ public class HookEngine implements IXposedHookLoadPackage {
 
     public static Context targetContext;
 
-    public void runCoreJS1() {
-        Toast.makeText(getTargetContext(), "trse", Toast.LENGTH_SHORT).show();
-//
-
-    }
-
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
         if (!loadPackageParam.packageName.equals("com.mojang.minecraftpe")) return;

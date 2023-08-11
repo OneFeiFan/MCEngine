@@ -6,3 +6,5 @@
 ItemRegistry *(*fake_ItemRegistry_mMaxItemID);
 
 WeakPtr<Item> (*fake_ItemRegistry_registerItemShared)(std::string const &, short &);
+
+WeakPtr<Item> (*fake_ItemRegistry_registerItemSharedForSword)(std::string const &, short &,Item::Tier const&);

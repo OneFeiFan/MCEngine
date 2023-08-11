@@ -5,9 +5,11 @@
 #include "../headers/Fake_VanillaItems.h"
 #include "../headers/Fake_Item.h"
 #include "../headers/Fake_ItemRegistry.h"
-#include "NC_items.h"
+#include "NC_Items.hpp"
 #include "headers/Fake_HashedString.h"
 #include "headers/fake_FoodItemComponentLegacy.h"
+#include "NC_FoodItems.hpp"
+#include "NC_SwordItems.hpp"
 
 class Experiments;
 
@@ -17,13 +19,11 @@ void *(*base_VanillaItems_registerItems)(void *, Experiments const &, bool);
 void *NC_VanillaItems_registerItems(void *ptr, Experiments const &e, bool b)
 {
     printf("注册物品开始\n");
-    //log::Toast("注册物品");
     Item *itemPtr;
 
     for(auto &NC_ItemPtr: normalItemsPoolArray){
         itemPtr = fake_ItemRegistry_registerItemShared(NC_ItemPtr->getName(), (short &) (++fake_ItemRegistry_mMaxItemID)).get();
         NC_ItemPtr->setItemPtr(itemPtr);
-        //normalItemsPoolMap.insert(std::pair<short &, NC_Items *>((short &) fake_ItemRegistry_mMaxItemID, NC_ItemPtr));
         if(NC_ItemPtr->isInCreative()){
             fake_Item_setCategory(itemPtr, NC_ItemPtr->getType());
         }else{
@@ -31,6 +31,19 @@ void *NC_VanillaItems_registerItems(void *ptr, Experiments const &e, bool b)
         }
     }
     printf("普通物品注册完成，一切正常\n");
+    for(auto &NC_ItemPtr: swordItemsPoolArray){
+        itemPtr = fake_ItemRegistry_registerItemSharedForSword(NC_ItemPtr->getName(), (short &) (++fake_ItemRegistry_mMaxItemID),*tiersPool[NC_ItemPtr->getTier()]).get();
+
+        *((uint32_t *)itemPtr + 75) = NC_ItemPtr->getDamage();//设置攻击力
+        fake_Item_setMaxDamage(itemPtr, NC_ItemPtr->getDurability());//设置耐久
+        NC_ItemPtr->setItemPtr(itemPtr);
+        if(NC_ItemPtr->isInCreative()){
+            fake_Item_setCategory(itemPtr, NC_ItemPtr->getType());
+        }else{
+            fake_Item_setCategory(itemPtr, (CreativeItemCategory)0);
+        }
+    }
+    printf("武器注册完成，一切正常\n");
     for(auto &NC_ItemPtr: foodItemsPoolArray){
         auto *value = new Json::Value();
         auto *reader = new Json::Reader();
@@ -63,6 +76,9 @@ void *NC_VanillaItems_initClientData(void *ptr, Experiments const &e)
             base_Item_setIcon(temp->getPtr(), temp->getIconName(), (short) temp->getIconData());
         }
         printf("普通物品图标设置完成\n");
+        for(NC_Items *temp: swordItemsPoolArray){
+            base_Item_setIcon(temp->getPtr(), temp->getIconName(), (short) temp->getIconData());
+        }
         for(NC_Items *temp: foodItemsPoolArray){
             base_Item_setIcon(temp->getPtr(), temp->getIconName(), (short) temp->getIconData());
         }

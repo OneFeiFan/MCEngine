@@ -24,8 +24,18 @@ class TextureUVCoordinateSet
 class Item
 {
 public:
-    // Fields
-    // char filler_Item[UNKNOW_SIZE];
+    class Tier
+    {
+    private:
+        const int mLevel;
+        const int mDurability;
+        const float mSpeed;
+        const int mDamage;
+        const int mEnchantmentValue;
+    public:
+        Tier(int level, int durability, float speed, int damage, int echantmentValue);
+    };
+
 public:
     // Virtual Tables
     virtual ~Item();
@@ -53,9 +63,8 @@ public:
     // virtual void getCamera() const;
     // virtual void getFood() const;
     // virtual void getFuel() const;
-    // virtual void setMaxStackSize(unsigned char);
+
     // virtual void setStackedByData(bool);
-    // virtual void setMaxDamage(int);
     // virtual void setHandEquipped();
     // virtual void setUseAnimation(UseAnimation);
     // virtual void setMaxUseDuration(int);
@@ -273,7 +282,14 @@ extern int (*fake_UseAnimationFromString)(std::string const &);
 
 extern int (*fake_FoodSaturationFromString)(std::string const &);
 
-//_ZNK4Item6isFoodEv
+extern int (*fake_Tier_getUses)(Item::Tier *);
+
+extern int (*fake_Tier_getAttackDamageBonus)(Item::Tier *);
+
+extern Item *(*fake_Item_setMaxDamage)(Item *, int);
+
+extern Item *(*fake_Item_setMaxStackSize)(Item *, unsigned char );
+//_ZN4Item15setMaxStackSizeEh
 //hook区
 extern void (*base_Item_setIcon)(Item *, std::string const &, short);
 

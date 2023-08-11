@@ -4,8 +4,8 @@
 #include <string>
 #include <dlfcn.h>
 #include "sharedptr.h"
+#include "Fake_Item.h"
 
-class Item;
 
 class ItemRegistry
 {
@@ -85,5 +85,8 @@ public:
 extern ItemRegistry *(*fake_ItemRegistry_mMaxItemID);
 
 extern WeakPtr<Item> (*fake_ItemRegistry_registerItemShared)(std::string const &, short &);
+
+extern WeakPtr<Item> (*fake_ItemRegistry_registerItemSharedForSword)(std::string const &, short &,Item::Tier const&);
+//_ZN12ItemRegistry18registerItemSharedI10WeaponItemJRsRKN4Item4TierEEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNSA_11char_traitsIcEENSA_9allocatorIcEEEEDpOT0_
 
 #endif

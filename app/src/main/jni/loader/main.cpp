@@ -2,7 +2,7 @@
 #include "JniToNative.hpp"
 #include <iostream>
 #include <cstring>
-#include "includes/NC_Items/NC_items.h"
+#include "includes/NC_Items/NC_Items.hpp"
 #include "headers/Fake_Actor.hpp"
 #include "headers/Fake_BlockSource.hpp"
 #include "headers/Fake_BlockLegacy.hpp"
@@ -81,6 +81,13 @@ void NCHookFR::init()
     NC_FakeNative((void **) &fake_Item_initClient, "_ZN4Item10initClientERN4Json5ValueES2_");
     NC_FakeNative((void **) &fake_FoodSaturationFromString, "_Z24FoodSaturationFromStringRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE");
     NC_FakeNative((void **) &fake_UseAnimationFromString, "_Z22UseAnimationFromStringRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE");
+    NC_FakeNative((void **) &fake_ItemRegistry_registerItemSharedForSword, "_ZN12ItemRegistry18registerItemSharedI10WeaponItemJRsRKN4Item4TierEEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNSA_11char_traitsIcEENSA_9allocatorIcEEEEDpOT0_");
+    NC_FakeNative((void **) &fake_Tier_getUses, "_ZNK4Item4Tier7getUsesEv");
+    NC_FakeNative((void **) &fake_Tier_getAttackDamageBonus, "_ZNK4Item4Tier20getAttackDamageBonusEv");
+    NC_FakeNative((void **) &fake_Item_setMaxDamage, "_ZN4Item12setMaxDamageEi");
+    NC_FakeNative((void **) &fake_Item_setMaxStackSize, "_ZN4Item15setMaxStackSizeEh");
+
+
     //NC_FakeNative((void **) &fake_FoodItemComponentLegacy, "_ZN23FoodItemComponentLegacyC2ER4Item");
 
 
@@ -103,6 +110,12 @@ void NCHookFR::init()
     NC_InLineHook((void *) NC_Json_Value_Value, (void **) &base_Json_Value_Value, "_ZN4Json5ValueC1EPKcS2_");//这个方法不调用
     NC_InLineHook((void *) NC_Item_initClient, (void **) &base_Item_initClient, "_ZN4Item10initClientERN4Json5ValueES2_");//无用
 
+    tiersPool[0] = new Item::Tier( 0, 59, 2.0, 0, 15);
+    tiersPool[1] = new Item::Tier( 1, 131, 4.0, 1, 5);
+    tiersPool[2] = new Item::Tier( 2, 250, 6.0, 2, 14);
+    tiersPool[3] = new Item::Tier( 3, 1561, 8.0, 3, 10);
+    tiersPool[4] = new Item::Tier( 0, 32, 12.0, 0, 22);
+    tiersPool[5] = new Item::Tier( 4, 2031, 9.0, 4, 15);
 //        ptr = (void *)dlsym(this->MCHandle, "_ZN22TextureUVCoordinateSetC1Efffftt16ResourceLocationft");
 //        MSHookFunction(ptr, (void *)&EX_TextureUVCoordinateSet_TextureUVCoordinateSet, (void **)&base_TextureUVCoordinateSet_TextureUVCoordinateSet);
 //        ptr = (void *)dlsym(this->MCHandle, "_ZN4Item25getTextureUVCoordinateSetERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEi");

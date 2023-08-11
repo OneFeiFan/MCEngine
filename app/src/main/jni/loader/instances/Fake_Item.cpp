@@ -3,10 +3,10 @@
 //
 #include <iostream>
 #include "../headers/Fake_Item.h"
-#include "NC_items.h"
+#include "NC_Items.hpp"
 #include "headers/Fake_HashedString.h"
 //#include "../includes/json/json.h"
-
+Item::Tier::Tier(int level, int durability, float speed, int damage, int echantmentValue): mLevel(level), mDurability(durability), mSpeed(speed), mDamage(damage), mEnchantmentValue(echantmentValue){}
 //fake区
 short (*fake_Item_getId)(Item *);
 
@@ -24,6 +24,13 @@ int (*fake_UseAnimationFromString)(std::string const &);
 
 int (*fake_FoodSaturationFromString)(std::string const &);
 
+int (*fake_Tier_getUses)(Item::Tier *);
+
+int (*fake_Tier_getAttackDamageBonus)(Item::Tier *);
+
+Item *(*fake_Item_setMaxDamage)(Item *, int);
+
+Item *(*fake_Item_setMaxStackSize)(Item *, unsigned char );
 //hook区
 void (*base_Item_setIcon)(Item *, std::string const &, short);
 
@@ -67,7 +74,7 @@ void NC_Item_useOn(Item *ptr, ItemStack &itemstack, Actor &actor, int x, int y, 
     //         return;
     //     }
     // }
-    std::cout << fake_Item_isFood(ptr) << std::endl;
+    //std::cout << fake_Item_isFood(ptr) << std::endl;
     return base_Item_useOn(ptr, itemstack, actor, x, y, z, d, e, f, g);
 }
 
