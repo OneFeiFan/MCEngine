@@ -22,7 +22,7 @@ void (*fake_Item_initClient)(Item *, Json::Value &, Json::Value &);
 
 int (*fake_UseAnimationFromString)(std::string const &);
 
-int (*fake_FoodSaturationFromString)(std::string const &);
+float (*fake_FoodSaturationFromString)(std::string const &);
 
 int (*fake_Tier_getUses)(Item::Tier *);
 
@@ -41,7 +41,7 @@ void NC_Item_setIcon(Item *ptr, std::string const &str, short data)
 
 void *(*base_Item_addCreativeItem)(Item *, short);
 
-void *NC_Item_addCreativeItem(Item *obj, short a)
+[[maybe_unused]] void *NC_Item_addCreativeItem(Item *obj, short a)
 {
 //    short id = fake_Item_getId(obj);
 //    if(normalItemsPoolMap.count(id)){
@@ -74,13 +74,13 @@ void NC_Item_useOn(Item *ptr, ItemStack &itemstack, Actor &actor, int x, int y, 
     //         return;
     //     }
     // }
-    //std::cout << fake_Item_isFood(ptr) << std::endl;
+    std::cout << fake_Item_isFood(ptr) << std::endl;
     return base_Item_useOn(ptr, itemstack, actor, x, y, z, d, e, f, g);
 }
 
 void *(*base_Item_addTag)(Item *, HashedString *);
 
-void *NC_Item_addTag(Item *ptr, HashedString *hashedString)
+[[maybe_unused]] void *NC_Item_addTag(Item *ptr, HashedString *hashedString)
 {
     return base_Item_addTag(ptr, hashedString);
 }
@@ -89,6 +89,8 @@ int (*base_Item_initServer)(Item *, Json::Value &);
 
 int NC_Item_initServer(Item *ptr, Json::Value &ptr_)
 {
+    //ptr_[""];
+    //std::cout<<ptr_.type()<<std::endl;
     base_Item_initServer(ptr, ptr_);
     return 1;
 }

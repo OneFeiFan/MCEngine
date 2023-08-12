@@ -11,7 +11,7 @@ LOCAL_CPP_EXTENSION := .cpp .cc
 LOCAL_MODULE    := mcengine
 SRC_FILS := $(wildcard $(LOCAL_PATH)/*/*.c $(LOCAL_PATH)/*/*.cpp $(LOCAL_PATH)/*.cpp $(LOCAL_PATH)/*/*/*.cpp $(LOCAL_PATH)/*/*/*/*.cpp $(LOCAL_PATH)/*/*/*/*/*.cpp)
 LOCAL_SRC_FILES := $(SRC_FILS:$(LOCAL_PATH)/%=%)
-LOCAL_LDLIBS    := -L$(LOCAL_PATH)/$(TARGET_ARCH_ABI) -llog
+LOCAL_LDLIBS    := -llog
 include $(BUILD_SHARED_LIBRARY)
 
 LOCAL_PATH := $(LOADE_PATH)
@@ -24,5 +24,4 @@ LOCAL_MODULE    := loader
 SRC_FILS := $(wildcard $(LOCAL_PATH)/*/*/*.c $(LOCAL_PATH)/*/*.cpp $(LOCAL_PATH)/*.cpp $(LOCAL_PATH)/*/*/*.cpp $(LOCAL_PATH)/*/*/*/*.cpp $(LOCAL_PATH)/*/*/*/*/*.cpp)
 LOCAL_SRC_FILES := $(SRC_FILS:$(LOCAL_PATH)/%=%)
 LOCAL_LDLIBS     := -L$(LOCAL_PATH)/$(TARGET_ARCH_ABI) -ldobby -llua
-#LOCAL_LDLIBS     := -L$(LOCAL_PATH)/$(TARGET_ARCH_ABI) -ldobby
 include $(BUILD_SHARED_LIBRARY)

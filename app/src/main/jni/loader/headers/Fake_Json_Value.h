@@ -105,11 +105,15 @@
 #include "../includes/lib_json/json/json.h"
 //fake区
 extern int (*fake_Json_Value_size)(Json::Value *);
-extern const char * (*fake_Json_Value_asCString)(Json::Value *);//用途未知
+extern const char * (*fake_Json_Value_asCString)(Json::Value *);//把值为string的结果转换为const char*
 extern const char * (*fake_Json_Value_getMemberNames)(Json::Value *);//
 extern Json::Value & (*fake_Json_Value_resolveReference)(Json::Value * ptr,const char* key,bool b);//
 extern std::string (*fake_Json_Value_toStyledString)(Json::Value * ptr);//
-
+extern std::string (*fake_Json_Value_toStyledString)(Json::Value * ptr);//
+extern bool (*fake_Json_Reader_parse)(Json::Reader *, const char *, const char *, Json::Value *, bool);//
+extern void (*fake_Json_Reader_Reader)(Json::Reader *);
+extern void (*fake_Json_Value_Value)(Json::Value *,int);
+//_ZN4Json5ValueC2ENS_9ValueTypeE
 extern void (*base_Json_Value_Value)(Json::Value *,char const*, char const*);//无用
 
 extern void NC_Json_Value_Value(Json::Value * ptr,char const* a, char const* b);

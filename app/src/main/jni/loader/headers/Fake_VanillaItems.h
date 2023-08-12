@@ -5,6 +5,9 @@
 #ifndef MCENGINE_FAKE_VANILLAITEMS_H
 #define MCENGINE_FAKE_VANILLAITEMS_H
 
+#include "Fake_Item.h"
+
+class VanillaItems;
 class Experiments;
 class ActorInfoRegistry;
 
@@ -14,16 +17,16 @@ class BaseGameVersion;
 class CreativeItemRegistry;
 
 //hook区
-extern void *(*base_VanillaItems_registerItems)(void *, Experiments const &, bool);
+extern void *(*base_VanillaItems_registerItems)(VanillaItems *, Experiments const &, bool);
 
-extern void *NC_VanillaItems_registerItems(void *ptr, Experiments const &e, bool b);
+extern void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, bool b);
 
-extern void *(*base_VanillaItems_initClientData)(void *, Experiments const &);
+extern void *(*base_VanillaItems_initClientData)(VanillaItems *, Experiments const &);
 
-extern void *NC_VanillaItems_initClientData(void *ptr, Experiments const &e);
+extern void *NC_VanillaItems_initClientData(VanillaItems *, Experiments const &);
 
-extern void *(*base_VanillaItems_serverInitCreativeItemsCallback)(void *, ActorInfoRegistry *, BlockDefinitionGroup *, CreativeItemRegistry *, bool, BaseGameVersion const &, Experiments const &);
+extern void (*base_VanillaItems_serverInitCreativeItemsCallback)(VanillaItems *, ActorInfoRegistry *, BlockDefinitionGroup *, CreativeItemRegistry *, Item *, BaseGameVersion const &, Experiments const &);
 
-extern void *NC_VanillaItems_serverInitCreativeItemsCallback(void *ptr, ActorInfoRegistry *a, BlockDefinitionGroup *b, CreativeItemRegistry *c, bool d, BaseGameVersion const &e, Experiments const &f);
+extern void NC_VanillaItems_serverInitCreativeItemsCallback(VanillaItems *, ActorInfoRegistry *, BlockDefinitionGroup *, CreativeItemRegistry *, Item * , BaseGameVersion const &, Experiments const &);
 
 #endif //MCENGINE_FAKE_VANILLAITEMS_H

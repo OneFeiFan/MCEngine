@@ -86,6 +86,9 @@ void NCHookFR::init()
     NC_FakeNative((void **) &fake_Tier_getAttackDamageBonus, "_ZNK4Item4Tier20getAttackDamageBonusEv");
     NC_FakeNative((void **) &fake_Item_setMaxDamage, "_ZN4Item12setMaxDamageEi");
     NC_FakeNative((void **) &fake_Item_setMaxStackSize, "_ZN4Item15setMaxStackSizeEh");
+    NC_FakeNative((void **) &fake_Json_Reader_parse, "_ZN4Json6Reader5parseEPKcS2_RNS_5ValueEb");
+    NC_FakeNative((void **) &fake_Json_Reader_Reader, "_ZN4Json6ReaderC2Ev");
+    NC_FakeNative((void **) &fake_Json_Value_Value, "_ZN4Json5ValueC2ENS_9ValueTypeE");
 
 
     //NC_FakeNative((void **) &fake_FoodItemComponentLegacy, "_ZN23FoodItemComponentLegacyC2ER4Item");
@@ -104,7 +107,7 @@ void NCHookFR::init()
     //    ptr = (void *)dlsym(this->MCHandle, "_ZN13ItemStackBaseC2ERK4Itemii");
     //    MSHookFunction(ptr, (void *)&EX_ItemStackBase, (void **)&base_ItemStackBase);
     NC_InLineHook((void *) NC_VanillaItems_serverInitCreativeItemsCallback, (void **) &base_VanillaItems_serverInitCreativeItemsCallback, "_ZN12VanillaItems31serverInitCreativeItemsCallbackEP17ActorInfoRegistryP20BlockDefinitionGroupP20CreativeItemRegistrybRK15BaseGameVersionRK11Experiments");
-    NC_InLineHook((void *) NC_Item_addCreativeItem, (void **) &base_Item_addCreativeItem, "_ZN4Item15addCreativeItemEPS_s");
+    //NC_InLineHook((void *) NC_Item_addCreativeItem, (void **) &base_Item_addCreativeItem, "_ZN4Item15addCreativeItemEPS_s");//用其他方法实现了添加背包
     //NC_InLineHook((void *) NC_Item_addTag, (void **) &base_Item_addTag, "_ZN4Item6addTagERK12HashedString");//大概没大用
     NC_InLineHook((void *) NC_Item_initServer, (void **) &base_Item_initServer, "_ZN4Item10initServerERN4Json5ValueE");
     NC_InLineHook((void *) NC_Json_Value_Value, (void **) &base_Json_Value_Value, "_ZN4Json5ValueC1EPKcS2_");//这个方法不调用

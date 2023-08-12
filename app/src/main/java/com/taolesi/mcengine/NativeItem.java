@@ -49,7 +49,7 @@ public class NativeItem {
         } catch (Exception e) {
             Loader.Toast(String.valueOf(e));
         }
-        return createFood(name, icon, index, addToCategory, type, "{\"components\": {\"minecraft:use_duration\":" + (foodData.contains("useDuration") ? foodData.getString("use_duration") : "32") + ",\"minecraft:food\": {\"nutrition\": " + (foodData.contains("nutrition") ? foodData.getString("nutrition") : "2") + ",\"saturation_modifier\": \"" + saturation + "\"}}}");
+        return createFood(name, icon, index, addToCategory, type, "{\"components\": {\"minecraft:food\": {\"nutrition\": " + (foodData.contains("nutrition") ? foodData.getString("nutrition") : "2") + ",\"saturation_modifier\": \"" + saturation + "\"}," + "\"minecraft:use_duration\":" + (foodData.contains("useDuration") ? foodData.getString("useDuration") : "32") + "}}");
     }//NC_ItemsPtr
 
     @JavascriptInterface

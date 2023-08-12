@@ -280,7 +280,7 @@ extern void (*fake_Item_initClient)(Item *, Json::Value &, Json::Value &);
 
 extern int (*fake_UseAnimationFromString)(std::string const &);
 
-extern int (*fake_FoodSaturationFromString)(std::string const &);
+extern float (*fake_FoodSaturationFromString)(std::string const &);
 
 extern int (*fake_Tier_getUses)(Item::Tier *);
 
@@ -297,7 +297,7 @@ extern void NC_Item_setIcon(Item *ptr, std::string const &str, short data);
 
 extern void *(*base_Item_addCreativeItem)(Item *, short);
 
-extern void *NC_Item_addCreativeItem(Item *obj, short a);
+[[maybe_unused]] extern void *NC_Item_addCreativeItem(Item *obj, short a);
 
 extern void (*base_Item_useOn)(Item *, ItemStack &, Actor &, int, int, int, unsigned char, float, float, float);
 
@@ -305,7 +305,7 @@ extern void NC_Item_useOn(Item *ptr, ItemStack &itemstack, Actor &actor, int x, 
 
 extern void *(*base_Item_addTag)(Item *, HashedString *);
 
-extern void *NC_Item_addTag(Item *ptr, HashedString *hashedString);
+[[maybe_unused]] extern void *NC_Item_addTag(Item *ptr, HashedString *hashedString);
 
 extern int (*base_Item_initServer)(Item *, Json::Value &);
 

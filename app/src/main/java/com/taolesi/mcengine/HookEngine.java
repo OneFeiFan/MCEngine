@@ -64,9 +64,10 @@ public class HookEngine implements IXposedHookLoadPackage {
                 AssetManager assetManager_org = ctx.getAssets();
                 Method addAssetPath = AssetManager.class.getDeclaredMethod("addAssetPath", String.class);
                 addAssetPath.invoke(assetManager_org, Environment.getExternalStorageDirectory() + "/tmp/app.zip");
-                Toast.makeText(ctx, Arrays.toString(assetManager_org.list("")), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ctx, Arrays.toString(assetManager_org.list("")), Toast.LENGTH_SHORT).show();
                 super.beforeHookedMethod(param);
             }
+
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
                 boolean isOwnPermission = true;
@@ -102,6 +103,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                         }
                     }
                 }
+
                 ApplicationInfo info = getTargetContext().getPackageManager().getApplicationInfo("com.taolesi.mcengine", 0);
                 //模块的信息
                 ApplicationInfo mcInfo = getTargetContext().getPackageManager().getApplicationInfo("com.mojang.minecraftpe", 0);
@@ -112,12 +114,17 @@ public class HookEngine implements IXposedHookLoadPackage {
                 // 重定向lib目录 让load找到正确的加载
                 String mcLib = mcInfo.nativeLibraryDir;//mc的lib路径
                 String mcFileDir = getTargetContext().getFilesDir().getAbsolutePath();
+
                 try {
                     unzip(getTargetContext(), path, mcFileDir + "/base");//将base.apk解压到mc的data的files下面
                 } catch (Exception e) {
                     Toast.makeText(getTargetContext(), e.toString(), Toast.LENGTH_SHORT).show();
                 }
-                String newLibDir = mcFileDir + "/base/lib/armeabi-v7a/";//模块的新lib路径
+                String newLibDir = mcFileDir + "/base/lib/armeabi-v7a/";//模块的新lib路径 32位
+                String architecture = System.getProperty("os.arch");
+                if (architecture.contains("64")) {
+                    newLibDir = mcFileDir + "/base/lib/arm64-v8a/";//模块的新lib路径 64位
+                }
                 String output = getTargetContext().getDir("cache_dex", 0).getAbsolutePath();//不懂
                 try {
                     ClassLoader loader = getTargetContext().getClassLoader();
