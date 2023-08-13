@@ -8,12 +8,14 @@
 #include "includes/JavaAtach.h"
 #include "includes/log.h"
 #include "includes/NativeEngine.h"
+#include "../loader/tester/android.hpp"
 #include <unistd.h>
 #include <iostream>
 
 extern "C" {
     JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *unused) {
         JavaAtach::init(vm);
+        android::setJavaVM(vm);
         return JNI_VERSION_1_6;
     }
     JNIEXPORT void JNICALL Java_com_taolesi_mcengine_Loader_define(JNIEnv *env, jclass clazz) {
@@ -25,11 +27,12 @@ extern "C" {
 }
 
 extern "C"
-JNIEXPORT void JNICALL Java_com_taolesi_mcengine_Loader_copyToEx(JNIEnv *env, jclass clazz, jstring res, jstring output) {
+JNIEXPORT void JNICALL Java_com_taolesi_mcengine_MainActivity_copyToPatch(JNIEnv *env, jclass clazz, jstring res, jstring output) {
     try {
         std::filesystem::copy_file(log::jstringToChar(res), log::jstringToChar(output));
     } catch (const std::exception &e) {
-        remove(log::jstringToChar(output));
-        std::filesystem::copy_file(log::jstringToChar(res), log::jstringToChar(output));
+        android::showToast(env, env->NewStringUTF(e.what()));
+        //remove(log::jstringToChar(output));
+        //std::filesystem::copy_file(log::jstringToChar(res), log::jstringToChar(output));
     }
 }

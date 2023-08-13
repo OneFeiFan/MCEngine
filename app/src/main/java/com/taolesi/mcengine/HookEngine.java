@@ -63,7 +63,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                 setTargetActivity((Activity) param.thisObject);
                 AssetManager assetManager_org = ctx.getAssets();
                 Method addAssetPath = AssetManager.class.getDeclaredMethod("addAssetPath", String.class);
-                addAssetPath.invoke(assetManager_org, Environment.getExternalStorageDirectory() + "/tmp/app.zip");
+                addAssetPath.invoke(assetManager_org, Environment.getExternalStorageDirectory() + "/games/MCEngine/assets.zip");
                 //Toast.makeText(ctx, Arrays.toString(assetManager_org.list("")), Toast.LENGTH_SHORT).show();
                 super.beforeHookedMethod(param);
             }
@@ -139,8 +139,6 @@ public class HookEngine implements IXposedHookLoadPackage {
                     Toast.makeText(getTargetContext(), e.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
-
         });
-
     }
 }

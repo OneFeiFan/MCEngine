@@ -56,7 +56,7 @@ char *log::jstringToChar(jstring jstr)
 void log::Toast(std::string str)
 {
     JNIEnv *env = JavaAtach::attach();
-    jclass HookEngineptr = env->FindClass("com/taolesi/mcengine/Loader");
+    jclass HookEngineptr = env->FindClass("com/taolesi/mcengine/MainActivity");
     jmethodID id = env->GetStaticMethodID(HookEngineptr, "Toast", "(Ljava/lang/String;)V");
     const char *_charName = str.c_str();
     jstring _jName = env->NewStringUTF(_charName);
