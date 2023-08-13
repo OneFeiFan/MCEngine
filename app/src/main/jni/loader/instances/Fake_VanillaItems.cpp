@@ -20,7 +20,6 @@ void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, boo
 {
     printf("注册物品开始\n");
     Item *itemPtr;
-    std::string *err = new std::string();
     for(auto &NC_ItemPtr: normalItemsPoolArray){
         itemPtr = fake_ItemRegistry_registerItemShared(NC_ItemPtr->getName(), (short &) (++fake_ItemRegistry_mMaxItemID)).get();
         NC_ItemPtr->setItemPtr(itemPtr);
@@ -33,8 +32,16 @@ void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, boo
     printf("普通物品注册完成，一切正常\n");
     for(auto &NC_ItemPtr: swordItemsPoolArray){
         itemPtr = fake_ItemRegistry_registerItemSharedForSword(NC_ItemPtr->getName(), (short &) (++fake_ItemRegistry_mMaxItemID), *tiersPool[NC_ItemPtr->getTier()]).get();
-
+#ifdef __arm__
+        // 如果目标平台是 ARM32 架构（armeabi、armeabi-v7a），则编译以下代码块
         *((uint32_t *) itemPtr + 75) = NC_ItemPtr->getDamage();//设置攻击力
+#endif
+
+#ifdef __aarch64__
+        // 如果目标平台是 ARM64 架构（arm64-v8a），则编译以下代码块
+      *((uint32_t *) itemPtr + 128) = NC_ItemPtr->getDamage();//设置攻击力
+#endif
+
         fake_Item_setMaxDamage(itemPtr, NC_ItemPtr->getDurability());//设置耐久
         NC_ItemPtr->setItemPtr(itemPtr);
         if(NC_ItemPtr->isInCreative()){
@@ -45,8 +52,8 @@ void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, boo
     }
     printf("武器注册完成，一切正常\n");
     for(auto &NC_ItemPtr: foodItemsPoolArray){
-        Json::Value *value = new Json::Value(Json::ValueType::objectValue);
-        Json::Reader *reader = new Json::Reader();
+        auto *value = new Json::Value(Json::ValueType::objectValue);
+        auto *reader = new Json::Reader();
         itemPtr = fake_ItemRegistry_registerItemShared(NC_ItemPtr->getName(), (short &) (++fake_ItemRegistry_mMaxItemID)).get();
         NC_ItemPtr->setItemPtr(itemPtr);
         fake_Item_setCategory(itemPtr, NC_ItemPtr->getType());
@@ -55,7 +62,7 @@ void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, boo
         base_Item_initServer(itemPtr, *value);
 #ifdef __arm__
         // 如果目标平台是 ARM32 架构（armeabi、armeabi-v7a），则编译以下代码块
-        FoodItemComponentLegacy *fooderPtr = (FoodItemComponentLegacy *) *((uintptr_t *) itemPtr + 66);//获取Item中和食物有关对象的地址
+        auto *fooderPtr = (FoodItemComponentLegacy *) *((uintptr_t *) itemPtr + 66);//获取Item中和食物有关对象的地址
         *((uint8_t *) itemPtr + 22) = fake_UseAnimationFromString("eat");//写入使用动画
         *((float *) fooderPtr + 3) = fake_FoodSaturationFromString(saturationLevel);//写入营养值
 #endif

@@ -8,10 +8,10 @@ std::vector<NC_SwordItems *> swordItemsPoolArray;
 
 NC_SwordItems::NC_SwordItems(const char *name, const char *iconName, int iconData, bool inCreative, const CreativeItemCategory type) : NC_Items(name, iconName, iconData, inCreative, type){}
 
-NC_SwordItems *NC_SwordItems::createObj(const char *name, const char *iconName, int iconData, bool inCreative, const CreativeItemCategory type, int tier_, int durability, int damage)
+NC_SwordItems *NC_SwordItems::createObj(const char *name, const char *iconName, int iconData, bool inCreative, const CreativeItemCategory type, short tier_, int durability, int damage)
 {
     Item::Tier *ptr = tiersPool[tier_];
-    NC_SwordItems *item = new NC_SwordItems(name, iconName, iconData, inCreative, type);
+    auto *item = new NC_SwordItems(name, iconName, iconData, inCreative, type);
     item->tier = tier_;
     item->mDurability = durability ? durability : fake_Tier_getUses(ptr);
     item->mDamage = damage ? damage : fake_Tier_getAttackDamageBonus(ptr) + 4;
@@ -19,7 +19,7 @@ NC_SwordItems *NC_SwordItems::createObj(const char *name, const char *iconName, 
     return item;
 }
 
-int NC_SwordItems::getTier() const
+short NC_SwordItems::getTier() const
 {
     return tier;
 }
