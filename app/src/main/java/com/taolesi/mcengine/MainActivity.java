@@ -53,11 +53,11 @@ import java.util.Map;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-    public final String[] PERMISSIONS = {
+    private final String[] PERMISSIONS = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
-    public final String[] PERMISSIONS_30 = {
+    private final String[] PERMISSIONS_30 = {
             Manifest.permission.READ_MEDIA_AUDIO,
             Manifest.permission.READ_MEDIA_IMAGES,
             Manifest.permission.READ_MEDIA_VIDEO,
@@ -68,17 +68,17 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("mcengine");
     }
 
-    public ArrayList<String> modLists = new ArrayList<String>();
+    private ArrayList<String> modLists = new ArrayList<String>();
 
     public static native void copyToPatch(String input, String output);
 
-    public static Context context;
+    private static Context context;
 
-    public static void setContext(Context context_) {
+    private static void setContext(Context context_) {
         context = context_;
     }
 
-    public static Context getContext() {
+    private static Context getContext() {
         return context;
     }
 
@@ -114,8 +114,9 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton launchButton = findViewById(R.id.floatingActionButton2);
         launchButton.setOnClickListener(v -> {
             try {
-                TextureMap map = new TextureMap(this);
-                map.run();
+                TextureMap textureMap = new TextureMap(this);
+                textureMap.run();
+
                 Intent intent = new Intent();
                 intent.setClassName("com.mojang.minecraftpe", "com.mojang.minecraftpe.MainActivity");
                 startActivity(intent);
@@ -141,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         refreshModList();
     }
 
-    public void refreshAssets() {
+    private void refreshAssets() {
         File assets = new File(getExternalFilesDir("") + "/assets_modify");
         if (!assets.exists()) {
             try {
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void refreshModList() {
+    private void refreshModList() {
         File modList = new File(getExternalFilesDir("") + "/mods.json");
         if (!modList.exists()) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(modList, true))) {
@@ -161,6 +162,12 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 Log.put(e.toString());
             }
+        }
+    }
+    private void refreshCacheDir() {
+        File cache = new File(getExternalCacheDir().getAbsolutePath());
+        if (cache.exists()) {
+            cache.delete();
         }
     }
 
@@ -177,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == OPENFILE.ordinal()) {
             refreshAssets();
             refreshModList();
+            refreshCacheDir();
             Uri file = data.getData();
             String path;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -214,17 +222,12 @@ public class MainActivity extends AppCompatActivity {
             copyDir(new File(Environment.getExternalStorageDirectory() + "/games/MCEngine/mods/" + name + "/" + res), modAssets);
             try {
                 HashMap<String, String> json = new HashMap<>();
-                int count = 0;
                 Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(getExternalFilesDir("") + "/mods.json"), new TypeReference<>() {});
                 for (Map.Entry<String, Object> stringObjectEntry : jsonMap.entrySet()) {
-                    count += 1;
                     json.put(stringObjectEntry.getKey(), stringObjectEntry.getValue().toString());
-                    if (!modLists.contains(stringObjectEntry.getKey())) modLists.add(stringObjectEntry.getKey());
                 }
-                if (count == 0) {
-                    json.put(name, "enabled");
-                    if (!modLists.contains(name)) modLists.add(name);
-                }
+                json.put(name, "enabled");
+                if (!modLists.contains(name)) modLists.add(name);
                 try {
                     objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
                     objectMapper.writeValue(new File(getExternalFilesDir("") + "/mods.json"), json);

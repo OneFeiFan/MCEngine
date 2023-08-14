@@ -1,6 +1,7 @@
 package com.taolesi.mcengine;
 
 
+import static com.taolesi.mcengine.FileTools.JsonToObjTest;
 import static com.taolesi.mcengine.FileTools.unzip;
 
 import android.Manifest;
@@ -18,11 +19,19 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.quickjs.JSContext;
+import com.quickjs.QuickJS;
+import com.quickjs.QuickJSScriptException;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 import dalvik.system.DexClassLoader;
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -126,6 +135,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                     newLibDir = mcFileDir + "/base/lib/arm64-v8a/";//模块的新lib路径 64位
                 }
                 String output = getTargetContext().getDir("cache_dex", 0).getAbsolutePath();//不懂
+                boolean isOpen = false;
                 try {
                     ClassLoader loader = getTargetContext().getClassLoader();
                     DexClassLoader newLoader = new DexClassLoader(path, output, newLibDir, loader);

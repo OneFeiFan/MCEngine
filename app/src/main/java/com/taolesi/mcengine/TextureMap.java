@@ -23,27 +23,34 @@ import java.util.List;
 import java.util.Map;
 
 public class TextureMap {
-    public Context ctx;
-    public String modListJson;
-    public String textureListPatch;
+    private Context ctx;
+    private String modListJson;
+    private String textureListPatch;
+
     public TextureMap(Context context) {
         ctx = context;
     }
-    public Context getContext() {
+
+    private Context getContext() {
         return ctx;
     }
+
     public void run() throws IOException {
         modListJson = getContext().getExternalFilesDir("") + "/mods.json";
         textureListPatch = getContext().getExternalFilesDir("").getAbsolutePath();
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(modListJson), new TypeReference<>() {});
+        Log.put("TextureMap: mods.json 读取成功");
+        Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(modListJson), new TypeReference<>() {
+        });
         for (Map.Entry<String, Object> stringObjectEntry : jsonMap.entrySet()) {
-            if(stringObjectEntry.getValue().equals("enabled")) {
+            if (stringObjectEntry.getValue().equals("enabled")) {
                 //contents.json
                 String patch = textureListPatch + "/" + stringObjectEntry.getKey();
                 ArrayList<String> list = mapFiles(patch, patch);
                 List<Object> obj = new ArrayList<>();
-                Map<String, Object> contents = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/contents.json"), new TypeReference<>() {});
+                Map<String, Object> contents = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/contents.json"), new TypeReference<>() {
+                });
+                Log.put("TextureMap: contents.json 读取成功");
                 for (Map.Entry<String, Object> stringObjectEntry_contents : contents.entrySet()) {
                     obj.addAll((List<Object>) stringObjectEntry_contents.getValue());
                 }
@@ -54,17 +61,20 @@ public class TextureMap {
                 }
                 objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
                 new File(textureListPatch + "/assets").delete();
+                Log.put("TextureMap: assets 删除成功");
                 copyDir(new File(textureListPatch + "/assets_modify/assets"), new File(textureListPatch + "/assets"));
                 copyDir(new File(textureListPatch + "/" + stringObjectEntry.getKey() + "/textures"), new File(textureListPatch + "/assets/resource_packs/vanilla_1.14/textures"));
                 new File(textureListPatch + "/assets/resource_packs/vanilla_1.14/contents.json").delete();
                 objectMapper.writeValue(new File(textureListPatch + "/assets/resource_packs/vanilla_1.14/contents.json"), obj);
-
+                Log.put("TextureMap: contents.json 写入成功");
                 //item_texture.json
                 patch = textureListPatch + "/" + stringObjectEntry.getKey() + "/textures/" + stringObjectEntry.getKey() + "_items";
                 list = mapItems(patch, textureListPatch + "/" + stringObjectEntry.getKey() + "/");
-
+                Log.put("TextureMap: mapItems 成功");
                 HashMap<String, Object> items_json = new HashMap<>();
-                Map<String, Object> items = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/textures/item_texture.json"), new TypeReference<>() {});
+                Map<String, Object> items = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/textures/item_texture.json"), new TypeReference<>() {
+                });
+                Log.put("TextureMap: item_texture.json 读取成功");
                 items_json.putAll(items);
                 HashMap<String, Object> texture_data = (HashMap<String, Object>) items_json.get("texture_data");
 
@@ -85,7 +95,7 @@ public class TextureMap {
                     ArrayList<String> temp = new ArrayList<>();
                     temp.add(latter);
                     if (texture_data != null) {
-                        if (texture_data.get(String.valueOf(fileName)) != null){
+                        if (texture_data.get(String.valueOf(fileName)) != null) {
                             HashMap<String, ArrayList<String>> littleMap = (HashMap<String, ArrayList<String>>) texture_data.get(String.valueOf(fileName));
                             ArrayList<String> list1 = littleMap.get("textures");
                             list1.add(latter);
@@ -106,7 +116,8 @@ public class TextureMap {
                 list = mapItems(patch, textureListPatch + "/" + stringObjectEntry.getKey() + "/");
 
                 items_json = new HashMap<>();
-                items = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/textures/terrain_texture.json"), new TypeReference<>() {});
+                items = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/textures/terrain_texture.json"), new TypeReference<>() {
+                });
                 items_json.putAll(items);
                 texture_data = (HashMap<String, Object>) items_json.get("texture_data");
 
@@ -127,7 +138,7 @@ public class TextureMap {
                     ArrayList<String> temp = new ArrayList<>();
                     temp.add(latter);
                     if (texture_data != null) {
-                        if (texture_data.get(String.valueOf(fileName)) != null){
+                        if (texture_data.get(String.valueOf(fileName)) != null) {
                             HashMap<String, ArrayList<String>> littleMap = (HashMap<String, ArrayList<String>>) texture_data.get(String.valueOf(fileName));
                             ArrayList<String> list1 = littleMap.get("textures");
                             list1.add(latter);
@@ -143,9 +154,12 @@ public class TextureMap {
                 new File(textureListPatch + "/assets/resource_packs/vanilla_1.14/textures/terrain_texture.json").delete();
                 objectMapper.writeValue(new File(textureListPatch + "/assets/resource_packs/vanilla_1.14/textures/terrain_texture.json"), items_json);
                 toZip(textureListPatch + "/assets", new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/games/MCEngine/assets.zip")), true);
+                ModMap modMap = new ModMap(getContext());
+                modMap.run();
             }
         }
     }
+
     public ArrayList<String> mapFiles(String patch, String blackList) {
         File file = new File(patch);
         String[] studentFilesName = file.list();
@@ -159,13 +173,14 @@ public class TextureMap {
             } else {
                 String formal = newFile.getAbsolutePath();
                 String latter = formal.replace(blackList, "");
-                if(latter.startsWith("/textures")) {
+                if (latter.startsWith("/textures")) {
                     files.add(latter.replace("/textures", "textures"));
                 }
             }
         }
         return files;
     }
+
     public ArrayList<String> mapItems(String patch, String blackList) {
         File file = new File(patch);
         String[] studentFilesName = file.list();
