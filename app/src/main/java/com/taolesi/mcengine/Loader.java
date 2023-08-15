@@ -50,7 +50,7 @@ public class Loader {
     public void runCoreJS(Context context) throws JsonProcessingException {
         String modListJson = Environment.getExternalStorageDirectory() + "/games/MCEngine/mods.json";
         ObjectMapper objectMapper = new ObjectMapper();
-        Log.init(Environment.getExternalStorageDirectory() + "/games/MCEngine","log.txt");
+        Log.init(Environment.getExternalStorageDirectory() + "/games/MCEngine","logJS.txt");
         Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(modListJson), new TypeReference<>() {
         });
         Log.put(jsonMap.toString());
