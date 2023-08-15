@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         appCacheDir = getExternalCacheDir().getAbsolutePath();
         appTempDir = appCacheDir + "/temp/";
         appModsDir = Environment.getExternalStorageDirectory().getAbsolutePath()+"/games/MCEngine/mods/";
+        Log.init(Environment.getExternalStorageDirectory() +"/games/MCEngine", "log.txt");
         if (Build.VERSION.SDK_INT >= 30) {
             if (!Environment.isExternalStorageManager()) {
                 Intent request = new Intent(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
@@ -141,8 +142,6 @@ public class MainActivity extends AppCompatActivity {
         openFileButton.setOnClickListener(v -> {
             startActivityForResult(intent, OPENFILE.ordinal());
         });
-
-        Log.init(Environment.getExternalStorageDirectory() +"/games/MCEngine", "log.txt");
         refreshAssets();
         refreshModList();
     }
