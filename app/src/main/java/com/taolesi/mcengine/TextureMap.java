@@ -1,6 +1,7 @@
 package com.taolesi.mcengine;
 
 import static com.taolesi.mcengine.FileTools.copyDir;
+import static com.taolesi.mcengine.FileTools.deleteFile;
 import static com.taolesi.mcengine.FileTools.toZip;
 
 import android.content.Context;
@@ -127,7 +128,8 @@ public class TextureMap {
             if (stringObjectEntry.getValue().equals("enabled")) {
                 //contents.json
                 objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-                new File(textureListPatch + "/assets").delete();
+                //new File(textureListPatch + "/assets").delete();
+                deleteFile(textureListPatch + "/assets");
                 Log.put("TextureMap: assets 删除成功");
                 copyDir(new File(textureListPatch + "/assets_modify/assets"), new File(textureListPatch + "/assets"));
                 copyDir(new File(textureListPatch + "/" + stringObjectEntry.getKey() + "/textures"), new File(textureListPatch + "/assets/resource_packs/vanilla_1.14/textures"));
@@ -151,7 +153,7 @@ public class TextureMap {
         objectMapper.writeValue(new File(textureListPatch + "/assets/resource_packs/vanilla_1.14/contents.json"), contentsObj);
         Log.put("TextureMap: contents.json 写入成功");
 
-        toZip(textureListPatch + "/assets", new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/games/MCEngine/assets.zip")), true);
+        toZip(textureListPatch + "/assets", new FileOutputStream(Environment.getExternalStorageDirectory() + "/games/MCEngine/assets.zip"), true);
     }
 
     public ArrayList<String> mapItems(String patch, String blackList) {
