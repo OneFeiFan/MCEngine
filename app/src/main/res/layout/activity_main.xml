@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:id="@+id/main"
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -54,6 +55,13 @@
         android:clickable="true"
         android:focusable="true"
         app:srcCompat="@android:drawable/ic_media_play" />
+
+    <ListView
+        android:id="@+id/modList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="0dp" />
 
 
 </RelativeLayout>

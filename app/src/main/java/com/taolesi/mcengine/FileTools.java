@@ -78,47 +78,6 @@ public class FileTools {
         }
     }
 
-    public static void unZip_DocumentsApi(Context ctx, String res, String output) {
-        //targetPath输出文件路径
-
-        /*File targetFile = new File(output);
-        // 如果目录不存在，则创建
-        if (!targetFile.exists()) {
-            targetFile.mkdirs();
-        } else {
-            targetFile.delete();
-            targetFile.mkdirs();
-        }
-        //sourcePath压缩包文件路径
-        try (ZipFile zipFile = new ZipFile(new File(res))) {
-            Enumeration enumeration = zipFile.entries();
-            while (enumeration.hasMoreElements()) {
-                ZipEntry entry = (ZipEntry) enumeration.nextElement();
-                String name = entry.getName();
-                if (entry.isDirectory()) {
-                    continue;
-                }
-                try (BufferedInputStream inputStream = new BufferedInputStream(zipFile.getInputStream(entry))) {
-                    String outName = output + "/" + name;
-                    File outFile = new File(outName);
-                    File tempFile = new File(outName.substring(0, outName.lastIndexOf("/")));
-                    if (!tempFile.exists()) {
-                        tempFile.mkdirs();
-                    }
-                    try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outFile))) {
-                        int len;
-                        byte[] buffer = new byte[1024];
-                        while ((len = inputStream.read(buffer)) > 0) {
-                            outputStream.write(buffer, 0, len);
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            Toast.makeText(ctx, e.toString(), Toast.LENGTH_SHORT).show();
-        }*/
-    }
-
     public static DocumentFile getDoucmentFile(Context context, String path) {
         if (path.endsWith("/")) {
             path = path.substring(0, path.length() - 1);
@@ -221,8 +180,7 @@ public class FileTools {
         String filePath;
         String[] filePathColumn = {MediaStore.DownloadColumns.DATA, MediaStore.DownloadColumns.DISPLAY_NAME};
         ContentResolver contentResolver = context.getContentResolver();
-        Cursor cursor = contentResolver.query(uri, filePathColumn, null,
-                null, null);
+        Cursor cursor = contentResolver.query(uri, filePathColumn, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
             try {
@@ -358,5 +316,17 @@ public class FileTools {
                 }
             }
         }
+    }
+    public static void deleteFie(String path) {
+        File file = new File(path);
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            for (File littleFile : files) {
+                deleteFie(littleFile.getAbsolutePath());
+            }
+        } else {
+            file.delete();
+        }
+        file.delete();
     }
 }

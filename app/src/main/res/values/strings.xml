@@ -1,14 +1,9 @@
 <resources>
     <string name="app_name">MCEngine</string>
-    <string name="title_activity_main">MCEngine</string>
     <string name="settings">设置</string>
     <string name="about">关于</string>
     <string name="title_activity_setttings">SetttingsActivity</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
     <string name="nomods">没有模组</string>
     <string name="about_app_front">一个基于LSPosed的Minecraftpe模块化启动器。\n现处于立项阶段，仅提供nativeMod功能。\n仅支持Minecraft基岩版1.16.201。</string>
     <string name="browser_about">跳转</string>
