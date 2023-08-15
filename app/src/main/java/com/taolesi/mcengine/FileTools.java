@@ -41,13 +41,30 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class FileTools {
+    public static boolean deleteDirectory(File directory) {
+        if (!directory.exists() || !directory.isDirectory()) {
+            return false;
+        }
+
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteDirectory(file); // 递归删除子目录
+                } else {
+                    file.delete(); // 删除文件
+                }
+            }
+        }
+        return directory.delete(); // 删除目录本身
+    }
     public static void unzip(Context ctx, String res, String output) {
         File targetFile = new File(output);
         if (!targetFile.exists()) {
             targetFile.mkdirs();
         } else {
-            targetFile.delete();
-            targetFile.mkdirs();
+          deleteDirectory(targetFile);
+          targetFile.mkdirs();
         }
         try (ZipFile zipFile = new ZipFile(new File(res))) {
             Enumeration enumeration = zipFile.entries();
@@ -119,8 +136,11 @@ public class FileTools {
 
     public static String readJsonFile(String fileName) {
         String jsonStr = "";
+        File jsonFile = new File(fileName);
+        if(!jsonFile.exists()){
+            return null;
+        }
         try {
-            File jsonFile = new File(fileName);
             FileReader fileReader = new FileReader(jsonFile);
 
             Reader reader = new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8);
@@ -253,7 +273,23 @@ public class FileTools {
             }
         }
     }
-
+    public static void removeDir(File file, File file1) {
+        if (!file.isDirectory()) {
+            return;
+        }
+        if (!file1.exists()) {
+            file1.mkdirs();
+        }
+        File[] files = file.listFiles();
+        for (File f : files) {
+            if (f.isDirectory()) {
+                removeDir(f, new File(file1.getPath(), f.getName()));
+            } else if (f.isFile()) {
+                copyFile(f, new File(file1.getPath(), f.getName()));
+            }
+        }
+        deleteDirectory(file);
+    }
     public static void toZip(String srcDir, OutputStream out, boolean KeepDirStructure) throws RuntimeException {
 
         long start = System.currentTimeMillis();

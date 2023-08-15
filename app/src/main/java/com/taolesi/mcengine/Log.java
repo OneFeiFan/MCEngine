@@ -8,18 +8,30 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Log {
-    public static String dir;
-    public static boolean setDir(String patch) {
-        dir = patch;
-        return true;
+    private static String dir;
+
+    public static void init(String dir, String fileName) {
+        File file = new File(dir);
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        setDir(file.getAbsolutePath() +"/"+fileName);
+        clear();
     }
-    public static String getDir() {
+
+    private static void setDir(String patch) {
+        dir = patch;
+    }
+
+    private static String getDir() {
         return dir;
     }
-    public static boolean clear() {
+
+    private static boolean clear() {
         deleteFie(getDir());
         return true;
     }
+
     public static void put(String str) {
         File file = new File(getDir());
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {

@@ -41,24 +41,16 @@ public class Loader {
         //System.loadLibrary("mcengine");
         System.loadLibrary("loader");
         //此处若是加载异常,将会停止向下运行,不用担心quickjs
-        QuickJS quickJS = QuickJS.createRuntimeWithEventQueue();
         Loader loader = new Loader();
-        loader.runCoreJS(context, quickJS);
+        loader.runCoreJS(context);
+
         return true;
     }
 
-    public void runCoreJS(Context context, QuickJS quickJS) throws JsonProcessingException {
-        JSContext quickJS_context = quickJS.createContext();
-        quickJS_context.addJavascriptInterface(new Loader(), "Loader");
-        quickJS_context.addJavascriptInterface(new NativeItem(), "NativeItem");
-        quickJS_context.executeScript(JsonToObjTest(context.getFilesDir() + "/base/assets/main.js"), "main.js");
-        quickJS_context.close();
-        quickJS.close();
-
+    public void runCoreJS(Context context) throws JsonProcessingException {
         String modListJson = Environment.getExternalStorageDirectory() + "/games/MCEngine/mods.json";
         ObjectMapper objectMapper = new ObjectMapper();
-        Log.setDir(Environment.getExternalStorageDirectory() + "/games/MCEngine/log.txt");
-        Log.clear();
+        Log.init(Environment.getExternalStorageDirectory() + "/games/MCEngine","log.txt");
         Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(modListJson), new TypeReference<>() {
         });
         Log.put(jsonMap.toString());

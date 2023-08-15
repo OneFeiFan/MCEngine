@@ -119,6 +119,7 @@ void NCHookFR::init()
     tiersPool[3] = new Item::Tier( 3, 1561, 8.0, 3, 10);
     tiersPool[4] = new Item::Tier( 0, 32, 12.0, 0, 22);
     tiersPool[5] = new Item::Tier( 4, 2031, 9.0, 4, 15);
+    
 //        ptr = (void *)dlsym(this->MCHandle, "_ZN22TextureUVCoordinateSetC1Efffftt16ResourceLocationft");
 //        MSHookFunction(ptr, (void *)&EX_TextureUVCoordinateSet_TextureUVCoordinateSet, (void **)&base_TextureUVCoordinateSet_TextureUVCoordinateSet);
 //        ptr = (void *)dlsym(this->MCHandle, "_ZN4Item25getTextureUVCoordinateSetERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEi");
