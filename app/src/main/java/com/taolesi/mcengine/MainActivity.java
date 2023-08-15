@@ -120,8 +120,7 @@ public class MainActivity extends AppCompatActivity {
         appTempDir = appCacheDir + "/temp/";
         appModsDir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/games/MCEngine/mods/";
 
-        Log.setDir(Environment.getExternalStorageDirectory() + "/games/MCEngine/log.txt");
-        Log.clear();
+        Log.init(Environment.getExternalStorageDirectory() + "/games/MCEngine","log.txt");
 
         if (new File(getExternalFilesDir("") + "/mods.json").exists()){
             ObjectMapper objectMapper = new ObjectMapper();

@@ -19,15 +19,15 @@ public class Log {
         clear();
     }
 
-    public static void setDir(String patch) {
+    private static void setDir(String patch) {
         dir = patch;
     }
 
-    public static String getDir() {
+    private static String getDir() {
         return dir;
     }
 
-    public static boolean clear() {
+    private static boolean clear() {
         deleteFile(getDir());
         return true;
     }
