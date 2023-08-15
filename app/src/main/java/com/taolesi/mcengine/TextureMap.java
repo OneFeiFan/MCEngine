@@ -84,8 +84,13 @@ public class TextureMap {
             if (texture_data != null) {
                 if (texture_data.get(String.valueOf(fileName)) != null) {
                     HashMap<String, ArrayList<String>> littleMap = (HashMap<String, ArrayList<String>>) texture_data.get(String.valueOf(fileName));
-                    ArrayList<String> list1 = littleMap.get("textures");
-                    list1.add(latter);
+                    ArrayList<String> list1 = null;
+                    if (littleMap != null) {
+                        list1 = littleMap.get("textures");
+                    }
+                    if (list1 != null) {
+                        list1.add(latter);
+                    }
                     texture_data.put(String.valueOf(fileName), littleMap);
                 } else {
                     HashMap<String, ArrayList<String>> littleMap = new HashMap<>();
@@ -148,20 +153,23 @@ public class TextureMap {
 
         toZip(textureListPatch + "/assets", new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/games/MCEngine/assets.zip")), true);
     }
+
     public ArrayList<String> mapItems(String patch, String blackList) {
         File file = new File(patch);
         String[] studentFilesName = file.list();
         ArrayList<String> files = new ArrayList<>();
-        for (String name : studentFilesName) {
-            String newPatch = patch + "/" + name;
-            File newFile = new File(newPatch);
-            if (newFile.isDirectory()) {
-                ArrayList<String> temp = mapItems(newPatch, blackList);
-                files.addAll(temp);
-            } else {
-                String formal = newFile.getAbsolutePath();
-                String latter = formal.replace(blackList, "");
-                files.add(latter);
+        if (studentFilesName != null) {
+            for (String name : studentFilesName) {
+                String newPatch = patch + "/" + name;
+                File newFile = new File(newPatch);
+                if (newFile.isDirectory()) {
+                    ArrayList<String> temp = mapItems(newPatch, blackList);
+                    files.addAll(temp);
+                } else {
+                    String formal = newFile.getAbsolutePath();
+                    String latter = formal.replace(blackList, "");
+                    files.add(latter);
+                }
             }
         }
         return files;
