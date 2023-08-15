@@ -353,12 +353,12 @@ public class FileTools {
             }
         }
     }
-    public static void deleteFie(String path) {
+    public static void deleteFile(String path) {
         File file = new File(path);
         if (file.isDirectory()) {
             File[] files = file.listFiles();
             for (File littleFile : files) {
-                deleteFie(littleFile.getAbsolutePath());
+                deleteFile(littleFile.getAbsolutePath());
             }
         } else {
             file.delete();
