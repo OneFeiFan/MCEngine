@@ -41,4 +41,13 @@ public class Log {
             e.printStackTrace();
         }
     }
+    public static void put(int str) {
+        put(String.valueOf(str));
+    }
+    public static void put(boolean str) {
+        put(String.valueOf(str));
+    }
+    public static void put(long str) {
+        put(String.valueOf(str));
+    }
 }
