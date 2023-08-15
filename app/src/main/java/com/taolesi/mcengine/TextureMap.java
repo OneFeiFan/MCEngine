@@ -40,8 +40,7 @@ public class TextureMap {
         textureListPatch = getContext().getExternalFilesDir("").getAbsolutePath();
         ObjectMapper objectMapper = new ObjectMapper();
         Log.put("TextureMap: mods.json 读取成功");
-        Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(modListJson), new TypeReference<>() {
-        });
+        Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(modListJson), new TypeReference<>() {});
         for (Map.Entry<String, Object> stringObjectEntry : jsonMap.entrySet()) {
             if (stringObjectEntry.getValue().equals("enabled")) {
                 //contents.json
@@ -132,16 +131,19 @@ public class TextureMap {
                         for (int i = 0; i < f.length - 1; i++) {
                             fileName.append(f[i]);
                         }
-                    } catch (NumberFormatException e) {
-
-                    }
+                    } catch (NumberFormatException ignored) {}
                     ArrayList<String> temp = new ArrayList<>();
                     temp.add(latter);
                     if (texture_data != null) {
                         if (texture_data.get(String.valueOf(fileName)) != null) {
                             HashMap<String, ArrayList<String>> littleMap = (HashMap<String, ArrayList<String>>) texture_data.get(String.valueOf(fileName));
-                            ArrayList<String> list1 = littleMap.get("textures");
-                            list1.add(latter);
+                            ArrayList<String> list1 = null;
+                            if (littleMap != null) {
+                                list1 = littleMap.get("textures");
+                            }
+                            if (list1 != null) {
+                                list1.add(latter);
+                            }
                             texture_data.put(String.valueOf(fileName), littleMap);
                         } else {
                             HashMap<String, ArrayList<String>> littleMap = new HashMap<>();
@@ -164,17 +166,19 @@ public class TextureMap {
         File file = new File(patch);
         String[] studentFilesName = file.list();
         ArrayList<String> files = new ArrayList<>();
-        for (String name : studentFilesName) {
-            String newPatch = patch + "/" + name;
-            File newFile = new File(newPatch);
-            if (newFile.isDirectory()) {
-                ArrayList<String> temp = mapFiles(newPatch, blackList);
-                files.addAll(temp);
-            } else {
-                String formal = newFile.getAbsolutePath();
-                String latter = formal.replace(blackList, "");
-                if (latter.startsWith("/textures")) {
-                    files.add(latter.replace("/textures", "textures"));
+        if (studentFilesName != null) {
+            for (String name : studentFilesName) {
+                String newPatch = patch + "/" + name;
+                File newFile = new File(newPatch);
+                if (newFile.isDirectory()) {
+                    ArrayList<String> temp = mapFiles(newPatch, blackList);
+                    files.addAll(temp);
+                } else {
+                    String formal = newFile.getAbsolutePath();
+                    String latter = formal.replace(blackList, "");
+                    if (latter.startsWith("/textures")) {
+                        files.add(latter.replace("/textures", "textures"));
+                    }
                 }
             }
         }
@@ -185,16 +189,18 @@ public class TextureMap {
         File file = new File(patch);
         String[] studentFilesName = file.list();
         ArrayList<String> files = new ArrayList<>();
-        for (String name : studentFilesName) {
-            String newPatch = patch + "/" + name;
-            File newFile = new File(newPatch);
-            if (newFile.isDirectory()) {
-                ArrayList<String> temp = mapItems(newPatch, blackList);
-                files.addAll(temp);
-            } else {
-                String formal = newFile.getAbsolutePath();
-                String latter = formal.replace(blackList, "");
-                files.add(latter);
+        if (studentFilesName != null) {
+            for (String name : studentFilesName) {
+                String newPatch = patch + "/" + name;
+                File newFile = new File(newPatch);
+                if (newFile.isDirectory()) {
+                    ArrayList<String> temp = mapItems(newPatch, blackList);
+                    files.addAll(temp);
+                } else {
+                    String formal = newFile.getAbsolutePath();
+                    String latter = formal.replace(blackList, "");
+                    files.add(latter);
+                }
             }
         }
         return files;

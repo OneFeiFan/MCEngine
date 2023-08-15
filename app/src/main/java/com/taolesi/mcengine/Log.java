@@ -1,6 +1,6 @@
 package com.taolesi.mcengine;
 
-import static com.taolesi.mcengine.FileTools.deleteFie;
+import static com.taolesi.mcengine.FileTools.deleteFile;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,16 +19,16 @@ public class Log {
         clear();
     }
 
-    private static void setDir(String patch) {
+    public static void setDir(String patch) {
         dir = patch;
     }
 
-    private static String getDir() {
+    public static String getDir() {
         return dir;
     }
 
-    private static boolean clear() {
-        deleteFie(getDir());
+    public static boolean clear() {
+        deleteFile(getDir());
         return true;
     }
 
