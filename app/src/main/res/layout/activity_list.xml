@@ -54,15 +54,16 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="8dp"
             app:cardCornerRadius="25dp"
+            app:cardBackgroundColor="@color/purple_50"
             app:cardElevation="0dp">
 
             <net.qiujuer.genius.ui.widget.Button
                 android:id="@+id/button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/purple_50"
+                android:backgroundTint="@color/purple_200"
                 android:clickable="true"
-                android:foreground="@drawable/a_gear"
+                android:background="@drawable/a_gear"
                 android:gravity="center"
                 android:text=""
                 app:gTouchEffect="ripple" />

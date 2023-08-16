@@ -17,6 +17,7 @@ import static com.taolesi.mcengine.QUESTCODE.REQUEST_CODE_FOR_DIR;
 import static com.taolesi.mcengine.StatusBarUtils.setWindowStatusBarColor;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -29,7 +30,12 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.DocumentsContract;
+import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.animation.Animation;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,10 +43,12 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.documentfile.provider.DocumentFile;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -53,8 +61,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Timer;
@@ -110,18 +121,54 @@ public class MainActivity extends AppCompatActivity {
             refreshMods();
         }
     };
+    private FloatingActionButton openFileButton;
+    private FloatingActionButton launchButton;
+    private float x1 = 0.0F;
+    private float y1 = 0.0F;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContext(this);
         setContentView(R.layout.activity_main);
-        setWindowStatusBarColor(this, R.color.purple_200);
+        setWindowStatusBarColor(this, R.color.purple_300);
         appCacheDir = getExternalCacheDir().getAbsolutePath();
         appTempDir = appCacheDir + "/temp/";
         appModsDir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/games/MCEngine/mods/";
 
         Log.init(Environment.getExternalStorageDirectory() + "/games/MCEngine","log.txt");
+
+        launchButton = findViewById(R.id.floatingActionButton2);
+        launchButton.setOnClickListener(v -> {
+            try {
+                TextureMap textureMap = new TextureMap(getContext());
+                textureMap.run();
+
+                Intent intent = new Intent();
+                intent.setClassName("com.mojang.minecraftpe", "com.mojang.minecraftpe.MainActivity");
+                startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                Log.put(e.toString());
+                Toast.makeText(MainActivity.this, "启动MC失败", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                Log.put(e.toString());
+            }
+        });
+
+        openFileButton = findViewById(R.id.floatingActionButton);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+
+        openFileButton.setOnClickListener(v -> {
+            startActivityForResult(intent, OPENFILE.ordinal());
+        });
+
+        /*openFileButton.setOnLongClickListener(v -> {
+            launchButton.hide();
+            openFileButton.hide();
+            return true;
+        });*/
 
         if (new File(getExternalFilesDir("") + "/mods.json").exists()){
             ObjectMapper objectMapper = new ObjectMapper();
@@ -144,6 +191,27 @@ public class MainActivity extends AppCompatActivity {
         }
 
         ListView listView = (ListView) findViewById(R.id.modList);
+        Collections.sort(getModLists());
+
+        listView.setOnTouchListener((v, event) -> {
+
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                x1 = event.getX();
+                y1 = event.getY();
+            }
+            if(event.getAction() == MotionEvent.ACTION_UP) {
+                float x2 = event.getX();
+                float y2 = event.getY();
+                if(y1 - y2 > 50) {
+                    launchButton.hide();
+                    openFileButton.hide();
+                } else if(y2 - y1 > 50) {
+                    launchButton.show();
+                    openFileButton.show();
+                }
+            }
+            return false;
+        });
         setModAdapter(new ModAdapter(getContext(), getModLists()));
         try {
             listView.setAdapter(modAdapter);
@@ -183,30 +251,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        FloatingActionButton launchButton = findViewById(R.id.floatingActionButton2);
-        launchButton.setOnClickListener(v -> {
-            try {
-                TextureMap textureMap = new TextureMap(getContext());
-                textureMap.run();
 
-                Intent intent = new Intent();
-                intent.setClassName("com.mojang.minecraftpe", "com.mojang.minecraftpe.MainActivity");
-                startActivity(intent);
-            } catch (ActivityNotFoundException e) {
-                Log.put(e.toString());
-                Toast.makeText(MainActivity.this, "启动MC失败", Toast.LENGTH_SHORT).show();
-            } catch (IOException e) {
-                Log.put(e.toString());
-            }
-        });
-
-        FloatingActionButton openFileButton = findViewById(R.id.floatingActionButton);
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-
-        openFileButton.setOnClickListener(v -> {
-            startActivityForResult(intent, OPENFILE.ordinal());
-        });
         refreshAssets();
         refreshModList();
     }
@@ -215,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
             for (String name : getModLists()) {
                 if (!new File(Environment.getExternalStorageDirectory() + "/games/MCEngine/mods/" + name).exists() | !new File(getExternalFilesDir("") + "/" + name).exists()) {
                     getModLists().remove(name);
+                    Collections.sort(getModLists());
                     getModAdapter().notifyDataSetChanged();
                     try {
                         removeFromJson(getExternalFilesDir("") + "/mods.json", name);
@@ -355,6 +401,7 @@ public class MainActivity extends AppCompatActivity {
             Log.put("材质复制完成");
             Log.put("mod列表" + modLists.toString());
             refreshCacheDir();
+            getModAdapter().notifyDataSetChanged();
         }
     }
 }
