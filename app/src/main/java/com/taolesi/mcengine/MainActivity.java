@@ -14,6 +14,7 @@ import static com.taolesi.mcengine.FileTools.unzip;
 import static com.taolesi.mcengine.FileTools.uriToFileApiQ;
 import static com.taolesi.mcengine.QUESTCODE.OPENFILE;
 import static com.taolesi.mcengine.QUESTCODE.REQUEST_CODE_FOR_DIR;
+import static com.taolesi.mcengine.StatusBarUtils.setWindowStatusBarColor;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContext(this);
         setContentView(R.layout.activity_main);
-
+        setWindowStatusBarColor(this, R.color.purple_200);
         appCacheDir = getExternalCacheDir().getAbsolutePath();
         appTempDir = appCacheDir + "/temp/";
         appModsDir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/games/MCEngine/mods/";
@@ -214,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
             for (String name : getModLists()) {
                 if (!new File(Environment.getExternalStorageDirectory() + "/games/MCEngine/mods/" + name).exists() | !new File(getExternalFilesDir("") + "/" + name).exists()) {
                     getModLists().remove(name);
+                    getModAdapter().notifyDataSetChanged();
                     try {
                         removeFromJson(getExternalFilesDir("") + "/mods.json", name);
                     } catch (IOException e) {
@@ -223,7 +225,6 @@ public class MainActivity extends AppCompatActivity {
                     deleteFile(Environment.getExternalStorageDirectory() + "/games/MCEngine/mods/" + name);
                 }
             }
-            getModAdapter().notifyDataSetChanged();
             refreshTextView();
         } catch (Exception e) {
             Log.put(e.toString());
@@ -313,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
             refreshAssets();
             refreshModList();
             try {
-                Map<String, Object> jsonMap = objectMapper.readValue(modInfo, new TypeReference<Map<String, Object>>() {
+                Map<String, Object> jsonMap = objectMapper.readValue(modInfo, new TypeReference<>() {
                 });
                 for (Map.Entry<String, Object> entry : jsonMap.entrySet()) {
                     switch (entry.getKey()) {

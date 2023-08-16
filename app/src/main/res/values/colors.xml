@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="toolbar">#93c4d4</color>
     <color name="txt">#244a60</color>
+
+    <color name="紫罗兰">#7456B1</color>
+
+    <color name="purple_700">#512DA8</color>
+    <color name="purple_500">#673AB7</color>
+    <color name="purple_300">#9575CD</color>
+    <color name="purple_200">#B39DDB</color>
+    <color name="purple_100">#D1C4E9</color>
+    <color name="purple_50">#EDE7F6</color>
+
+    <color name="blue_700">#1976D2</color>
+    <color name="blue_500">#2196F3</color>
+    <color name="blue_300">#64B5F6</color>
+    <color name="blue_200">#90CAF9</color>
+    <color name="blue_100">#BBDEFB</color>
+    <color name="blue_50">#E3F2FD</color>
+
+    <color name="雪青">#BDB5D7</color>
 </resources>

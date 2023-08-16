@@ -5,14 +5,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+
+import net.qiujuer.genius.ui.widget.Button;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -48,7 +55,13 @@ public class ModAdapter extends BaseAdapter {
         modName.setText(mods.get(position));
         ImageView modIcon = convertView.findViewById(R.id.file_name);
         modIcon.setImageURI(Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/games/MCEngine/mods/" + modName.getText() + "/mod_icon.png")));
+        //Button button = convertView.findViewById(R.id.button);
+        //button.setOnKeyListener((v, keyCode, event) -> false);
 
+        /*CardView settings = convertView.findViewById(R.id.mod_settings);
+        settings.setOnClickListener(view -> {
+            Toast.makeText(context, "点击card", Toast.LENGTH_SHORT).show();
+        });*/
         return convertView;
     }
 }

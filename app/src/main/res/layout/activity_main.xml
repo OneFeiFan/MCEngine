@@ -8,22 +8,17 @@
     android:id="@+id/main"
     tools:context=".MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
 
-    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/toolbar"
+        android:background="@color/purple_100"
         app:layout_anchorGravity="top|center"
         app:menu="@menu/menu_main"
         app:title="@string/app_name"
-        app:titleTextColor="@color/txt" />
+        app:titleTextColor="@color/紫罗兰" />
 
     <TextView
         android:id="@+id/textView"
@@ -42,7 +37,9 @@
         android:layout_marginBottom="50dp"
         android:clickable="true"
         app:srcCompat="@android:drawable/ic_input_add"
-        android:focusable="true" />
+        android:background="@color/purple_50"
+        android:focusable="true"
+        android:importantForAccessibility="no" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton2"
@@ -54,13 +51,17 @@
         android:layout_marginBottom="120dp"
         android:clickable="true"
         android:focusable="true"
-        app:srcCompat="@android:drawable/ic_media_play" />
+        android:background="@color/purple_50"
+        app:srcCompat="@android:drawable/ic_media_play"
+        android:importantForAccessibility="no" />
 
     <ListView
         android:id="@+id/modList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
+        android:background="@color/purple_50"
+        android:divider="@null"
         android:layout_marginTop="0dp" />
 
 

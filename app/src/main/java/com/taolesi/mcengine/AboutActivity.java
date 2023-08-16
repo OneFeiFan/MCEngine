@@ -1,6 +1,7 @@
 package com.taolesi.mcengine;
 
 import static com.taolesi.mcengine.R.layout;
+import static com.taolesi.mcengine.StatusBarUtils.setWindowStatusBarColor;
 
 import android.content.Context;
 import android.graphics.Point;
@@ -21,6 +22,7 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_about);
+        setWindowStatusBarColor(this, R.color.blue_200);
         Toolbar toolbar = (Toolbar) findViewById(R.id.about_toolbar);
 
 
