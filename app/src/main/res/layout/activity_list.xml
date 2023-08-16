@@ -13,11 +13,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/rl"
         android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:id="@+id/card1"
+            android:layout_alignParentLeft="true"
             android:layout_marginStart="15dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
@@ -43,8 +46,9 @@
         <androidx.cardview.widget.CardView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginStart="320dp"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="8dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="0dp">
@@ -53,11 +57,11 @@
                 android:id="@+id/button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/purple_50"
                 android:clickable="true"
-                app:gTouchEffect="ripple"
                 android:gravity="center"
                 android:text="@string/settings"
-                android:background="@color/purple_50"/>
+                app:gTouchEffect="ripple" />
         </androidx.cardview.widget.CardView>
 
 
