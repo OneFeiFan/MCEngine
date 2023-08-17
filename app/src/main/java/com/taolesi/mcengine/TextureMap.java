@@ -20,17 +20,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings({"ResultOfMethodCallIgnored", "unchecked"})
 public class TextureMap {
-    private Context ctx;
-    private String modListJson;
+    private final Context ctx;
+
+    private final ObjectMapper objectMapper;
     private String textureListPatch;
-    private ObjectMapper objectMapper;
+    private Map<String,List<Map<String,String>>> contentsObj;
 
-    private Map contentsObj;
+    private Map<String, Object> items_json;
 
-    private HashMap<String, Object> items_json = new HashMap<>();
-
-    private HashMap<String, Object> block_json = new HashMap<>();
+    private Map<String, Object> block_json;
 
     public TextureMap(Context context) {
         ctx = context;
@@ -41,10 +41,10 @@ public class TextureMap {
         return ctx;
     }
 
-    private void addData(Map.Entry<String, Object> stringObjectEntry, String type) throws IOException {
-        HashMap<String, Object> tempMap = null;
+    private void addData(Map.Entry<String, Object> stringObjectEntry, String type) {
+        Map<String, Object> tempMap = null;
         HashMap<String, Object> texture_data = null;
-        List<Map> subContentList = (List<Map>) contentsObj.get("content");
+        List<Map<String,String>> subContentList = contentsObj.get("content");
         switch (type) {
             case "items":
                 texture_data = (HashMap<String, Object>) items_json.get("texture_data");
@@ -64,7 +64,9 @@ public class TextureMap {
         for (String name : list) {
             Map<String, String> subMap = new HashMap<>();
             subMap.put("path", name);
-            subContentList.add(subMap);
+            if (subContentList != null) {
+                subContentList.add(subMap);
+            }
             String dir = name.replace(".png", "");
             String[] latter = dir.split("/");
             String fileName = latter[latter.length - 1];
@@ -84,19 +86,17 @@ public class TextureMap {
                 ArrayList<String> subTemp = littleMap.get("textures");
                 temp = (subTemp == null ? new ArrayList<>() : subTemp);
                 temp.add(dir);
-                littleMap.put("textures", temp);
-                texture_data.put(fileName, littleMap);
             } else {
                 littleMap = new HashMap<>();
-                littleMap.put("textures", temp);
-                texture_data.put(fileName, littleMap);
             }
+            littleMap.put("textures", temp);
+            texture_data.put(fileName, littleMap);
         }
         tempMap.put("texture_data", texture_data);
     }
 
     public void run() throws IOException {
-        modListJson = getContext().getExternalFilesDir("") + "/mods.json";
+        String modListJson = getContext().getExternalFilesDir("") + "/mods.json";
         textureListPatch = getContext().getExternalFilesDir("").getAbsolutePath();
 
         Log.put("TextureMap: mods.json 读取成功");
@@ -104,13 +104,13 @@ public class TextureMap {
         });
         Log.put("TextureMap: contents.json 读取成功");
 
-        Map<String, Object> items = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/textures/item_texture.json"), new TypeReference<>() {
+        items_json = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/textures/item_texture.json"), new TypeReference<>() {
         });
-        items_json.putAll(items);
+        //items_json.putAll(items);
         Log.put("TextureMap: item_texture.json 读取成功");
-        Map<String, Object> blocks = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/textures/terrain_texture.json"), new TypeReference<>() {
+        block_json = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/textures/terrain_texture.json"), new TypeReference<>() {
         });
-        block_json.putAll(blocks);
+        //.putAll(blocks);
         Log.put("TextureMap: terrain_texture.json 读取成功");
         Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(modListJson), new TypeReference<>() {
         });
