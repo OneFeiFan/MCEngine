@@ -92,11 +92,12 @@ public class MainActivity extends AppCompatActivity {
     public static native void copyToPatch(String input, String output);
 
     private static Context context;
-    private static String appCacheDir;
-    private static String appTempDir;
+    private String appCacheDir;
+    private String appTempDir;
 
-    private static String appModsDir;
+    private String appModsDir;
 
+    private String appFilesDir;
     private static void setContext(Context context_) {
         context = context_;
     }
@@ -136,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         appCacheDir = getExternalCacheDir().getAbsolutePath();
         appTempDir = appCacheDir + "/temp/";
         appModsDir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/games/MCEngine/mods/";
-
+        appFilesDir = getExternalFilesDir("").toString()+"/";
         Log.init(Environment.getExternalStorageDirectory() + "/games/MCEngine","log.txt");
 
         launchButton = findViewById(R.id.floatingActionButton2);
@@ -169,19 +170,19 @@ public class MainActivity extends AppCompatActivity {
             openFileButton.hide();
             return true;
         });*/
-
-        if (new File(getExternalFilesDir("") + "/mods.json").exists()){
+        String filesDirJson = appFilesDir + "mods.json";
+        if (new File(filesDirJson).exists()){
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(getExternalFilesDir("") + "/mods.json"), new TypeReference<>() {});
+                Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(filesDirJson), new TypeReference<>() {});
                 for (Map.Entry<String, Object> stringObjectEntry : jsonMap.entrySet()) {
                     if (!getModLists().contains(stringObjectEntry.getKey())) {
-                        if (new File(Environment.getExternalStorageDirectory() + "/games/MCEngine/mods/" + stringObjectEntry.getKey()).exists() && new File(getExternalFilesDir("") + "/" + stringObjectEntry.getKey()).exists()) {
+                        if (new File(appModsDir + stringObjectEntry.getKey()).exists() && new File(appFilesDir + stringObjectEntry.getKey()).exists()) {
                             getModLists().add(stringObjectEntry.getKey());
                         } else {
-                            removeFromJson(getExternalFilesDir("") + "/mods.json", stringObjectEntry.getKey());
-                            deleteFile(getExternalFilesDir("") + "/" + stringObjectEntry.getKey());
-                            deleteFile(Environment.getExternalStorageDirectory() + "/games/MCEngine/mods/" + stringObjectEntry.getKey());
+                            deleteDirectory(new File(appFilesDir + stringObjectEntry.getKey()));
+                            deleteDirectory(new File(appModsDir + stringObjectEntry.getKey()));
+                            removeFromJson(filesDirJson, stringObjectEntry.getKey());
                         }
                     }
                 }
@@ -258,17 +259,17 @@ public class MainActivity extends AppCompatActivity {
     private void refreshMods() {
         try {
             for (String name : getModLists()) {
-                if (!new File(Environment.getExternalStorageDirectory() + "/games/MCEngine/mods/" + name).exists() | !new File(getExternalFilesDir("") + "/" + name).exists()) {
+                if (!new File(appModsDir + name).exists() | !new File(appFilesDir + name).exists()) {
                     getModLists().remove(name);
                     Collections.sort(getModLists());
                     getModAdapter().notifyDataSetChanged();
                     try {
-                        removeFromJson(getExternalFilesDir("") + "/mods.json", name);
+                        removeFromJson(appFilesDir + "mods.json", name);
                     } catch (IOException e) {
                         Log.put(e.toString());
                     }
-                    deleteFile(getExternalFilesDir("") + "/" + name);
-                    deleteFile(Environment.getExternalStorageDirectory() + "/games/MCEngine/mods/" + name);
+                    deleteDirectory(new File(appFilesDir + name));
+                    deleteDirectory(new File(appModsDir + name));
                 }
             }
             refreshTextView();
@@ -302,10 +303,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshAssets() {
-        File assets = new File(getExternalFilesDir("") + "/assets_modify");
+        File assets = new File(appFilesDir + "assets_modify");
         if (!assets.exists()) {
             try {
-                UnZipAssetsFolder(getContext(), "app.zip", getExternalFilesDir("") + "/assets_modify");
+                UnZipAssetsFolder(getContext(), "app.zip", appFilesDir + "assets_modify");
             } catch (Exception e) {
                 Log.put(e.toString());
             }
@@ -313,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshModList() {
-        File modList = new File(getExternalFilesDir("") + "/mods.json");
+        File modList = new File(appFilesDir + "mods.json");
         if (!modList.exists()) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(modList, true))) {
                 writer.write("{}");
@@ -344,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
             String res = "";
             Uri file = data.getData();
             String path = getFileFromContentUri(getContext(), file);
-            ;
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 path = uriToFileApiQ(this, file);
             }
@@ -376,13 +377,19 @@ public class MainActivity extends AppCompatActivity {
             } catch (JsonProcessingException e) {
                 Log.put(e.toString());
             }
-            File modAssets = new File(getExternalFilesDir("") + "/" + name);
-            removeDir(new File(appTempDir + res), modAssets);
+            File modAssets = new File(appFilesDir + name);
+            File tempModAssets = new File(appTempDir + res);
+            if (!tempModAssets.exists()){//防止小可爱modInfo.json中的res写错，导致安装异常
+                Toast.makeText(this, "加载失败，模组材质文件夹与配置不匹配", Toast.LENGTH_SHORT).show();
+                refreshCacheDir();
+                return;
+            }
+            removeDir(tempModAssets, modAssets);
             removeDir(new File(appTempDir), new File(appModsDir + name));
             Log.put(appModsDir + name + "构建完成");
             try {
                 HashMap<String, String> json = new HashMap<>();
-                Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(getExternalFilesDir("") + "/mods.json"), new TypeReference<>() {
+                Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(appFilesDir + "mods.json"), new TypeReference<>() {
                 });
                 for (Map.Entry<String, Object> stringObjectEntry : jsonMap.entrySet()) {
                     json.put(stringObjectEntry.getKey(), stringObjectEntry.getValue().toString());
@@ -391,7 +398,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!modLists.contains(name)) modLists.add(name);
                 try {
                     objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-                    objectMapper.writeValue(new File(getExternalFilesDir("") + "/mods.json"), json);
+                    objectMapper.writeValue(new File(appFilesDir + "mods.json"), json);
                 } catch (IOException e) {
                     Log.put(e.toString());
                 }

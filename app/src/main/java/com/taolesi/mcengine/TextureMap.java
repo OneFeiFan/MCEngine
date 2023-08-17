@@ -6,10 +6,7 @@ import static com.taolesi.mcengine.FileTools.toZip;
 
 import android.content.Context;
 import android.os.Environment;
-import android.os.Parcel;
-import android.widget.Toast;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -29,7 +26,7 @@ public class TextureMap {
     private String textureListPatch;
     private ObjectMapper objectMapper;
 
-    private List<Object> contentsObj;
+    private Map contentsObj;
 
     private HashMap<String, Object> items_json = new HashMap<>();
 
@@ -38,7 +35,6 @@ public class TextureMap {
     public TextureMap(Context context) {
         ctx = context;
         objectMapper = new ObjectMapper();
-        contentsObj = new ArrayList<>();
     }
 
     private Context getContext() {
@@ -46,61 +42,57 @@ public class TextureMap {
     }
 
     private void addData(Map.Entry<String, Object> stringObjectEntry, String type) throws IOException {
-        HashMap<String, Object> temp1 = null;
-        HashMap<String, Object> texture_data = new HashMap<>();
+        HashMap<String, Object> tempMap = null;
+        HashMap<String, Object> texture_data = null;
+        List<Map> subContentList = (List<Map>) contentsObj.get("content");
         switch (type) {
             case "items":
                 texture_data = (HashMap<String, Object>) items_json.get("texture_data");
-                temp1 = items_json;
+                tempMap = items_json;
                 break;
             case "blocks":
                 texture_data = (HashMap<String, Object>) block_json.get("texture_data");
-                temp1 = block_json;
+                tempMap = block_json;
                 break;
         }
-
+        if (texture_data == null) {
+            return;//防止日后手贱出错
+        }
         String patch = textureListPatch + "/" + stringObjectEntry.getKey() + "/textures/" + stringObjectEntry.getKey() + "_" + type;
         ArrayList<String> list = mapItems(patch, textureListPatch + "/" + stringObjectEntry.getKey() + "/");
         Log.put("TextureMap: mapItems 成功");
-
         for (String name : list) {
-            HashMap<String, String> littleMap1 = new HashMap<>();
-            littleMap1.put("path", name);
-            contentsObj.add(littleMap1);
-            String latter = name.replace(".png", "");
-            String[] f = latter.split("/");
-            StringBuilder fileName = new StringBuilder(f[f.length - 1]);
-            f = fileName.toString().split("_");
+            Map<String, String> subMap = new HashMap<>();
+            subMap.put("path", name);
+            subContentList.add(subMap);
+            String dir = name.replace(".png", "");
+            String[] latter = dir.split("/");
+            String fileName = latter[latter.length - 1];
             try {
-                Integer.parseInt(f[f.length - 1]);
-                fileName = new StringBuilder();
-                for (int i = 0; i < f.length - 1; i++) {
-                    fileName.append(f[i]);
-                }
+                ArrayList<String> temp = new ArrayList<>(Arrays.asList(fileName.split("_")));
+                Integer.parseInt(temp.get(temp.size() - 1));//如果图片文件名不是data值结尾的，那么报错跳出，继续使用普文件名作为key
+                temp.remove(temp.size() - 1);//删除末尾的数字
+                fileName = String.join("_", temp);//将其余间隔部分(如果有的话)使用_填充回去，形成一个不带data的文件名座位key
             } catch (NumberFormatException e) {
-
+                e.printStackTrace();
             }
             ArrayList<String> temp = new ArrayList<>();
-            temp.add(latter);
-            if (texture_data != null) {
-                if (texture_data.get(String.valueOf(fileName)) != null) {
-                    HashMap<String, ArrayList<String>> littleMap = (HashMap<String, ArrayList<String>>) texture_data.get(String.valueOf(fileName));
-                    ArrayList<String> list1 = null;
-                    if (littleMap != null) {
-                        list1 = littleMap.get("textures");
-                    }
-                    if (list1 != null) {
-                        list1.add(latter);
-                    }
-                    texture_data.put(String.valueOf(fileName), littleMap);
-                } else {
-                    HashMap<String, ArrayList<String>> littleMap = new HashMap<>();
-                    littleMap.put("textures", temp);
-                    texture_data.put(String.valueOf(fileName), littleMap);
-                }
+            temp.add(dir);
+
+            HashMap<String, ArrayList<String>> littleMap;
+            if ((littleMap = (HashMap<String, ArrayList<String>>) texture_data.get(fileName)) != null) {
+                ArrayList<String> subTemp = littleMap.get("textures");
+                temp = (subTemp == null ? new ArrayList<>() : subTemp);
+                temp.add(dir);
+                littleMap.put("textures", temp);
+                texture_data.put(fileName, littleMap);
+            } else {
+                littleMap = new HashMap<>();
+                littleMap.put("textures", temp);
+                texture_data.put(fileName, littleMap);
             }
         }
-        temp1.put("texture_data", texture_data);
+        tempMap.put("texture_data", texture_data);
     }
 
     public void run() throws IOException {
@@ -108,12 +100,10 @@ public class TextureMap {
         textureListPatch = getContext().getExternalFilesDir("").getAbsolutePath();
 
         Log.put("TextureMap: mods.json 读取成功");
-        Map<String, Object> contents = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/contents.json"), new TypeReference<>() {
+        contentsObj = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/contents.json"), new TypeReference<>() {
         });
         Log.put("TextureMap: contents.json 读取成功");
-        for (Map.Entry<String, Object> stringObjectEntry_contents : contents.entrySet()) {
-            contentsObj.addAll((List<Object>) stringObjectEntry_contents.getValue());
-        }
+
         Map<String, Object> items = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/textures/item_texture.json"), new TypeReference<>() {
         });
         items_json.putAll(items);
