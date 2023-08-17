@@ -13,9 +13,9 @@ class NC_FoodItems : public NC_Items
 private:
     const char *foodData = nullptr;
 public:
-    NC_FoodItems(const char *name, const char *iconName, int iconData, bool inCreative, const CreativeItemCategory type);
+    NC_FoodItems(const char *name, const char *iconName, int iconData, const CreativeItemCategory type);
 
-    static NC_FoodItems* createObj(const char *name, const char *iconName, int iconData, bool inCreative, const CreativeItemCategory type ,const char *data);
+    static NC_FoodItems* createObj(const char *name, const char *iconName, int iconData, const CreativeItemCategory type ,const char *data);
 
     const char *getTypeData();
 

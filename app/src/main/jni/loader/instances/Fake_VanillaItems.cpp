@@ -23,11 +23,7 @@ void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, boo
     for(auto &NC_ItemPtr: normalItemsPoolArray){
         itemPtr = fake_ItemRegistry_registerItemShared(NC_ItemPtr->getName(), (short &) (++fake_ItemRegistry_mMaxItemID)).get();
         NC_ItemPtr->setItemPtr(itemPtr);
-        if(NC_ItemPtr->isInCreative()){
-            fake_Item_setCategory(itemPtr, NC_ItemPtr->getType());
-        }else {
-            fake_Item_setCategory(itemPtr, (CreativeItemCategory) 0);
-        }
+        fake_Item_setCategory(itemPtr, NC_ItemPtr->getType());
     }
     printf("普通物品注册完成，一切正常\n");
     for(auto &NC_ItemPtr: swordItemsPoolArray){
@@ -44,11 +40,7 @@ void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, boo
 
         fake_Item_setMaxDamage(itemPtr, NC_ItemPtr->getDurability());//设置耐久
         NC_ItemPtr->setItemPtr(itemPtr);
-        if(NC_ItemPtr->isInCreative()){
-            fake_Item_setCategory(itemPtr, NC_ItemPtr->getType());
-        }else {
-            fake_Item_setCategory(itemPtr, (CreativeItemCategory) 0);
-        }
+        fake_Item_setCategory(itemPtr, NC_ItemPtr->getType());
     }
     printf("武器注册完成，一切正常\n");
     for(auto &NC_ItemPtr: foodItemsPoolArray){
@@ -76,11 +68,9 @@ void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, boo
 //        Dl_info info;
 //        dladdr((uintptr_t *)(*(uintptr_t (__fastcall **)(FoodItemComponentLegacy *))(*(uintptr_t *)fooderPtr + 8)),&info);
 //        std::cout<<info.dli_sname<<std::endl;
-        if(NC_ItemPtr->isInCreative()){
-            fake_Item_setCategory(itemPtr, NC_ItemPtr->getType());
-        }else {
-            fake_Item_setCategory(itemPtr, (CreativeItemCategory) 0);
-        }
+
+        fake_Item_setCategory(itemPtr, NC_ItemPtr->getType());
+
     }
     printf("物品注册完成，一切正常\n");
     return base_VanillaItems_registerItems(ptr, e, b);

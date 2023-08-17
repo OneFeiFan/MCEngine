@@ -16,15 +16,14 @@ private:
     const char *name;
     const char *iconName;
     const int iconData;
-    const bool inCreative;
     const CreativeItemCategory type;
     Item *ptr;
 
 public:
 
-    NC_Items(const char *name, const char *iconName, int iconData, bool inCreative, CreativeItemCategory type);
+    NC_Items(const char *name, const char *iconName, int iconData, CreativeItemCategory type);
 
-    static NC_Items* createObj(const char *name, const char *iconName, int iconData, bool inCreative, const CreativeItemCategory type);
+    static NC_Items* createObj(const char *name, const char *iconName, int iconData, const CreativeItemCategory type);
 
     void setItemPtr(Item *ptr);
 
@@ -34,7 +33,6 @@ public:
 
     int getIconData() const;
 
-    bool isInCreative() const;
 
     CreativeItemCategory getType();
 

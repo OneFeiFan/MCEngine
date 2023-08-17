@@ -15,9 +15,9 @@ private:
     int mDurability;
     int mDamage;
 public:
-    NC_SwordItems(const char *name, const char *iconName, int iconData, bool inCreative, const CreativeItemCategory type);
+    NC_SwordItems(const char *name, const char *iconName, int iconData, const CreativeItemCategory type);
 
-    static NC_SwordItems *createObj(const char *name, const char *iconName, int iconData, bool inCreative, const CreativeItemCategory type, short tier_, int durability, int damage);
+    static NC_SwordItems *createObj(const char *name, const char *iconName, int iconData, const CreativeItemCategory type, short tier_, int durability, int damage);
 
     short getTier() const;
 

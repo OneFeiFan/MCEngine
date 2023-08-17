@@ -111,24 +111,24 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
     return JNI_VERSION_1_6;
 }
 
-JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeItem_createItem(JNIEnv *env, jclass clazz, jstring jname, jstring jiconName, jint jindex, jboolean is2category, jint jtype)
+JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeItem_createItem(JNIEnv *env, jclass clazz, jstring jname, jstring jiconName, jint jindex, jint jtype)
 {
     const char *name = android::jstringToCharArr(env, jname);
     const char *iconName = android::jstringToCharArr(env, jiconName);
-    return (jlong *) NC_Items::createObj(name, iconName, jindex, is2category, (CreativeItemCategory) jtype);
+    return (jlong *) NC_Items::createObj(name, iconName, jindex, (CreativeItemCategory) jtype);
 }
-JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeItem_createFood(JNIEnv *env, jclass clazz, jstring jname, jstring jicon, jint index, jboolean add_to_category, jint type, jstring jfood_data)
+JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeItem_createFood(JNIEnv *env, jclass clazz, jstring jname, jstring jicon, jint index, jint type, jstring jfood_data)
 {
     const char *name = android::jstringToCharArr(env, jname);
     const char *iconName = android::jstringToCharArr(env, jicon);
     const char *food_data = android::jstringToCharArr(env, jfood_data);
-    return (jlong *) NC_FoodItems::createObj(name, iconName, index, add_to_category, (CreativeItemCategory) type, food_data);
+    return (jlong *) NC_FoodItems::createObj(name, iconName, index, (CreativeItemCategory) type, food_data);
 }
-JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeItem_createSword(JNIEnv *env, jclass clazz, jstring jname, jstring jicon, jint jindex, jboolean is2category, jint jtype, jint jtier, jint jdurability, jint jdamage)
+JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeItem_createSword(JNIEnv *env, jclass clazz, jstring jname, jstring jicon, jint jindex, jint jtype, jint jtier, jint jdurability, jint jdamage)
 {
     const char *name = android::jstringToCharArr(env, jname);
     const char *iconName = android::jstringToCharArr(env, jicon);
-    return (jlong *) NC_SwordItems::createObj(name, iconName, jindex, is2category, (CreativeItemCategory) jtype, jtier, jdurability, jdamage);
+    return (jlong *) NC_SwordItems::createObj(name, iconName, jindex, (CreativeItemCategory) jtype, jtier, jdurability, jdamage);
 }
 }
 

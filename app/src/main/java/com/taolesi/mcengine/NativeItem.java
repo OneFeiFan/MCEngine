@@ -16,14 +16,14 @@ public class NativeItem {
     }
 
     @JavascriptInterface
-    public static native long createItem(String name, String icon, int index, boolean addToCategory, int type);//NC_ItemsPtr
+    public static native long createItem(String name, String icon, int index,  int type);//NC_ItemsPtr
 
-    public static native long createFood(String name, String icon, int index, boolean addToCategory, int type, String FoodData);//NC_ItemsPtr
+    public static native long createFood(String name, String icon, int index,  int type, String FoodData);//NC_ItemsPtr
 
-    public static native long createSword(String name, String icon, int index, boolean addToCategory, int type, int tier, int durability, int damage);//NC_ItemsPtr
+    public static native long createSword(String name, String icon, int index, int type, int tier, int durability, int damage);//NC_ItemsPtr
 
     @JavascriptInterface
-    public static long createFoodItem(String name, String icon, int index, boolean addToCategory, int type, JSObject foodData) {
+    public static long createFoodItem(String name, String icon, int index, int type, JSObject foodData) {
         String saturation = "normal";
         try {
             switch (foodData.getInteger("saturationLevel")) {
@@ -49,11 +49,11 @@ public class NativeItem {
         } catch (Exception e) {
             Loader.Toast(String.valueOf(e));
         }
-        return createFood(name, icon, index, addToCategory, type, "{\"components\": {\"minecraft:food\": {\"nutrition\": " + (foodData.contains("nutrition") ? foodData.getString("nutrition") : "2") + ",\"saturation_modifier\": \"" + saturation + "\"}," + "\"minecraft:use_duration\":" + (foodData.contains("useDuration") ? foodData.getString("useDuration") : "32") + "}}");
+        return createFood(name, icon, index, type, "{\"components\": {\"minecraft:food\": {\"nutrition\": " + (foodData.contains("nutrition") ? foodData.getString("nutrition") : "2") + ",\"saturation_modifier\": \"" + saturation + "\"}," + "\"minecraft:use_duration\":" + (foodData.contains("useDuration") ? foodData.getString("useDuration") : "32") + "}}");
     }//NC_ItemsPtr
 
     @JavascriptInterface
-    public static long createSwordItem(String name, String icon, int index, boolean addToCategory, int type, JSObject extraData) {
+    public static long createSwordItem(String name, String icon, int index, int type, JSObject extraData) {
         int tier = 0;
         try {
             switch (extraData.getString("base")) {
@@ -80,6 +80,6 @@ public class NativeItem {
             Loader.Toast(String.valueOf(e));
         }
 
-        return createSword(name, icon, index, addToCategory, type, tier, extraData.contains("durability") ? extraData.getInteger("durability") : 0, extraData.contains("damage") ? extraData.getInteger("damage") : 0);
+        return createSword(name, icon, index, type, tier, extraData.contains("durability") ? extraData.getInteger("durability") : 0, extraData.contains("damage") ? extraData.getInteger("damage") : 0);
     }//NC_ItemsPtr
 }
