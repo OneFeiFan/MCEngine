@@ -16,133 +16,130 @@
         app:menu="@menu/menu_about"
         app:title="@string/about"
         tools:layout_editor_absoluteX="-50dp"
-        tools:layout_editor_absoluteY="2dp"
+        tools:layout_editor_absoluteY="0dp"
         tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/about_app_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_width="@dimen/_70sdp"
+        android:layout_height="@dimen/_70sdp"
+        android:layout_marginTop="@dimen/_60sdp"
         android:src="@mipmap/ic_launcher_round"
-        app:layout_constraintBottom_toTopOf="@+id/about_app"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/about_toolbar"
-        app:layout_constraintVertical_bias="0.26" />
+        app:layout_constraintTop_toBottomOf="@+id/about_toolbar" />
 
     <TextView
         android:id="@+id/about_app"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="@dimen/_180sdp"
         android:gravity="center"
         android:text="@string/app_name"
-        android:textSize="20sp"
+        android:textSize="@dimen/_20ssp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/about_app_front"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/about_toolbar" />
 
     <TextView
         android:id="@+id/about_app_front"
-        android:layout_width="324dp"
-        android:layout_height="67dp"
-        android:layout_marginBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_222sdp"
         android:gravity="center"
         android:text="@string/about_app_front"
         android:textAppearance="@style/TextAppearance.AppCompat.Display4"
-        android:textSize="9sp"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/about_github_Android"
+        android:textSize="@dimen/_10ssp"
+        app:autoSizeTextType="none"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/about_toolbar"
         tools:ignore="SmallSp" />
 
     <TextView
         android:id="@+id/about_github_Android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="@dimen/_270sdp"
         android:gravity="center"
         android:text="@string/about_github_Android"
         android:textAppearance="@style/TextAppearance.AppCompat.Display4"
-        android:textSize="12sp"
+        android:textSize="@dimen/_12ssp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/about_github_LSPosed"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/about_toolbar" />
 
     <TextView
         android:id="@+id/about_github_LSPosed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="@dimen/_320sdp"
         android:gravity="center"
         android:text="@string/about_github_LSPosed"
         android:textAppearance="@style/TextAppearance.AppCompat.Display4"
-        android:textSize="12sp"
+        android:textSize="@dimen/_12ssp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/about_github_Dobby"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/about_toolbar" />
 
     <TextView
         android:id="@+id/about_github_Dobby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="@dimen/_370sdp"
         android:gravity="center"
         android:text="@string/about_github_Dobby"
         android:textAppearance="@style/TextAppearance.AppCompat.Display4"
-        android:textSize="12sp"
+        android:textSize="@dimen/_12ssp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/about_github_miniz"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/about_toolbar" />
 
     <TextView
         android:id="@+id/about_github_miniz"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="@dimen/_420sdp"
         android:gravity="center"
         android:text="@string/about_github_miniz"
         android:textAppearance="@style/TextAppearance.AppCompat.Display4"
-        android:textSize="12sp"
+        android:textSize="@dimen/_12ssp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/about_github_quickjs_android"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/about_toolbar" />
 
     <TextView
         android:id="@+id/about_github_quickjs_android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="@dimen/_470sdp"
         android:gravity="center"
         android:text="@string/about_github_quickjs_android"
         android:textAppearance="@style/TextAppearance.AppCompat.Display4"
-        android:textSize="12sp"
+        android:textSize="@dimen/_12ssp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/about_thanks"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/about_toolbar" />
 
     <TextView
         android:id="@+id/about_thanks"
-        android:layout_width="163dp"
-        android:layout_height="54dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_520sdp"
         android:gravity="center"
         android:text="@string/about_thanks"
         android:textAppearance="@style/TextAppearance.AppCompat.Display4"
-        android:textSize="9sp"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="@dimen/_9ssp"
+        app:autoSizeTextType="none"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/about_toolbar"
-        app:layout_constraintVertical_bias="0.94"
         tools:ignore="SmallSp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

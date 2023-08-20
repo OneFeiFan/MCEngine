@@ -55,13 +55,7 @@ public class ModAdapter extends BaseAdapter {
         modName.setText(mods.get(position));
         ImageView modIcon = convertView.findViewById(R.id.file_name);
         modIcon.setImageURI(Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/games/MCEngine/mods/" + modName.getText() + "/mod_icon.png")));
-        //Button button = convertView.findViewById(R.id.button);
-        //button.setOnKeyListener((v, keyCode, event) -> false);
 
-        /*CardView settings = convertView.findViewById(R.id.mod_settings);
-        settings.setOnClickListener(view -> {
-            Toast.makeText(context, "点击card", Toast.LENGTH_SHORT).show();
-        });*/
         return convertView;
     }
 }

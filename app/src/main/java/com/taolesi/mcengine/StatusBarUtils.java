@@ -15,7 +15,7 @@ public class StatusBarUtils {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(activity.getResources().getColor(colorResId));
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.put(e.toString());
         }
     }
 
@@ -26,7 +26,7 @@ public class StatusBarUtils {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(dialog.getContext().getResources().getColor(colorResId));
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.put(e.toString());
         }
     }
 }
