@@ -1,5 +1,4 @@
 LOADE_PATH := $(call my-dir)/loader
-EXAMPLE_PATH := $(call my-dir)/nativecore
 MCENGINE_PATH := $(call my-dir)/cpp
 
 LOCAL_PATH := $(MCENGINE_PATH)

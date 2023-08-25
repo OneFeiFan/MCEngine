@@ -87,6 +87,10 @@ extern ItemRegistry *(*fake_ItemRegistry_mMaxItemID);
 extern WeakPtr<Item> (*fake_ItemRegistry_registerItemShared)(std::string const &, short &);
 
 extern WeakPtr<Item> (*fake_ItemRegistry_registerItemSharedForSword)(std::string const &, short &,Item::Tier const&);
-//_ZN12ItemRegistry18registerItemSharedI10WeaponItemJRsRKN4Item4TierEEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNSA_11char_traitsIcEENSA_9allocatorIcEEEEDpOT0_
 
+extern WeakPtr<Item> (*fake_ItemRegistry_registerBlockItemShared)(std::string const &, short &);
+//_ZN12ItemRegistry18registerItemSharedI9BlockItemJsEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEDpOT0_
+//hook区
+extern WeakPtr<Item> (*base_ItemRegistry_registerBlockItemShared)(std::string const &, short &);
+extern WeakPtr<Item> NC_ItemRegistry_registerBlockItemShared(std::string const &, short &);
 #endif

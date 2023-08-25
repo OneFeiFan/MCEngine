@@ -10,6 +10,7 @@
 #include "headers/fake_FoodItemComponentLegacy.h"
 #include "NC_FoodItems.hpp"
 #include "NC_SwordItems.hpp"
+#include "headers/Fake_VanillaBlockTypes.hpp"
 
 class Experiments;
 
@@ -20,6 +21,16 @@ void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, boo
 {
     printf("注册物品开始\n");
     Item *itemPtr;
+    short id = fake_BlockLegacy_getBlockItemId(tempBlock);
+
+    short qid = -180;
+    itemPtr = fake_ItemRegistry_registerBlockItemShared("item_Temp",id).get();
+    //fake_ItemRegistry_registerBlockItemShared("minecraft:block.block_test_block",id).get();
+    std::cout<<"112ddeaa"<<std::endl;
+    short id2 = fake_BlockLegacy_getBlockItemId(fake_Item_getLegacyBlock(itemPtr));
+    std::cout<<fake_Item_getId(itemPtr)<<std::endl;
+    std::cout<<id2<<std::endl;
+    fake_Item_setCategory(itemPtr, (CreativeItemCategory)1);
     for(auto &NC_ItemPtr: normalItemsPoolArray){
         itemPtr = fake_ItemRegistry_registerItemShared(NC_ItemPtr->getName(), (short &) (++fake_ItemRegistry_mMaxItemID)).get();
         NC_ItemPtr->setItemPtr(itemPtr);
