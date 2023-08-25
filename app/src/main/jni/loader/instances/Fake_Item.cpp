@@ -31,6 +31,10 @@ int (*fake_Tier_getAttackDamageBonus)(Item::Tier *);
 Item *(*fake_Item_setMaxDamage)(Item *, int);
 
 Item *(*fake_Item_setMaxStackSize)(Item *, unsigned char );
+
+Item *(*fake_Item_toBlockId)(Item *, short);
+
+BlockLegacy *(*fake_Item_getLegacyBlock)(Item *);
 //hook区
 void (*base_Item_setIcon)(Item *, std::string const &, short);
 

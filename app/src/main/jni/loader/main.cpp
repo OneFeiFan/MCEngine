@@ -14,6 +14,9 @@
 #include "headers/Fake_HashedString.h"
 #include "headers/Fake_Json_Value.h"
 #include "headers/fake_FoodItemComponentLegacy.h"
+#include "headers/Fake_VanillaBlockTypes.hpp"
+#include "headers/Fake_Material.hpp"
+#include "headers/Fake_BlockTypeRegistry.hpp"
 
 class CreativeItemRegistry;
 
@@ -89,8 +92,26 @@ void NCHookFR::init()
     NC_FakeNative((void **) &fake_Json_Reader_parse, "_ZN4Json6Reader5parseEPKcS2_RNS_5ValueEb");
     NC_FakeNative((void **) &fake_Json_Reader_Reader, "_ZN4Json6ReaderC2Ev");
     NC_FakeNative((void **) &fake_Json_Value_Value, "_ZN4Json5ValueC2ENS_9ValueTypeE");
+    NC_FakeNative((void **) &fake_Material_getMaterial, "_ZN8Material11getMaterialE12MaterialType");
+    NC_FakeNative((void **) &fake_BlockTypeRegistry_registerBlock, "_ZN17BlockTypeRegistry13registerBlockI11BlockLegacyJRKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEiRK8MaterialEEERT_DpOT0_");
+    NC_FakeNative((void **) &fake_ItemRegistry_registerBlockItemShared, "_ZN12ItemRegistry18registerItemSharedI9BlockItemJsEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEDpOT0_");
+    NC_FakeNative((void **) &fake_Item_toBlockId, "_ZN4Item9toBlockIdEs");
+    NC_FakeNative((void **) &fake_Item_getLegacyBlock, "_ZNK4Item14getLegacyBlockEv");
+    NC_FakeNative((void **) &fake_BlockLegacy_createWeakPtr, "_ZN11BlockLegacy13createWeakPtrEv");
+    NC_FakeNative((void **) &fake_BlockLegacy_setCategory, "_ZN11BlockLegacy11setCategoryE20CreativeItemCategory");
+    NC_FakeNative((void **) &fake_BlockLegacy_setDestroyTime, "_ZN11BlockLegacy14setDestroyTimeEf");
+    NC_FakeNative((void **) &fake_BlockLegacy_setExplodeable, "_ZN11BlockLegacy14setExplodeableEf");
+    NC_FakeNative((void **) &fake_BlockLegacy_getCommandName, "_ZNK11BlockLegacy14getCommandNameEv");
+    NC_FakeNative((void **) &fake_BlockLegacy_getRawName, "_ZNK11BlockLegacy12getRawNameIdEv");
 
 
+
+//
+//
+//
+//
+//
+//
     //NC_FakeNative((void **) &fake_FoodItemComponentLegacy, "_ZN23FoodItemComponentLegacyC2ER4Item");
 
 
@@ -112,7 +133,15 @@ void NCHookFR::init()
     NC_InLineHook((void *) NC_Item_initServer, (void **) &base_Item_initServer, "_ZN4Item10initServerERN4Json5ValueE");
     NC_InLineHook((void *) NC_Json_Value_Value, (void **) &base_Json_Value_Value, "_ZN4Json5ValueC1EPKcS2_");//这个方法不调用
     NC_InLineHook((void *) NC_Item_initClient, (void **) &base_Item_initClient, "_ZN4Item10initClientERN4Json5ValueES2_");//无用
+    NC_InLineHook((void *) NC_VanillaBlockTypes_registerBlocks, (void **) &base_VanillaBlockTypes_registerBlocks, "_ZN17VanillaBlockTypes14registerBlocksERK11Experiments");
+    NC_InLineHook((void *) NC_Material__setupSurfaceMaterials, (void **) &base_Material__setupSurfaceMaterials, "_ZN8Material22_setupSurfaceMaterialsEv");
+    NC_InLineHook((void *) NC_BlockTypeRegistry_registerBlock, (void **) &base_BlockTypeRegistry_registerBlock, "_ZN17BlockTypeRegistry13registerBlockI11BlockLegacyJRKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEiRK8MaterialEEERT_DpOT0_");
+    //NC_InLineHook((void *) NC_ItemRegistry_registerBlockItemShared, (void **) &base_ItemRegistry_registerBlockItemShared, "_ZN12ItemRegistry18registerItemSharedI9BlockItemJsEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEDpOT0_");//测试用
 
+
+
+
+//
     tiersPool[0] = new Item::Tier( 0, 59, 2.0, 0, 15);
     tiersPool[1] = new Item::Tier( 1, 131, 4.0, 1, 5);
     tiersPool[2] = new Item::Tier( 2, 250, 6.0, 2, 14);
