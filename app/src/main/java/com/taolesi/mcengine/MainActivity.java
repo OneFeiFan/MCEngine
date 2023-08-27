@@ -70,6 +70,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
+//import java.lang.foreign;
 
 public class MainActivity extends AppCompatActivity {
     private final String[] PERMISSIONS = {
@@ -230,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
 
         refreshAssets();
         refreshModList();
+        //Linker linker          = Linker.nativeLinker();
     }
 
     private void getPermission() {

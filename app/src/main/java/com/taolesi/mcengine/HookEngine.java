@@ -1,13 +1,10 @@
 package com.taolesi.mcengine;
 
 
-import static com.taolesi.mcengine.FileTools.JsonToObjTest;
 import static com.taolesi.mcengine.FileTools.unzip;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -19,24 +16,13 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.quickjs.JSContext;
-import com.quickjs.QuickJS;
-import com.quickjs.QuickJSScriptException;
-
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
 
 import dalvik.system.DexClassLoader;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
@@ -131,7 +117,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                 }
                 String newLibDir = mcFileDir + "/base/lib/armeabi-v7a/";//模块的新lib路径 32位
                 String architecture = System.getProperty("os.arch");
-                if (architecture.contains("64")) {
+                if (architecture != null && architecture.contains("64")) {
                     newLibDir = mcFileDir + "/base/lib/arm64-v8a/";//模块的新lib路径 64位
                 }
                 String output = getTargetContext().getDir("cache_dex", 0).getAbsolutePath();//不懂
@@ -140,7 +126,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                     ClassLoader loader = getTargetContext().getClassLoader();
                     DexClassLoader newLoader = new DexClassLoader(path, output, newLibDir, loader);
                     SoLibraryPatcher.patchNativeLibraryDir(newLoader, mcLib);//重定向lib目录
-                    Class clazz = newLoader.loadClass(entry);
+                    Class<?> clazz = newLoader.loadClass(entry);
                     Method method = clazz.getDeclaredMethod(fun, Context.class, String.class, String.class);
                     method.invoke(null, getTargetContext(), path, mcLib);//调用
                 } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException |

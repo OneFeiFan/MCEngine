@@ -6,7 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -20,21 +19,15 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
-import java.net.URI;
-import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -67,7 +60,7 @@ public class FileTools {
           targetFile.mkdirs();
         }
         try (ZipFile zipFile = new ZipFile(new File(res))) {
-            Enumeration enumeration = zipFile.entries();
+            Enumeration<? extends ZipEntry> enumeration = zipFile.entries();
             while (enumeration.hasMoreElements()) {
                 ZipEntry entry = (ZipEntry) enumeration.nextElement();
                 String name = entry.getName();
@@ -115,8 +108,8 @@ public class FileTools {
         try {
             File jsonFile = new File(src);
             FileReader fileReader = new FileReader(jsonFile);
-            Reader reader = new InputStreamReader(new FileInputStream(jsonFile), "utf-8");
-            StringBuffer sb = new StringBuffer();
+            Reader reader = new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8);
+            StringBuilder sb = new StringBuilder();
             while (true) {
                 int ch = reader.read();
                 if (ch != -1) {
@@ -124,8 +117,7 @@ public class FileTools {
                 } else {
                     fileReader.close();
                     reader.close();
-                    String jsonStr = sb.toString();
-                    return jsonStr;
+                    return sb.toString();
                 }
             }
         } catch (IOException e) {
@@ -142,7 +134,6 @@ public class FileTools {
         }
         try {
             FileReader fileReader = new FileReader(jsonFile);
-
             Reader reader = new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8);
             int ch = 0;
             StringBuilder sb = new StringBuilder();
@@ -168,6 +159,7 @@ public class FileTools {
         } else if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
             //把文件复制到沙盒目录
             ContentResolver contentResolver = context.getContentResolver();
+            @SuppressLint("Recycle")
             Cursor cursor = contentResolver.query(uri, null, null, null, null);
             if (cursor.moveToFirst()) {
                 @SuppressLint("Range")
@@ -200,15 +192,14 @@ public class FileTools {
         String filePath;
         String[] filePathColumn = {MediaStore.DownloadColumns.DATA, MediaStore.DownloadColumns.DISPLAY_NAME};
         ContentResolver contentResolver = context.getContentResolver();
+        @SuppressLint("Recycle")
         Cursor cursor = contentResolver.query(uri, filePathColumn, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
-            try {
+            try (cursor) {
                 filePath = cursor.getString(cursor.getColumnIndex(filePathColumn[0]));
                 return filePath;
-            } catch (Exception e) {
-            } finally {
-                cursor.close();
+            } catch (Exception ignored) {
             }
         }
         return "";
@@ -250,8 +241,6 @@ public class FileTools {
             while ((len = fis.read(bys)) != -1) {
                 fos.write(bys, 0, len);
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -316,34 +305,25 @@ public class FileTools {
     public static void compress(File sourceFile, ZipOutputStream zos, String name, boolean KeepDirStructure) throws Exception {
         byte[] buf = new byte[2 * 1024];
         if (sourceFile.isFile()) {
-            // 向zip输出流中添加一个zip实体，构造器中name为zip实体的文件的名字
             zos.putNextEntry(new ZipEntry(name));
-            // copy文件到zip输出流中
             int len;
             FileInputStream in = new FileInputStream(sourceFile);
             while ((len = in.read(buf)) != -1) {
                 zos.write(buf, 0, len);
             }
-            // Complete the entry
             zos.closeEntry();
             in.close();
         } else {
             File[] listFiles = sourceFile.listFiles();
             if (listFiles == null || listFiles.length == 0) {
-                // 需要保留原来的文件结构时,需要对空文件夹进行处理
                 if (KeepDirStructure) {
-                    // 空文件夹的处理
                     zos.putNextEntry(new ZipEntry(name + "/"));
-                    // 没有文件，不需要文件的copy
                     zos.closeEntry();
                 }
 
             } else {
                 for (File file : listFiles) {
-                    // 判断是否需要保留原来的文件结构
                     if (KeepDirStructure) {
-                        // 注意：file.getName()前面需要带上父文件夹的名字加一斜杠,
-                        // 不然最后压缩包中就不能保留原来的文件结构,即：所有文件都跑到压缩包根目录下了
                         compress(file, zos, name + "/" + file.getName(), KeepDirStructure);
                     } else {
                         compress(file, zos, file.getName(), KeepDirStructure);
