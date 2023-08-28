@@ -18,8 +18,6 @@ NC_Items* NC_Items::createObj(const char *name, const char *iconName,int iconDat
     return item;
 }
 
-
-
 void NC_Items::setItemPtr(Item *ptr_)
 {
     ptr = ptr_;

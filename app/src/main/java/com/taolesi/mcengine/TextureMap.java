@@ -98,22 +98,16 @@ public class TextureMap {
     public void run() throws IOException {
         String modListJson = getContext().getExternalFilesDir("") + "/mods.json";
         textureListPatch = getContext().getExternalFilesDir("").getAbsolutePath();
-
         Log.put("TextureMap: mods.json 读取成功");
-        contentsObj = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/contents.json"), new TypeReference<>() {
-        });
+        contentsObj = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/contents.json"), new TypeReference<>() {});
         Log.put("TextureMap: contents.json 读取成功");
-
-        items_json = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/textures/item_texture.json"), new TypeReference<>() {
-        });
+        items_json = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/textures/item_texture.json"), new TypeReference<>() {});
         //items_json.putAll(items);
         Log.put("TextureMap: item_texture.json 读取成功");
-        block_json = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/textures/terrain_texture.json"), new TypeReference<>() {
-        });
+        block_json = objectMapper.readValue(FileTools.readJsonFile(textureListPatch + "/assets_modify/assets/resource_packs/vanilla_1.14/textures/terrain_texture.json"), new TypeReference<>() {});
         //.putAll(blocks);
         Log.put("TextureMap: terrain_texture.json 读取成功");
-        Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(modListJson), new TypeReference<>() {
-        });
+        Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(modListJson), new TypeReference<>() {});
         for (Map.Entry<String, Object> stringObjectEntry : jsonMap.entrySet()) {
             if (stringObjectEntry.getValue().equals("enabled")) {
                 //contents.json
@@ -124,12 +118,10 @@ public class TextureMap {
                 copyDir(new File(textureListPatch + "/assets_modify/assets"), new File(textureListPatch + "/assets"));
                 copyDir(new File(textureListPatch + "/" + stringObjectEntry.getKey() + "/textures"), new File(textureListPatch + "/assets/resource_packs/vanilla_1.14/textures"));
                 new File(textureListPatch + "/assets/resource_packs/vanilla_1.14/contents.json").delete();
-
                 //item_texture.json
                 addData(stringObjectEntry, "items");
                 //terrain_texture.json
                 addData(stringObjectEntry, "blocks");
-
                 ModMap modMap = new ModMap(getContext());
                 modMap.run();
             }

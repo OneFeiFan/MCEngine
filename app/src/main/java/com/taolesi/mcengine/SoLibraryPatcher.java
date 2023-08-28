@@ -138,8 +138,7 @@ public class SoLibraryPatcher{
 
             Class<?> nativeLibraryElementClass = Class.forName("dalvik.system.DexPathList$Element");
             Constructor<?> element = nativeLibraryElementClass.getConstructor(File.class, boolean.class, File.class, DexFile.class);
-            Field systemNativeLibraryDirectories = pathList.getClass()
-                    .getDeclaredField("systemNativeLibraryDirectories");
+            Field systemNativeLibraryDirectories = pathList.getClass().getDeclaredField("systemNativeLibraryDirectories");
             Field nativeLibraryDirectories = pathList.getClass().getDeclaredField("nativeLibraryDirectories");
             Field nativeLibraryPathElements = pathList.getClass().getDeclaredField("nativeLibraryPathElements");
             systemNativeLibraryDirectories.setAccessible(true);

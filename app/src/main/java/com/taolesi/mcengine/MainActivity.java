@@ -70,6 +70,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
+//import java.lang.foreign;
 
 public class MainActivity extends AppCompatActivity {
     private final String[] PERMISSIONS = {
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
     private String appModsDir;
 
     private String appFilesDir;
+
     private static void setContext(Context context_) {
         context = context_;
     }
@@ -105,18 +107,24 @@ public class MainActivity extends AppCompatActivity {
     private static Context getContext() {
         return context;
     }
+
     private ArrayList<String> getModLists() {
         return modLists;
-    };
+    }
+
+    ;
     private ModAdapter modAdapter;
+
     private void setModAdapter(ModAdapter adapter) {
         modAdapter = adapter;
     }
+
     private ModAdapter getModAdapter() {
         return modAdapter;
     }
+
     @SuppressLint("HandlerLeak")
-    private Handler hander = new Handler(){
+    private Handler hander = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             refreshMods();
@@ -134,44 +142,37 @@ public class MainActivity extends AppCompatActivity {
         setContext(this);
         setContentView(R.layout.activity_main);
         setWindowStatusBarColor(this, R.color.purple_300);
+        getPermission();
+
         appCacheDir = getExternalCacheDir().getAbsolutePath();
         appTempDir = appCacheDir + "/temp/";
         appModsDir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/games/MCEngine/mods/";
-        appFilesDir = getExternalFilesDir("").toString()+"/";
-        Log.init(Environment.getExternalStorageDirectory() + "/games/MCEngine","log.txt");
+        appFilesDir = getExternalFilesDir("").toString() + "/";
+        Log.init(Environment.getExternalStorageDirectory() + "/games/MCEngine", "log.txt");
 
-        launchButton = findViewById(R.id.floatingActionButton2);
+        launchButton = (FloatingActionButton) findViewById(R.id.floatingActionButton2);
         launchButton.setOnClickListener(v -> {
             try {
                 TextureMap textureMap = new TextureMap(getContext());
                 textureMap.run();
-
                 Intent intent = new Intent();
                 intent.setClassName("com.mojang.minecraftpe", "com.mojang.minecraftpe.MainActivity");
                 startActivity(intent);
-            } catch (ActivityNotFoundException e) {
-                Log.put(e.toString());
-                Toast.makeText(MainActivity.this, "启动MC失败", Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 Log.put(e.toString());
+                Toast.makeText(MainActivity.this, "启动MC失败", Toast.LENGTH_SHORT).show();
             }
         });
 
         openFileButton = findViewById(R.id.floatingActionButton);
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
-
         openFileButton.setOnClickListener(v -> {
             startActivityForResult(intent, OPENFILE.ordinal());
         });
 
-        /*openFileButton.setOnLongClickListener(v -> {
-            launchButton.hide();
-            openFileButton.hide();
-            return true;
-        });*/
         String filesDirJson = appFilesDir + "mods.json";
-        if (new File(filesDirJson).exists()){
+        if (new File(filesDirJson).exists()) {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
                 Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(filesDirJson), new TypeReference<>() {});
@@ -193,20 +194,18 @@ public class MainActivity extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.modList);
         Collections.sort(getModLists());
-
         listView.setOnTouchListener((v, event) -> {
-
-            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 x1 = event.getX();
                 y1 = event.getY();
             }
-            if(event.getAction() == MotionEvent.ACTION_UP) {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
                 float x2 = event.getX();
                 float y2 = event.getY();
-                if(y1 - y2 > 50) {
+                if (y1 - y2 > 50) {
                     launchButton.hide();
                     openFileButton.hide();
-                } else if(y2 - y1 > 50) {
+                } else if (y2 - y1 > 50) {
                     launchButton.show();
                     openFileButton.show();
                 }
@@ -214,32 +213,10 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
         setModAdapter(new ModAdapter(getContext(), getModLists()));
-        try {
-            listView.setAdapter(modAdapter);
-        } catch (Exception e) {
-            Log.put(e.toString());
-        }
-        TimerTask task = new TimerTask() {
-            public void run() {
-                hander.sendEmptyMessage(0);
-            }
-        };
-        Timer timer = new Timer();
-        long intevalPeriod = 1000;
+        listView.setAdapter(modAdapter);
+        TimerTask();
 
-        timer.scheduleAtFixedRate(task, 0, intevalPeriod);
 
-        if (Build.VERSION.SDK_INT >= 30) {
-            if (!Environment.isExternalStorageManager()) {
-                Intent request = new Intent(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                startActivityForResult(request, 0);
-            }
-            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-            }).launch(PERMISSIONS_30);
-        } else {
-            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-            }).launch(PERMISSIONS);
-        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.settings) {
@@ -252,10 +229,36 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-
         refreshAssets();
         refreshModList();
+        //Linker linker          = Linker.nativeLinker();
     }
+
+    private void getPermission() {
+        if (Build.VERSION.SDK_INT >= 30) {
+            if (!Environment.isExternalStorageManager()) {
+                Intent request = new Intent(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                startActivityForResult(request, 0);
+            }
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+            }).launch(PERMISSIONS_30);
+        } else {
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+            }).launch(PERMISSIONS);
+        }
+    }
+
+    private void TimerTask() {
+        TimerTask task = new TimerTask() {
+            public void run() {
+                hander.sendEmptyMessage(0);
+            }
+        };
+        Timer timer = new Timer();
+        long intevalPeriod = 1000;
+        timer.scheduleAtFixedRate(task, 0, intevalPeriod);
+    }
+
     private void refreshMods() {
         try {
             for (String name : getModLists()) {
@@ -277,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
             Log.put(e.toString());
         }
     }
+
     private void refreshTextView() {
         if (getModLists().size() != 0) {
             TextView textView = (TextView) findViewById(R.id.textView);
@@ -286,6 +290,7 @@ public class MainActivity extends AppCompatActivity {
             textView.setText("没有模组");
         }
     }
+
     private void removeFromJson(String path, String key) throws IOException {
         File jsonFile = new File(path);
         if (!jsonFile.exists()) {
@@ -293,9 +298,11 @@ public class MainActivity extends AppCompatActivity {
         } else {
             HashMap<String, Object> temp = new HashMap<>();
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(path), new TypeReference<>() {});
+            Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(path), new TypeReference<>() {
+            });
             for (Map.Entry<String, Object> stringObjectEntry : jsonMap.entrySet()) {
-                if (!stringObjectEntry.getKey().equals(key)) temp.put(stringObjectEntry.getKey(), stringObjectEntry.getValue());
+                if (!stringObjectEntry.getKey().equals(key))
+                    temp.put(stringObjectEntry.getKey(), stringObjectEntry.getValue());
             }
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
             objectMapper.writeValue(new File(path), temp);
@@ -361,8 +368,7 @@ public class MainActivity extends AppCompatActivity {
             refreshAssets();
             refreshModList();
             try {
-                Map<String, Object> jsonMap = objectMapper.readValue(modInfo, new TypeReference<>() {
-                });
+                Map<String, Object> jsonMap = objectMapper.readValue(modInfo, new TypeReference<>() {});
                 for (Map.Entry<String, Object> entry : jsonMap.entrySet()) {
                     switch (entry.getKey()) {
                         case "name":
@@ -379,7 +385,7 @@ public class MainActivity extends AppCompatActivity {
             }
             File modAssets = new File(appFilesDir + name);
             File tempModAssets = new File(appTempDir + res);
-            if (!tempModAssets.exists()){//防止小可爱modInfo.json中的res写错，导致安装异常
+            if (!tempModAssets.exists()) {//防止小可爱modInfo.json中的res写错，导致安装异常
                 Toast.makeText(this, "加载失败，模组材质文件夹与配置不匹配", Toast.LENGTH_SHORT).show();
                 refreshCacheDir();
                 return;
@@ -389,8 +395,7 @@ public class MainActivity extends AppCompatActivity {
             Log.put(appModsDir + name + "构建完成");
             try {
                 HashMap<String, String> json = new HashMap<>();
-                Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(appFilesDir + "mods.json"), new TypeReference<>() {
-                });
+                Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(appFilesDir + "mods.json"), new TypeReference<>() {});
                 for (Map.Entry<String, Object> stringObjectEntry : jsonMap.entrySet()) {
                     json.put(stringObjectEntry.getKey(), stringObjectEntry.getValue().toString());
                 }
