@@ -137,8 +137,7 @@ void NCHookFR::init()
     NC_InLineHook((void *) NC_Material__setupSurfaceMaterials, (void **) &base_Material__setupSurfaceMaterials, "_ZN8Material22_setupSurfaceMaterialsEv");
     NC_InLineHook((void *) NC_BlockTypeRegistry_registerBlock, (void **) &base_BlockTypeRegistry_registerBlock, "_ZN17BlockTypeRegistry13registerBlockI11BlockLegacyJRKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEiRK8MaterialEEERT_DpOT0_");
     //NC_InLineHook((void *) NC_ItemRegistry_registerBlockItemShared, (void **) &base_ItemRegistry_registerBlockItemShared, "_ZN12ItemRegistry18registerItemSharedI9BlockItemJsEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEDpOT0_");//测试用
-
-
+    NC_InLineHook((void *) NC_BlockLegacy_setExplodeable, (void **) &base_BlockLegacy_setExplodeable, "_ZN11BlockLegacy14setExplodeableEf");
 
 
 //

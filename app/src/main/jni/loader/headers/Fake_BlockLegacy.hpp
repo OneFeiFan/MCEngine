@@ -26,4 +26,7 @@ extern std::string (*fake_BlockLegacy_getCommandName)(BlockLegacy *);
 extern std::string (*fake_BlockLegacy_getRawName)(BlockLegacy *);
 
 //_ZNK11BlockLegacy12getRawNameIdEv
+//hook区
+extern BlockLegacy *(*base_BlockLegacy_setExplodeable)(BlockLegacy *, float);
+extern BlockLegacy *NC_BlockLegacy_setExplodeable(BlockLegacy *, float);
 #endif
