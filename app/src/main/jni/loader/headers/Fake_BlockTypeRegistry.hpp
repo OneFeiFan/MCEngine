@@ -9,15 +9,22 @@
 #include "Fake_Material.hpp"
 #include "Fake_BlockLegacy.hpp"
 #include "sharedptr.h"
-
+#include <map>
+#include <unordered_map>
 class BlockTypeRegistry
 {
 
 };
 //fake区
 extern BlockLegacy * (*fake_BlockTypeRegistry_registerBlock)(std::string const&,int *,Material const&);
-//_ZN17BlockTypeRegistry13registerBlockI11BlockLegacyJRA14_KciRK8MaterialEEERT_DpOT0_
+extern WeakPtr<BlockLegacy> (*fake_BlockTypeRegistry_lookupByName)(std::string const&,bool);
+extern  std::unordered_map<std::string,SharedPtr<BlockLegacy>> *(*fake_BlockTypeRegistry_mBlockLookupMap);
+
+//std::unordered_map<std::string,SharedPtr<BlockLegacy>>
 //hook区
 extern BlockLegacy * (*base_BlockTypeRegistry_registerBlock)(std::string const&,int *,Material const&);
 extern BlockLegacy * NC_BlockTypeRegistry_registerBlock(std::string const&,int *,Material const&);
+
+extern WeakPtr<BlockLegacy> (*base_BlockTypeRegistry_lookupByName)(std::string const&,bool);
+extern WeakPtr<BlockLegacy> NC_BlockTypeRegistry_lookupByName(std::string const&,bool);
 #endif //MCENGINE_FAKE_BLOCKTYPEREGISTRY_HPP

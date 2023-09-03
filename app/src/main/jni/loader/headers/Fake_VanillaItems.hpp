@@ -2,11 +2,10 @@
 // Created by 30225 on 2023/7/26.
 //
 
-#ifndef MCENGINE_FAKE_VANILLAITEMS_H
-#define MCENGINE_FAKE_VANILLAITEMS_H
+#ifndef MCENGINE_FAKE_VANILLAITEMS_HPP
+#define MCENGINE_FAKE_VANILLAITEMS_HPP
 
-#include "Fake_Item.h"
-
+#include "Fake_Item.hpp"
 class VanillaItems;
 class Experiments;
 class ActorInfoRegistry;
@@ -29,4 +28,4 @@ extern void (*base_VanillaItems_serverInitCreativeItemsCallback)(VanillaItems *,
 
 extern void NC_VanillaItems_serverInitCreativeItemsCallback(VanillaItems *, ActorInfoRegistry *, BlockDefinitionGroup *, CreativeItemRegistry *, Item * , BaseGameVersion const &, Experiments const &);
 
-#endif //MCENGINE_FAKE_VANILLAITEMS_H
+#endif //MCENGINE_FAKE_VANILLAITEMS_HPP

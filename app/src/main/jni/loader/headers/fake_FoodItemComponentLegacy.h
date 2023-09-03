@@ -5,7 +5,7 @@
 #ifndef MCENGINE_FAKE_FOODITEMCOMPONENTLEGACY_H
 #define MCENGINE_FAKE_FOODITEMCOMPONENTLEGACY_H
 
-#include "Fake_Item.h"
+#include "Fake_Item.hpp"
 
 class FoodItemComponentLegacy{};
 

@@ -2,16 +2,16 @@
 // Created by 30225 on 2023/7/26.
 //
 #include <iostream>
-#include "../headers/Fake_VanillaItems.h"
-#include "../headers/Fake_Item.h"
-#include "../headers/Fake_ItemRegistry.h"
+#include "../headers/Fake_VanillaItems.hpp"
+#include "../headers/Fake_Item.hpp"
+#include "../headers/Fake_ItemRegistry.hpp"
 #include "NC_Items.hpp"
 #include "headers/Fake_HashedString.h"
 #include "headers/fake_FoodItemComponentLegacy.h"
 #include "NC_FoodItems.hpp"
 #include "NC_SwordItems.hpp"
 #include "headers/Fake_VanillaBlockTypes.hpp"
-
+#include "headers/Fake_BlockTypeRegistry.hpp"
 class Experiments;
 
 //hook区
@@ -21,16 +21,13 @@ void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, boo
 {
     printf("注册物品开始\n");
     Item *itemPtr;
-    short id = fake_BlockLegacy_getBlockItemId(tempBlock);
-
-    short qid = -180;
-    itemPtr = fake_ItemRegistry_registerBlockItemShared("item_Temp",id).get();
-    //fake_ItemRegistry_registerBlockItemShared("minecraft:block.block_test_block",id).get();
-    std::cout<<"112ddeaa"<<std::endl;
-    short id2 = fake_BlockLegacy_getBlockItemId(fake_Item_getLegacyBlock(itemPtr));
-    std::cout<<fake_Item_getId(itemPtr)<<std::endl;
-    std::cout<<id2<<std::endl;
-    fake_Item_setCategory(itemPtr, (CreativeItemCategory)1);
+//    BlockLegacy *tempBlock1 = fake_BlockTypeRegistry_lookupByName("block_Temp", true).get();
+//    short id = fake_BlockLegacy_getBlockItemId(tempBlock1);
+//    std::cout<<id<<std::endl;
+//    itemPtr = fake_ItemRegistry_registerBlockItemShared("block_temp",id).get();
+//    *((c *)itemPtr + 48) = (uintptr_t)&tempBlock1;
+//
+//    fake_Item_setCategory(itemPtr, (CreativeItemCategory)1);
     for(auto &NC_ItemPtr: normalItemsPoolArray){
         itemPtr = fake_ItemRegistry_registerItemShared(NC_ItemPtr->getName(), (short &) (++fake_ItemRegistry_mMaxItemID)).get();
         NC_ItemPtr->setItemPtr(itemPtr);
@@ -41,12 +38,12 @@ void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, boo
         itemPtr = fake_ItemRegistry_registerItemSharedForSword(NC_ItemPtr->getName(), (short &) (++fake_ItemRegistry_mMaxItemID), *tiersPool[NC_ItemPtr->getTier()]).get();
 #ifdef __arm__
         // 如果目标平台是 ARM32 架构（armeabi、armeabi-v7a），则编译以下代码块
-        *((uint32_t *) itemPtr + 75) = NC_ItemPtr->getDamage();//设置攻击力
+        *((uintptr_t *) itemPtr + 75) = NC_ItemPtr->getDamage();//设置攻击力
 #endif
 
 #ifdef __aarch64__
         // 如果目标平台是 ARM64 架构（arm64-v8a），则编译以下代码块
-      *((uint32_t *) itemPtr + 128) = NC_ItemPtr->getDamage();//设置攻击力
+      *((uintptr_t *) itemPtr + 128) = NC_ItemPtr->getDamage();//设置攻击力
 #endif
 
         fake_Item_setMaxDamage(itemPtr, NC_ItemPtr->getDurability());//设置耐久
@@ -72,7 +69,7 @@ void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, boo
 
 #ifdef __aarch64__
         // 如果目标平台是 ARM64 架构（arm64-v8a），则编译以下代码块
-        FoodItemComponentLegacy *fooderPtr = (FoodItemComponentLegacy *) *((uintptr_t *) itemPtr + 55);//获取Item中和食物有关对象的地址
+        auto *fooderPtr = (FoodItemComponentLegacy *) *((uintptr_t *) itemPtr + 55);//获取Item中和食物有关对象的地址
         *((uint8_t *) itemPtr + 38) = fake_UseAnimationFromString("eat");//写入使用动画
         *((float *) fooderPtr + 5) = fake_FoodSaturationFromString(saturationLevel);//写入营养值
 #endif

@@ -5,12 +5,8 @@
 
 extern void NC_InLineHook(void *, void **, const char *);
 extern void NC_FakeNative(void **,const char *);
-extern char * mcNativeDir;
 class NCHookFR
 {
-private:
-    [[maybe_unused]] void *MCHandle;
-
 public:
     static NCHookFR *hookerPtr;
     static JavaVM *jvm;

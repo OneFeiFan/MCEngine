@@ -7,16 +7,19 @@
 #include "headers/Fake_BlockSource.hpp"
 #include "headers/Fake_BlockLegacy.hpp"
 #include "headers/Fake_ItemStackBase.hpp"
-#include "headers/Fake_ItemRegistry.h"
-#include "headers/Fake_Item.h"
+#include "headers/Fake_ItemRegistry.hpp"
+#include "headers/Fake_Item.hpp"
 #include "headers/CreativeItemCategory.h"
-#include "headers/Fake_VanillaItems.h"
+#include "headers/Fake_VanillaItems.hpp"
 #include "headers/Fake_HashedString.h"
 #include "headers/Fake_Json_Value.h"
 #include "headers/fake_FoodItemComponentLegacy.h"
 #include "headers/Fake_VanillaBlockTypes.hpp"
 #include "headers/Fake_Material.hpp"
 #include "headers/Fake_BlockTypeRegistry.hpp"
+#include "headers/Fake_BlockGraphics.hpp"
+#include "headers/Other.hpp"
+#include "headers/Fake_Block.hpp"
 
 class CreativeItemRegistry;
 
@@ -103,14 +106,30 @@ void NCHookFR::init()
     NC_FakeNative((void **) &fake_BlockLegacy_setExplodeable, "_ZN11BlockLegacy14setExplodeableEf");
     NC_FakeNative((void **) &fake_BlockLegacy_getCommandName, "_ZNK11BlockLegacy14getCommandNameEv");
     NC_FakeNative((void **) &fake_BlockLegacy_getRawName, "_ZNK11BlockLegacy12getRawNameIdEv");
+    NC_FakeNative((void **) &fake_BlockGraphics_registerBlockGraphics, "_ZN13BlockGraphics21registerBlockGraphicsERNSt6__ndk16vectorIN4Json5ValueENS0_9allocatorIS3_EEEERKNS0_12basic_stringIcNS0_11char_traitsIcEENS4_IcEEEE10BlockShape");
+    NC_FakeNative((void **) &fake_BlockGraphics_setTextureItem, "_ZN13BlockGraphics14setTextureItemERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
+    NC_FakeNative((void **) &fake_BlockGraphics_BlockGraphics, "_ZN13BlockGraphicsC2ERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
+    NC_FakeNative((void **) &fake_BlockTypeRegistry_lookupByName, "_ZN17BlockTypeRegistry12lookupByNameERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEb");
+    NC_FakeNative((void **) &fake_BlockTypeRegistry_mBlockLookupMap, "_ZN17BlockTypeRegistry15mBlockLookupMapE");
+    NC_FakeNative((void **) &fake_setBlockDisplayName, "_ZN6Social11UserProfile14setDisplayNameERKNSt6__ndk112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE_0");
+    NC_FakeNative((void **) &fake_ItemRegistry_getItemById, "_ZN12ItemRegistry7getItemEs");
+    NC_FakeNative((void **) &fake_BlockGraphics_lookupByName, "_ZN13BlockGraphics12lookupByNameERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEb");
+    NC_FakeNative((void **) &fake_BlockGraphics_getBlock, "_ZNK13BlockGraphics8getBlockEv");
+    NC_FakeNative((void **) &fake_BlockGraphics_setDefaultCarriedTextures, "_ZN13BlockGraphics25setDefaultCarriedTexturesEv");
+    NC_FakeNative((void **) &fake_BlockGraphics_mBlocks, "_ZN13BlockGraphics7mBlocksE");
+    NC_FakeNative((void **) &fake_BlockGraphics_mBlockLookupMap, "_ZN13BlockGraphics15mBlockLookupMapE");
+    NC_FakeNative((void **) &fake_BlockGraphics_mOwnedBlocks, "_ZN13BlockGraphics12mOwnedBlocksE");
+    NC_FakeNative((void **) &fake_Block_getRuntimeId, "_ZNK5Block12getRuntimeIdEv");
+    NC_FakeNative((void **) &fake_BlockGraphics_setCarriedTextures, "_ZN13BlockGraphics21setCarriedTextureItemERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
+    NC_FakeNative((void **) &fake_Json_Value_append, "_ZN4Json5Value6appendERKS0_");
 
 
 
+
+
 //
-//
-//
-//
-//
+
+
 //
     //NC_FakeNative((void **) &fake_FoodItemComponentLegacy, "_ZN23FoodItemComponentLegacyC2ER4Item");
 
@@ -128,7 +147,7 @@ void NCHookFR::init()
     //    ptr = (void *)dlsym(this->MCHandle, "_ZN13ItemStackBaseC2ERK4Itemii");
     //    MSHookFunction(ptr, (void *)&EX_ItemStackBase, (void **)&base_ItemStackBase);
     NC_InLineHook((void *) NC_VanillaItems_serverInitCreativeItemsCallback, (void **) &base_VanillaItems_serverInitCreativeItemsCallback, "_ZN12VanillaItems31serverInitCreativeItemsCallbackEP17ActorInfoRegistryP20BlockDefinitionGroupP20CreativeItemRegistrybRK15BaseGameVersionRK11Experiments");
-    //NC_InLineHook((void *) NC_Item_addCreativeItem, (void **) &base_Item_addCreativeItem, "_ZN4Item15addCreativeItemEPS_s");//用其他方法实现了添加背包
+    NC_InLineHook((void *) NC_Item_addCreativeItem, (void **) &base_Item_addCreativeItem, "_ZN4Item15addCreativeItemEPS_s");//用其他方法实现了添加背包
     //NC_InLineHook((void *) NC_Item_addTag, (void **) &base_Item_addTag, "_ZN4Item6addTagERK12HashedString");//大概没大用
     NC_InLineHook((void *) NC_Item_initServer, (void **) &base_Item_initServer, "_ZN4Item10initServerERN4Json5ValueE");
     NC_InLineHook((void *) NC_Json_Value_Value, (void **) &base_Json_Value_Value, "_ZN4Json5ValueC1EPKcS2_");//这个方法不调用
@@ -136,8 +155,18 @@ void NCHookFR::init()
     NC_InLineHook((void *) NC_VanillaBlockTypes_registerBlocks, (void **) &base_VanillaBlockTypes_registerBlocks, "_ZN17VanillaBlockTypes14registerBlocksERK11Experiments");
     NC_InLineHook((void *) NC_Material__setupSurfaceMaterials, (void **) &base_Material__setupSurfaceMaterials, "_ZN8Material22_setupSurfaceMaterialsEv");
     NC_InLineHook((void *) NC_BlockTypeRegistry_registerBlock, (void **) &base_BlockTypeRegistry_registerBlock, "_ZN17BlockTypeRegistry13registerBlockI11BlockLegacyJRKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEiRK8MaterialEEERT_DpOT0_");
-    //NC_InLineHook((void *) NC_ItemRegistry_registerBlockItemShared, (void **) &base_ItemRegistry_registerBlockItemShared, "_ZN12ItemRegistry18registerItemSharedI9BlockItemJsEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEDpOT0_");//测试用
+    NC_InLineHook((void *) NC_ItemRegistry_registerBlockItemShared, (void **) &base_ItemRegistry_registerBlockItemShared, "_ZN12ItemRegistry18registerItemSharedI9BlockItemJsEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEDpOT0_");//测试用
     NC_InLineHook((void *) NC_BlockLegacy_setExplodeable, (void **) &base_BlockLegacy_setExplodeable, "_ZN11BlockLegacy14setExplodeableEf");
+    NC_InLineHook((void *) NC_BlockGraphics_initBlocks, (void **) &base_BlockGraphics_initBlocks, "_ZN13BlockGraphics10initBlocksER19ResourcePackManagerRK11Experiments");
+    NC_InLineHook((void *) NC_BlockItem__useOn, (void **) &base_BlockItem__useOn, "_ZNK9BlockItem6_useOnER9ItemStackR5Actor8BlockPoshfff");
+    NC_InLineHook((void *) NC_BlockGraphics_BlockGraphics, (void **) &base_BlockGraphics_BlockGraphics, "_ZN13BlockGraphicsC2ERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
+    NC_InLineHook((void *) NC_BlockTypeRegistry_lookupByName, (void **) &base_BlockTypeRegistry_lookupByName, "_ZN17BlockTypeRegistry12lookupByNameERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEb");
+    NC_InLineHook((void *) NC_BlockGraphics_setTextureItem, (void **) &base_BlockGraphics_setTextureItem, "_ZN13BlockGraphics14setTextureItemERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEES8_S8_S8_S8_S8_");
+    NC_InLineHook((void *) NC_BlockGraphics_lookupByName, (void **) &base_BlockGraphics_lookupByName, "_ZN13BlockGraphics12lookupByNameERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEb");
+    NC_InLineHook((void *) NC_BlockGraphics_registerBlockGraphics, (void **) &base_BlockGraphics_registerBlockGraphics, "_ZN13BlockGraphics21registerBlockGraphicsERNSt6__ndk16vectorIN4Json5ValueENS0_9allocatorIS3_EEEERKNS0_12basic_stringIcNS0_11char_traitsIcEENS4_IcEEEE10BlockShape");
+    NC_InLineHook((void *) NC_BlockGraphics_registerLooseBlockGraphics, (void **) &base_BlockGraphics_registerLooseBlockGraphics, "_ZN13BlockGraphics26registerLooseBlockGraphicsERNSt6__ndk16vectorIN4Json5ValueENS0_9allocatorIS3_EEEE");
+
+
 
 
 //

@@ -8,7 +8,7 @@
 #include <map>
 #include <vector>
 #include "../../headers/CreativeItemCategory.h"
-#include "../../headers/Fake_Item.h"
+#include "../../headers/Fake_Item.hpp"
 
 class NC_Items
 {

@@ -2,6 +2,7 @@
 #define EX_FAKE_BLOCKLEGACY_HPP
 
 #include <string>
+#include "sharedptr.h"
 
 class BlockLegacy
 {
@@ -11,9 +12,9 @@ public:
     int getBlockItemId() const;
 }; //
 // fake区域
-extern unsigned int (*fake_BlockLegacy_getBlockItemId)(BlockLegacy *);
+extern int (*fake_BlockLegacy_getBlockItemId)(BlockLegacy *);
 
-extern BlockLegacy *(*fake_BlockLegacy_createWeakPtr)(BlockLegacy *);
+extern WeakPtr<BlockLegacy> (*fake_BlockLegacy_createWeakPtr)(BlockLegacy *);
 
 extern BlockLegacy *(*fake_BlockLegacy_setCategory)(BlockLegacy *, int);
 
@@ -23,7 +24,7 @@ extern BlockLegacy *(*fake_BlockLegacy_setExplodeable)(BlockLegacy *, float);
 
 extern std::string (*fake_BlockLegacy_getCommandName)(BlockLegacy *);
 
-extern std::string (*fake_BlockLegacy_getRawName)(BlockLegacy *);
+extern char *(*fake_BlockLegacy_getRawName)(BlockLegacy *);
 
 //_ZNK11BlockLegacy12getRawNameIdEv
 //hook区

@@ -19,7 +19,7 @@
 #include "includes/dobby.h"
 //#include "includes/Unzip/Unzip.h"
 #include "includes/lua/lua.hpp"
-#include "includes/NC_HookFR/NCHookFR.h"
+#include "includes/NC_HookFR/NCHookFR.hpp"
 #include "includes/NC_Items/NC_Items.hpp"
 #include "NC_FoodItems.hpp"
 #include "NC_SwordItems.hpp"
@@ -61,14 +61,14 @@ int add(lua_State *L)
     return 1;
 }
 
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, [[maybe_unused]]void *reserved)
 {
     freopen("/storage/emulated/0/tmp/log1.txt", "w", stdout);
 
     android::setJavaVM(vm);
     JNIEnv *env = android::getJNIEnv();
 
-    const char *a = android::getExternalFilePath(android::getJNIEnv(), "", android::getApplicationContext(android::getJNIEnv()));
+//    const char *a = android::getExternalFilePath(android::getJNIEnv(), "", android::getApplicationContext(android::getJNIEnv()));
 //    std::string b = std::string(a) + "/c01log.log";
 //    Logger::instance = new Logger(b.c_str());
 //
@@ -98,6 +98,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 //            }
 //            lua_close(L);
         android::showToast(env, android::charArrToJstring(env, "成功加载native核心"));
+        android::showToast(env, android::charArrToJstring(env, "成功加载native核心"));
         NCHookFR::jvm = vm;
         NCHookFR hooker;
         NCHookFR::hookerPtr = &hooker;
@@ -111,20 +112,20 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
     return JNI_VERSION_1_6;
 }
 
-JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeItem_createItem(JNIEnv *env, jclass clazz, jstring jname, jstring jiconName, jint jindex, jint jtype)
+JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeItem_createItem(JNIEnv *env, [[maybe_unused]] jclass clazz, jstring jname, jstring jiconName, jint jindex, jint jtype)
 {
     const char *name = android::jstringToCharArr(env, jname);
     const char *iconName = android::jstringToCharArr(env, jiconName);
     return (jlong *) NC_Items::createObj(name, iconName, jindex, (CreativeItemCategory) jtype);
 }
-JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeItem_createFood(JNIEnv *env, jclass clazz, jstring jname, jstring jicon, jint index, jint type, jstring jfood_data)
+JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeItem_createFood(JNIEnv *env, [[maybe_unused]] jclass clazz, jstring jname, jstring jicon, jint index, jint type, jstring jfood_data)
 {
     const char *name = android::jstringToCharArr(env, jname);
     const char *iconName = android::jstringToCharArr(env, jicon);
     const char *food_data = android::jstringToCharArr(env, jfood_data);
     return (jlong *) NC_FoodItems::createObj(name, iconName, index, (CreativeItemCategory) type, food_data);
 }
-JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeItem_createSword(JNIEnv *env, jclass clazz, jstring jname, jstring jicon, jint jindex, jint jtype, jint jtier, jint jdurability, jint jdamage)
+JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeItem_createSword(JNIEnv *env, [[maybe_unused]]jclass clazz, jstring jname, jstring jicon, jint jindex, jint jtype, jint jtier, jint jdurability, jint jdamage)
 {
     const char *name = android::jstringToCharArr(env, jname);
     const char *iconName = android::jstringToCharArr(env, jicon);

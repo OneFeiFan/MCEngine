@@ -1,15 +1,14 @@
-#include "NCHookFR.h"
+#include "NCHookFR.hpp"
 #include <cstdio>
 #include <iostream>
 #include "headers/Fake_Actor.hpp"
 #include "headers/Fake_BlockSource.hpp"
 #include "headers/Fake_BlockLegacy.hpp"
 #include "headers/Fake_ItemStackBase.hpp"
-#include "headers/Fake_ItemRegistry.h"
-#include "headers/Fake_Item.h"
+#include "headers/Fake_ItemRegistry.hpp"
+#include "headers/Fake_Item.hpp"
 #include "headers/CreativeItemCategory.h"
 #include "includes/dobby.h"
-char * mcNativeDir;
 NCHookFR *NCHookFR::hookerPtr;
 JavaVM *NCHookFR::jvm;
 [[maybe_unused]] jclass NCHookFR::Class;
@@ -25,7 +24,7 @@ JNIEnv *NCHookFR::getENV()
     return env;
 }
 void NC_InLineHook(void *hook, void **original, const char *symbol_name) {
-    void *ptr = DobbySymbolResolver(mcNativeDir, symbol_name);
+    void *ptr = DobbySymbolResolver("libminecraftpe.so", symbol_name);
     if (ptr != nullptr) {
         printf("成功获取符号：%s的地址\n", symbol_name);
         if (DobbyHook(ptr, hook, original) == 0) {
@@ -40,7 +39,7 @@ void NC_InLineHook(void *hook, void **original, const char *symbol_name) {
 
 void NC_FakeNative(void **fake_fun, const char *symbol_name) {
     if (fake_fun) {
-        void *symbol = DobbySymbolResolver(mcNativeDir, symbol_name);
+        void *symbol = DobbySymbolResolver("libminecraftpe.so", symbol_name);
         if (symbol != nullptr) {
             printf("成功获取符号：%s的地址\n", symbol_name);
             *fake_fun = symbol;
