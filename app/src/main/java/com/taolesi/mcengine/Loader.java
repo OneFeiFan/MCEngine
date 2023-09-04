@@ -4,7 +4,6 @@ import static com.taolesi.mcengine.FileTools.JsonToObjTest;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.os.Environment;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
@@ -16,20 +15,12 @@ import com.quickjs.JSArray;
 import com.quickjs.JSContext;
 import com.quickjs.JSFunction;
 import com.quickjs.JSObject;
-import com.quickjs.JSValue;
-import com.quickjs.JavaConstructorCallback;
 import com.quickjs.JavaVoidCallback;
 import com.quickjs.QuickJS;
-import com.quickjs.QuickJSScriptException;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class Loader {
@@ -43,7 +34,6 @@ public class Loader {
         //此处若是加载异常,将会停止向下运行,不用担心quickjs
         Loader loader = new Loader();
         loader.runCoreJS(context);
-
         return true;
     }
 
@@ -64,6 +54,30 @@ public class Loader {
                 JSContext quickJS_context_ = quickJS_.createContext();
                 quickJS_context_.addJavascriptInterface(new Loader(), "Loader");
                 quickJS_context_.addJavascriptInterface(new NativeItem(), "NativeItem");
+                quickJS_context_.registerClass((thisObj, args) -> {
+                    JSObject item = (JSObject) args.get(0);
+                    NativeItem nativeItem = new NativeItem(item.getInteger("ItemPtr"));
+                    //thisObj.set("this", nativeItem);
+                    thisObj.set("name", item.getString("name"));
+                    thisObj.set("icon", item.getString("icon"));
+                    thisObj.set("index", item.getInteger("index"));
+                    thisObj.set("type", item.getInteger("type"));
+                    //JSFunction callback = null;
+                    //thisObj.set("onItemUse", "");
+                    /*thisObj.registerJavaMethod((receiver, args1) -> {
+                        JSFunction callback = ((JSFunction) args1.get(0));
+                        nativeItem.addOnItemUseCallback(thisObj, callback);
+                    }, "addOnItemUseCallback");*/
+
+                    /*thisObj.registerJavaMethod((receiver, args1) -> {
+                        //JSFunction callback = (JSFunction) args1.get(0);
+                        Toast.makeText(context, "回调", Toast.LENGTH_SHORT).show();
+                        //Log.put(receiver.toJSONObject().toString());
+                        //nativeItem.addOnItemUseCallback(thisObj, callback);
+                    }, "__OnItemUse");*/
+                    //Toast.makeText(context, thisObj.toJSONObject().toString(), Toast.LENGTH_SHORT).show();
+                    //quickJS_context_.addJavascriptInterface(new NativeItem(ptr), "Item");
+                }, "Item");
                 try {
                     quickJS_context_.executeScript(JsonToObjTest(javaScriptPath), modName + ".js");
                 } catch (Exception e) {
@@ -79,6 +93,10 @@ public class Loader {
     @JavascriptInterface
     public static void Toast(String str) {
         Toast.makeText(context_, str, Toast.LENGTH_SHORT).show();
+    }
+    @JavascriptInterface
+    public static void log(String str) {
+        Log.put(str);
     }
     /*@JavascriptInterface
     public static JSObject getNewLoader() {

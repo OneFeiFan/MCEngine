@@ -31,8 +31,8 @@ void NC_BlockGraphics_registerLooseBlockGraphics(std::vector<Json::Value> &data)
     auto *value = new Json::Value();
     auto *reader = new Json::Reader();
     const char *c = "{ \"format_version\": [1,1,0],\"block_Temp\":{}}";
-    reader->parse(c, c + strlen(c), *value);
-    free(&data[0]);//释放原内存
+    reader -> parse(c, c + strlen(c), *value);
+    //free(&data[0]);//释放原内存
     memcpy(&data[0], value, sizeof(value));//强制拷贝新内存
     base_BlockGraphics_registerLooseBlockGraphics(data);
     BlockGraphics * ptr = blockGraphicsPool.find("block_Temp")->second;

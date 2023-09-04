@@ -7,6 +7,8 @@
 #include "headers/Fake_HashedString.h"
 #include "headers/Fake_BlockTypeRegistry.hpp"
 #include "headers/Fake_ItemRegistry.hpp"
+#include "tester/android.hpp"
+#include "NativeClass.hpp"
 
 //#include "../includes/json/json.h"
 Item::Tier::Tier(int level, int durability, float speed, int damage, int echantmentValue) : mLevel(level), mDurability(durability), mSpeed(speed), mDamage(damage), mEnchantmentValue(echantmentValue){}
@@ -68,18 +70,10 @@ void (*base_Item_useOn)(Item *, ItemStack &, Actor &, int, int, int, unsigned ch
 
 void NC_Item_useOn(Item *ptr, ItemStack &itemstack, Actor &actor, int x, int y, int z, unsigned char d, float e, float f, float g)
 {
-    // jclass CLASS = EXHookFR::hookerPtr->Class;
-    // BlockSource *Region = (BlockSource *)fake_Actor_getRegion(&actor);
-    // Block *block = Fake_BlockSource_getBlock(Region, x, y, z);
-    // int id = fake_BlockLegacy_getBlockItemId(((BlockLegacy *)*((uint32_t *)block + 2)));
-    // if (std::find(barrelIDPool.begin(), barrelIDPool.end(), id) != barrelIDPool.end() && !fake_Actor_isSneaking(&actor))
-    // {
-    //     if (std::find(forbiddenIDPool.begin(), forbiddenIDPool.end(), fake_ItemStackBase_getId((ItemStackBase *)&itemstack)) != forbiddenIDPool.end())
-    //     {
-    //         return;
-    //     }
-    // }
-    //std::cout << fake_Item_isFood(ptr) << std::endl;
+    JNIEnv* env = android::getJNIEnv();
+    jclass NativeItem = NativeClass::NativeItem;
+    jmethodID id = env -> GetStaticMethodID(NativeItem, "onItemUse", "(JJJIIICFFF)V");
+    env -> CallStaticVoidMethod(NativeItem, id, (jlong) ptr, (jlong) &itemstack, (jlong) &actor, x, y, z, d, e, f, g);
     return base_Item_useOn(ptr, itemstack, actor, x, y, z, d, e, f, g);
 }
 

@@ -122,7 +122,7 @@ void NCHookFR::init()
     //杂项
     NC_FakeNative((void **) &fake_FoodSaturationFromString, "_Z24FoodSaturationFromStringRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE");
     NC_FakeNative((void **) &fake_UseAnimationFromString, "_Z22UseAnimationFromStringRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE");
-    NC_FakeNative((void **) &fake_setBlockDisplayName, "_ZN6Social11UserProfile14setDisplayNameERKNSt6__ndk112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE_0");
+    //NC_FakeNative((void **) &fake_setBlockDisplayName, "_ZN6Social11UserProfile14setDisplayNameERKNSt6__ndk112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE_0");
     //NC_FakeNative((void **) &fake_FoodItemComponentLegacy, "_ZN23FoodItemComponentLegacyC2ER4Item");//没用
 
 

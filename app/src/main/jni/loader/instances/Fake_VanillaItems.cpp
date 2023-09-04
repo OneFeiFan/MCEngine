@@ -49,6 +49,7 @@ void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, boo
         fake_Item_setMaxDamage(itemPtr, NC_ItemPtr->getDurability());//设置耐久
         NC_ItemPtr->setItemPtr(itemPtr);
         fake_Item_setCategory(itemPtr, NC_ItemPtr->getType());
+        NC_Items::items.emplace_back(itemPtr);
     }
     printf("武器注册完成，一切正常\n");
     for(auto &NC_ItemPtr: foodItemsPoolArray){
@@ -78,7 +79,7 @@ void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, boo
 //        std::cout<<info.dli_sname<<std::endl;
 
         fake_Item_setCategory(itemPtr, NC_ItemPtr->getType());
-
+        NC_Items::items.emplace_back(itemPtr);
     }
     printf("物品注册完成，一切正常\n");
     return base_VanillaItems_registerItems(ptr, e, b);

@@ -1,24 +1,38 @@
 package com.taolesi.mcengine;
 
 import android.webkit.JavascriptInterface;
+import android.widget.Toast;
 
+import com.quickjs.JSArray;
+import com.quickjs.JSContext;
 import com.quickjs.JSObject;
+import com.quickjs.JSValue;
 
 public class NativeItem {
-    public long ptr;
+    private long ptr;
 
+    public static native void define();
     public NativeItem(long NC_ItemsPtr) {
         ptr = NC_ItemsPtr;
+        //define();
     }
 
     public NativeItem() {
-
+        define();
     }
 
-    @JavascriptInterface
-    public static native long createItem(String name, String icon, int index,  int type);//NC_ItemsPtr
+    public static native void baseItemUseOn(long Item, long ItemStack, long Actor, int x, int y, int z, char d, float e, float f, float g);
 
-    public static native long createFood(String name, String icon, int index,  int type, String FoodData);//NC_ItemsPtr
+    public static native long createItem(String name, String icon, int index, int type);//NC_ItemsPtr
+
+    @JavascriptInterface
+    public static JSObject createBaseItem(JSObject itemData) {
+        long ptr = createItem(itemData.getString("name"), itemData.getString("icon"), itemData.getInteger("index"), itemData.getInteger("type"));
+        itemData.set("ItemPtr", ptr);
+        return itemData;
+    }
+
+    public static native long createFood(String name, String icon, int index, int type, String FoodData);//NC_ItemsPtr
 
     public static native long createSword(String name, String icon, int index, int type, int tier, int durability, int damage);//NC_ItemsPtr
 
@@ -82,4 +96,10 @@ public class NativeItem {
 
         return createSword(name, icon, index, type, tier, extraData.contains("durability") ? extraData.getInteger("durability") : 0, extraData.contains("damage") ? extraData.getInteger("damage") : 0);
     }//NC_ItemsPtr
+    @JavascriptInterface
+    public static void onItemUse(long Item, long ItemStack, long Actor, int x, int y, int z, char d, float e, float f, float g) {
+        baseItemUseOn(Item, ItemStack, Actor, x, y, z, d, e, f, g);
+        Log.put("物品调用");
+        //Toast.makeText(, "", Toast.LENGTH_SHORT).show();
+    }
 }

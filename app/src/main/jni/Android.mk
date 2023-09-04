@@ -18,6 +18,7 @@ include $(CLEAR_VARS)
 LOCAL_CPP_FEATURES += exceptions
 LOCAL_C_INCLUDES += $(wildcard $(LOCAL_PATH)/includes/*)
 LOCAL_C_INCLUDES +=	$(wildcard $(LOCAL_PATH)/headers/*)
+LOCAL_C_INCLUDES +=	$(wildcard $(LOCAL_PATH)/instances/*)
 LOCAL_CPP_EXTENSION := .cpp .cc
 LOCAL_MODULE    := loader
 SRC_FILS := $(wildcard $(LOCAL_PATH)/*/*/*.c $(LOCAL_PATH)/*/*.cpp $(LOCAL_PATH)/*.cpp $(LOCAL_PATH)/*/*/*.cpp $(LOCAL_PATH)/*/*/*/*.cpp $(LOCAL_PATH)/*/*/*/*/*.cpp)
