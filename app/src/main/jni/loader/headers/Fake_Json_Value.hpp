@@ -2,9 +2,9 @@
 // Created by 30225 on 2023/7/27.
 //
 
-#ifndef MCENGINE_FAKE_JSON_VALUE_H
-#define MCENGINE_FAKE_JSON_VALUE_H
-
+#ifndef MCENGINE_FAKE_JSON_VALUE_HPP
+#define MCENGINE_FAKE_JSON_VALUE_HPP
+#include <string>
 //namespace Json {
 //    class Value {
 //    public:
@@ -115,11 +115,6 @@ extern void (*fake_Json_Reader_Reader)(Json::Reader *);
 extern void (*fake_Json_Value_Value)(Json::Value *,int);
 extern Json::Value& (*fake_Json_Value_append)(Json::Value *,Json::Value const&);
 
+//hook区
 
-//_ZN4Json5Value6appendERKS0_
-extern void (*base_Json_Value_Value)(Json::Value *,char const*, char const*);//无用
-
-extern void NC_Json_Value_Value(Json::Value * ptr,char const* a, char const* b);
-
-
-#endif //MCENGINE_FAKE_JSON_VALUE_H
+#endif //MCENGINE_FAKE_JSON_VALUE_HPP

@@ -6,7 +6,7 @@
 #include <string>
 #include <dlfcn.h>
 #include "CreativeItemCategory.h"
-#include "Fake_Json_Value.h"
+#include "Fake_Json_Value.hpp"
 #include "Fake_BlockLegacy.hpp"
 #include "Fake_ItemStackBase.hpp"
 

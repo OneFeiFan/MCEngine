@@ -88,11 +88,9 @@ extern WeakPtr<Item> (*fake_ItemRegistry_registerItemShared)(std::string const &
 
 extern WeakPtr<Item> (*fake_ItemRegistry_registerItemSharedForSword)(std::string const &, short &,Item::Tier const&);
 
-extern WeakPtr<Item> (*fake_ItemRegistry_registerBlockItemShared)(std::string const &, short &);
+//extern WeakPtr<Item> (*fake_ItemRegistry_registerBlockItemShared)(std::string const &, short &);
 
 extern WeakPtr<Item> (*fake_ItemRegistry_getItemById)(short);
 //_ZN12ItemRegistry7getItemEs
 //hook区
-extern WeakPtr<Item> (*base_ItemRegistry_registerBlockItemShared)(std::string const &, short &);
-extern WeakPtr<Item> NC_ItemRegistry_registerBlockItemShared(std::string const &, short &);
 #endif
