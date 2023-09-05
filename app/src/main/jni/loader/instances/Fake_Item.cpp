@@ -66,15 +66,16 @@ void *NC_Item_addCreativeItem(Item *obj, short a)
     return base_Item_addCreativeItem(obj, a);
 }
 
-void (*base_Item_useOn)(Item *, ItemStack &, Actor &, int, int, int, unsigned char, float, float, float);
+void (*base_Item_useOn)(Item *, ItemStack *, Actor *, int, int, int, short, float, float, float);
 
-void NC_Item_useOn(Item *ptr, ItemStack &itemstack, Actor &actor, int x, int y, int z, unsigned char d, float e, float f, float g)
+void NC_Item_useOn(Item *ptr, ItemStack *itemstack, Actor *actor, int x, int y, int z, short d, float e, float f, float g)
 {
     JNIEnv* env = android::getJNIEnv();
     jclass NativeItem = NativeClass::NativeItem;
-    jmethodID id = env -> GetStaticMethodID(NativeItem, "onItemUse", "(JJJIIICFFF)V");
-    env -> CallStaticVoidMethod(NativeItem, id, (jlong) ptr, (jlong) &itemstack, (jlong) &actor, x, y, z, d, e, f, g);
-    return base_Item_useOn(ptr, itemstack, actor, x, y, z, d, e, f, g);
+    jmethodID id = env -> GetStaticMethodID(NativeItem, "onItemUse", "(JJJIIISFFF)V");
+    env -> CallStaticVoidMethod(NativeItem, id, (jlong) ptr, (jlong) itemstack, (jlong) actor, x, y, z, d, e, f, g);
+    return;
+    //return base_Item_useOn(ptr, itemstack, actor, x, y, z, d, e, f, g);
 }
 
 void *(*base_Item_addTag)(Item *, HashedString *);

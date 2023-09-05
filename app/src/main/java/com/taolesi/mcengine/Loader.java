@@ -53,7 +53,7 @@ public class Loader {
                 QuickJS quickJS_ = QuickJS.createRuntimeWithEventQueue();
                 JSContext quickJS_context_ = quickJS_.createContext();
                 quickJS_context_.addJavascriptInterface(new Loader(), "Loader");
-                quickJS_context_.addJavascriptInterface(new NativeItem(), "NativeItem");
+                quickJS_context_.addJavascriptInterface(new NativeItem(null), "NativeItem");
                 quickJS_context_.registerClass((thisObj, args) -> {
                     JSObject item = (JSObject) args.get(0);
                     NativeItem nativeItem = new NativeItem(item.getInteger("ItemPtr"));

@@ -277,7 +277,7 @@ class BlockPos;
 // fake区域
 extern short (*fake_Item_getId)(Item *);
 
-extern char * (*fake_Item_getCommandName)(Item *);
+extern char *(*fake_Item_getCommandName)(Item *);
 
 extern void (*fake_Item_setCategory)(Item *, CreativeItemCategory);
 
@@ -313,9 +313,9 @@ extern void *(*base_Item_addCreativeItem)(Item *, short);
 
 [[maybe_unused]] extern void *NC_Item_addCreativeItem(Item *obj, short a);
 
-extern void (*base_Item_useOn)(Item *, ItemStack &, Actor &, int, int, int, unsigned char, float, float, float);
+extern void (*base_Item_useOn)(Item *, ItemStack *, Actor *, int, int, int, short, float, float, float);
 
-extern void NC_Item_useOn(Item *ptr, ItemStack &itemstack, Actor &actor, int x, int y, int z, unsigned char d, float e, float f, float g);
+extern void NC_Item_useOn(Item *, ItemStack *, Actor *, int, int, int, short, float, float, float);
 
 extern void *(*base_Item_addTag)(Item *, HashedString *);
 
@@ -333,9 +333,9 @@ extern void (*base_Item_initClient)(Item *, Json::Value &, Json::Value &);
 
 extern void NC_Item_initClient(Item *ptr, Json::Value &ptr_, Json::Value &ptr_1);
 
-extern bool (*base_BlockItem__useOn)(Item *, ItemStackBase &, float *, BlockPos const&, uint8_t, float, float, float);
+extern bool (*base_BlockItem__useOn)(Item *, ItemStackBase &, float *, BlockPos const &, uint8_t, float, float, float);
 
-extern bool NC_BlockItem__useOn(Item *, ItemStackBase &, float *, BlockPos const&, uint8_t, float, float, float);
+extern bool NC_BlockItem__useOn(Item *, ItemStackBase &, float *, BlockPos const &, uint8_t, float, float, float);
 
 //_ZNK9BlockItem6_useOnER9ItemStackR5Actor8BlockPoshfff
 //
