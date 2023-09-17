@@ -9,10 +9,11 @@
 #include "headers/Fake_ItemRegistry.hpp"
 #include "tester/android.hpp"
 #include "NativeClass.hpp"
+#include "NC_Blocks.hpp"
 
 //#include "../includes/json/json.h"
 Item::Tier::Tier(int level, int durability, float speed, int damage, int echantmentValue) : mLevel(level), mDurability(durability), mSpeed(speed), mDamage(damage), mEnchantmentValue(echantmentValue){}
-
+bool forBlock;
 //fake区
 short (*fake_Item_getId)(Item *);
 
@@ -50,17 +51,19 @@ void NC_Item_setIcon(Item *ptr, std::string const &str, short data)
     return base_Item_setIcon(ptr, str, data);
 }
 
-bool forBlock = true;
+
 
 void *(*base_Item_addCreativeItem)(Item *, short);
 
 void *NC_Item_addCreativeItem(Item *obj, short a)
 {
     if(forBlock){
-        BlockLegacy *tempBlock1 = fake_BlockTypeRegistry_lookupByName("block_Temp", true).get();
-        short id = fake_BlockLegacy_getBlockItemId(tempBlock1);
-        Item *testitem = fake_ItemRegistry_getItemById(id).get();
-        base_Item_addCreativeItem(testitem, fake_Item_getId(testitem));
+        for(auto &NC_BlockPtr: blocksPoolArray){
+            BlockLegacy *blockPtr = fake_BlockTypeRegistry_lookupByName(NC_BlockPtr->getName(), true).get();
+            short id = fake_BlockLegacy_getBlockItemId(blockPtr);
+            Item *itemPtr = fake_ItemRegistry_getItemById(id).get();
+            base_Item_addCreativeItem(itemPtr, 0);
+        }
         forBlock = false;
     }
     return base_Item_addCreativeItem(obj, a);

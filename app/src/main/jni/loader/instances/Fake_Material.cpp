@@ -12,6 +12,7 @@ void (*base_Material__setupSurfaceMaterials)(Material *);
 
 void NC_Material__setupSurfaceMaterials(Material * ptr){
     base_Material__setupSurfaceMaterials(ptr);
+    materialsPool[1] = (Material *)&fake_Material_getMaterial(1);//泥制方块
     materialsPool[2] = (Material *)&fake_Material_getMaterial(2);//木制方块
     materialsPool[3] = (Material *)&fake_Material_getMaterial(3);//石制方块
 }

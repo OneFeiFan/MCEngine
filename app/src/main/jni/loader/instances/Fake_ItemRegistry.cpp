@@ -5,7 +5,7 @@
 #include "../headers/Fake_ItemRegistry.hpp"
 #include "headers/Fake_VanillaBlockTypes.hpp"
 
-ItemRegistry *(*fake_ItemRegistry_mMaxItemID);
+short (*fake_ItemRegistry_mMaxItemID);
 
 WeakPtr<Item> (*fake_ItemRegistry_registerItemShared)(std::string const &, short &);
 

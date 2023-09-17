@@ -7,11 +7,11 @@
 // Created by 30225 on 2023/8/23.
 //
 //fake区
-int (*fake_BlockLegacy_getBlockItemId)(BlockLegacy *);
+short (*fake_BlockLegacy_getBlockItemId)(BlockLegacy *);
 
 WeakPtr<BlockLegacy> (*fake_BlockLegacy_createWeakPtr)(BlockLegacy *);
 
-BlockLegacy *(*fake_BlockLegacy_setCategory)(BlockLegacy *, int);
+BlockLegacy *(*fake_BlockLegacy_setCategory)(BlockLegacy *, CreativeItemCategory);
 
 BlockLegacy *(*fake_BlockLegacy_setDestroyTime)(BlockLegacy *, float);
 

@@ -21,21 +21,14 @@ void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, boo
 {
     printf("注册物品开始\n");
     Item *itemPtr;
-//    BlockLegacy *tempBlock1 = fake_BlockTypeRegistry_lookupByName("block_Temp", true).get();
-//    short id = fake_BlockLegacy_getBlockItemId(tempBlock1);
-//    std::cout<<id<<std::endl;
-//    itemPtr = fake_ItemRegistry_registerBlockItemShared("block_temp",id).get();
-//    *((c *)itemPtr + 48) = (uintptr_t)&tempBlock1;
-//
-//    fake_Item_setCategory(itemPtr, (CreativeItemCategory)1);
     for(auto &NC_ItemPtr: normalItemsPoolArray){
-        itemPtr = fake_ItemRegistry_registerItemShared(NC_ItemPtr->getName(), (short &) (++fake_ItemRegistry_mMaxItemID)).get();
+        itemPtr = fake_ItemRegistry_registerItemShared(NC_ItemPtr->getName(),  ++(*fake_ItemRegistry_mMaxItemID)).get();
         NC_ItemPtr->setItemPtr(itemPtr);
         fake_Item_setCategory(itemPtr, NC_ItemPtr->getType());
     }
     printf("普通物品注册完成，一切正常\n");
     for(auto &NC_ItemPtr: swordItemsPoolArray){
-        itemPtr = fake_ItemRegistry_registerItemSharedForSword(NC_ItemPtr->getName(), (short &) (++fake_ItemRegistry_mMaxItemID), *tiersPool[NC_ItemPtr->getTier()]).get();
+        itemPtr = fake_ItemRegistry_registerItemSharedForSword(NC_ItemPtr->getName(), ++(*fake_ItemRegistry_mMaxItemID), *tiersPool[NC_ItemPtr->getTier()]).get();
 #ifdef __arm__
         // 如果目标平台是 ARM32 架构（armeabi、armeabi-v7a），则编译以下代码块
         *((uintptr_t *) itemPtr + 75) = NC_ItemPtr->getDamage();//设置攻击力
@@ -55,7 +48,7 @@ void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, boo
     for(auto &NC_ItemPtr: foodItemsPoolArray){
         auto *value = new Json::Value(Json::ValueType::objectValue);
         auto *reader = new Json::Reader();
-        itemPtr = fake_ItemRegistry_registerItemShared(NC_ItemPtr->getName(), (short &) (++fake_ItemRegistry_mMaxItemID)).get();
+        itemPtr = fake_ItemRegistry_registerItemShared(NC_ItemPtr->getName(), ++(*fake_ItemRegistry_mMaxItemID)).get();
         NC_ItemPtr->setItemPtr(itemPtr);
         fake_Item_setCategory(itemPtr, NC_ItemPtr->getType());
         reader->parse(NC_ItemPtr->getTypeData(), NC_ItemPtr->getTypeData() + strlen(NC_ItemPtr->getTypeData()), *value);

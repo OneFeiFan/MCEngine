@@ -273,7 +273,7 @@ class BlockItem : public Item
 
 class BlockPos;
 
-//
+extern bool forBlock;
 // fake区域
 extern short (*fake_Item_getId)(Item *);
 

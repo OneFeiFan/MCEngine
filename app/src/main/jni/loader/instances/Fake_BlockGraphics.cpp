@@ -9,6 +9,7 @@
 #include "headers/Fake_ItemRegistry.hpp"
 #include "headers/Fake_VanillaItems.hpp"
 #include "headers/Fake_Block.hpp"
+#include "NC_Blocks.hpp"
 #include <iostream>
 #include <string.h>
 
@@ -30,15 +31,26 @@ void NC_BlockGraphics_registerLooseBlockGraphics(std::vector<Json::Value> &data)
 {
     auto *value = new Json::Value();
     auto *reader = new Json::Reader();
-    const char *c = "{ \"format_version\": [1,1,0],\"block_Temp\":{}}";
-    reader -> parse(c, c + strlen(c), *value);
+    std::string fakeJson = "{ \"format_version\": [1,1,0]";
+    for(auto &NC_BlockPtr: blocksPoolArray){
+        fakeJson += ",";
+        fakeJson += "\"";
+        fakeJson += NC_BlockPtr->getName();
+        fakeJson += "\"";
+        fakeJson += ":{}";
+    }
+    fakeJson += "}";
+    const char *json = fakeJson.c_str();
+    reader->parse(json, json + strlen(json), *value);
     //free(&data[0]);//释放原内存
     memcpy(&data[0], value, sizeof(value));//强制拷贝新内存
     base_BlockGraphics_registerLooseBlockGraphics(data);
-    BlockGraphics * ptr = blockGraphicsPool.find("block_Temp")->second;
-    fake_BlockGraphics_setTextureItem(ptr, "bee_nest_top");
-    fake_BlockGraphics_setCarriedTextures(ptr, "bee_nest_top");
-    fake_BlockGraphics_setDefaultCarriedTextures(ptr);
+    for(auto &NC_BlockPtr: blocksPoolArray){
+        BlockGraphics *ptr = blockGraphicsPool.find(NC_BlockPtr->getName())->second;
+        fake_BlockGraphics_setTextureItem(ptr, NC_BlockPtr->getTextureName());
+        fake_BlockGraphics_setCarriedTextures(ptr, NC_BlockPtr->getTextureName());
+        fake_BlockGraphics_setDefaultCarriedTextures(ptr);
+    }
     blockGraphicsPool.clear();
     blockGraphicsPool.~map();
 }
@@ -54,7 +66,7 @@ BlockGraphics *(*base_BlockGraphics_BlockGraphics)(BlockGraphics *, std::string 
 
 BlockGraphics *NC_BlockGraphics_BlockGraphics(BlockGraphics *ptr, std::string const &str)
 {
-    blockGraphicsPool[str] = ptr;
+    blockGraphicsPool.emplace(str,ptr);
     return base_BlockGraphics_BlockGraphics(ptr, str);
 }
 

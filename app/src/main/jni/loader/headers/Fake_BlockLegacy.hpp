@@ -3,6 +3,7 @@
 
 #include <string>
 #include "sharedptr.h"
+#include "CreativeItemCategory.h"
 
 class BlockLegacy
 {
@@ -12,11 +13,11 @@ public:
     int getBlockItemId() const;
 }; //
 // fake区域
-extern int (*fake_BlockLegacy_getBlockItemId)(BlockLegacy *);
+extern short (*fake_BlockLegacy_getBlockItemId)(BlockLegacy *);
 
 extern WeakPtr<BlockLegacy> (*fake_BlockLegacy_createWeakPtr)(BlockLegacy *);
 
-extern BlockLegacy *(*fake_BlockLegacy_setCategory)(BlockLegacy *, int);
+extern BlockLegacy *(*fake_BlockLegacy_setCategory)(BlockLegacy *, CreativeItemCategory);
 
 extern BlockLegacy *(*fake_BlockLegacy_setDestroyTime)(BlockLegacy *, float);
 

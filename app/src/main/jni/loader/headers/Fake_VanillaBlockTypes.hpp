@@ -12,7 +12,6 @@ class VanillaBlockTypes
 {
 
 };
-extern BlockLegacy *tempBlock;
 //fake区
 
 //hook区

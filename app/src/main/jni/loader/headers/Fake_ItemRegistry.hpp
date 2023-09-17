@@ -82,7 +82,7 @@ public:
 
 //
 // fake区域
-extern ItemRegistry *(*fake_ItemRegistry_mMaxItemID);
+extern short (*fake_ItemRegistry_mMaxItemID);
 
 extern WeakPtr<Item> (*fake_ItemRegistry_registerItemShared)(std::string const &, short &);
 
