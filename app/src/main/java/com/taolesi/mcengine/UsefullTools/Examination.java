@@ -1,6 +1,6 @@
-package com.taolesi.mcengine;
+package com.taolesi.mcengine.UsefullTools;
 
-import static com.taolesi.mcengine.Loader.Toast;
+import static com.taolesi.mcengine.ModHelper.Loader.Toast;
 
 import android.webkit.JavascriptInterface;
 

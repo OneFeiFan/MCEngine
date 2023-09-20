@@ -1,8 +1,8 @@
-package com.taolesi.mcengine;
+package com.taolesi.mcengine.ModHelper;
 
-import static com.taolesi.mcengine.FileTools.copyDir;
-import static com.taolesi.mcengine.FileTools.deleteFile;
-import static com.taolesi.mcengine.FileTools.toZip;
+import static com.taolesi.mcengine.UsefullTools.FileTools.copyDir;
+import static com.taolesi.mcengine.UsefullTools.FileTools.deleteFile;
+import static com.taolesi.mcengine.UsefullTools.FileTools.toZip;
 
 import android.content.Context;
 import android.os.Environment;
@@ -10,6 +10,9 @@ import android.os.Environment;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.taolesi.mcengine.ModHelper.ModMap;
+import com.taolesi.mcengine.UsefullTools.FileTools;
+import com.taolesi.mcengine.UsefullTools.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;

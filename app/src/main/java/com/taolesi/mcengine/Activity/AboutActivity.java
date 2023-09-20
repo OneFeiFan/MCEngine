@@ -1,28 +1,22 @@
-package com.taolesi.mcengine;
+package com.taolesi.mcengine.Activity;
 
 import static com.taolesi.mcengine.R.layout;
-import static com.taolesi.mcengine.StatusBarUtils.setWindowStatusBarColor;
+import static com.taolesi.mcengine.UsefullTools.StatusBarUtils.setWindowStatusBarColor;
 
-import android.content.Context;
-import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import java.util.Objects;
+import com.taolesi.mcengine.R;
+import com.taolesi.mcengine.UsefullTools.StatusBarUtils;
 
 public class AboutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_about);
-        setWindowStatusBarColor(this, R.color.blue_200);
+        StatusBarUtils.setWindowStatusBarColor(this, R.color.blue_200);
         Toolbar toolbar = (Toolbar) findViewById(R.id.about_toolbar);
 
 

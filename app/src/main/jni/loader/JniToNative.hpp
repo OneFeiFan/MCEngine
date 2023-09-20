@@ -112,33 +112,33 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, [[maybe_unused]]void *reserved)
     return JNI_VERSION_1_6;
 }
 
-JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeItem_createItem(JNIEnv *env, [[maybe_unused]] jclass clazz, jstring jname, jstring jiconName, jint jindex, jint jtype)
+JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeClass_NativeItem_createItem(JNIEnv *env, [[maybe_unused]] jclass clazz, jstring jname, jstring jiconName, jint jindex, jint jtype)
 {
     const char *name = android::jstringToCharArr(env, jname);
     const char *iconName = android::jstringToCharArr(env, jiconName);
     return (jlong *) NC_Items::createObj(name, iconName, jindex, (CreativeItemCategory) jtype);
 }
-JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeItem_createFood(JNIEnv *env, [[maybe_unused]] jclass clazz, jstring jname, jstring jicon, jint index, jint type, jstring jfood_data)
+JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeClass_NativeItem_createFood(JNIEnv *env, [[maybe_unused]] jclass clazz, jstring jname, jstring jicon, jint index, jint type, jstring jfood_data)
 {
     const char *name = android::jstringToCharArr(env, jname);
     const char *iconName = android::jstringToCharArr(env, jicon);
     const char *food_data = android::jstringToCharArr(env, jfood_data);
     return (jlong *) NC_FoodItems::createObj(name, iconName, index, (CreativeItemCategory) type, food_data);
 }
-JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeItem_createSword(JNIEnv *env, [[maybe_unused]]jclass clazz, jstring jname, jstring jicon, jint jindex, jint jtype, jint jtier, jint jdurability, jint jdamage)
+JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeClass_NativeItem_createSword(JNIEnv *env, [[maybe_unused]]jclass clazz, jstring jname, jstring jicon, jint jindex, jint jtype, jint jtier, jint jdurability, jint jdamage)
 {
     const char *name = android::jstringToCharArr(env, jname);
     const char *iconName = android::jstringToCharArr(env, jicon);
     return (jlong *) NC_SwordItems::createObj(name, iconName, jindex, (CreativeItemCategory) jtype, jtier, jdurability, jdamage);
 }
 JNIEXPORT void JNICALL
-Java_com_taolesi_mcengine_NativeItem_baseItemUseOn(JNIEnv *env, jclass clazz, jlong ptr, jlong itemstack, jlong actor, jint x, jint y, jint z, jshort d, jfloat e, jfloat f, jfloat g)
+Java_com_taolesi_mcengine_NativeClass_NativeItem_baseItemUseOn(JNIEnv *env, jclass clazz, jlong ptr, jlong itemstack, jlong actor, jint x, jint y, jint z, jshort d, jfloat e, jfloat f, jfloat g)
 {
     //std::cout << fake_Item_isFood((Item*) ptr) << "\n";
     base_Item_useOn((Item*) ptr, (ItemStack *) itemstack, (Actor *) actor, x, y, z, d, e, f, g);
 }
 JNIEXPORT void JNICALL
-Java_com_taolesi_mcengine_NativeItem_define(JNIEnv *env, jclass clazz)
+Java_com_taolesi_mcengine_NativeClass_NativeItem_define(JNIEnv *env, jclass clazz)
 {
     NativeClass::NativeItem = (jclass)env->NewGlobalRef(clazz);
 }

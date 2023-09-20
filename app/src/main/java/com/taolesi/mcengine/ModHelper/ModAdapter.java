@@ -1,4 +1,4 @@
-package com.taolesi.mcengine;
+package com.taolesi.mcengine.ModHelper;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -18,6 +18,8 @@ import android.widget.Toast;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+
+import com.taolesi.mcengine.R;
 
 import net.qiujuer.genius.ui.widget.Button;
 

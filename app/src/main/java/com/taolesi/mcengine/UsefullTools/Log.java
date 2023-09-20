@@ -1,6 +1,6 @@
-package com.taolesi.mcengine;
+package com.taolesi.mcengine.UsefullTools;
 
-import static com.taolesi.mcengine.FileTools.deleteFile;
+import static com.taolesi.mcengine.UsefullTools.FileTools.deleteFile;
 
 import java.io.BufferedWriter;
 import java.io.File;

@@ -1,10 +1,11 @@
-package com.taolesi.mcengine;
+package com.taolesi.mcengine.UsefullTools;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.os.Build;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.taolesi.mcengine.UsefullTools.Log;
 
 public class StatusBarUtils {
 

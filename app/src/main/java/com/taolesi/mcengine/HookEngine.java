@@ -1,20 +1,19 @@
 package com.taolesi.mcengine;
 
 
-import static com.taolesi.mcengine.FileTools.unzip;
+import static com.taolesi.mcengine.UsefullTools.FileTools.unzip;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.widget.Toast;
 
-import androidx.core.app.ActivityCompat;
+import com.taolesi.mcengine.ModHelper.SoLibraryPatcher;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -69,42 +68,49 @@ public class HookEngine implements IXposedHookLoadPackage {
                 setTargetActivity((Activity) param.thisObject);
                 //储存activity
                 setTargetContext(getTargetActivity());
-                //储存Context(这样写是某种好习惯
-                if (Build.VERSION.SDK_INT >= 30) {
-                    String[] permissions = {
-                            Manifest.permission.READ_MEDIA_AUDIO,
-                            Manifest.permission.READ_MEDIA_IMAGES,
-                            Manifest.permission.READ_MEDIA_VIDEO,
-                    };
-                    //验证是否许可权限
-                    for (String str : permissions) {
-                        if (ActivityCompat.checkSelfPermission(getTargetContext(), str) != PackageManager.PERMISSION_GRANTED) {
-                            //申请权限
-                            ActivityCompat.requestPermissions(getTargetActivity(), permissions, 101);
-                            isOwnPermission = false;
-                        }
-                    }
+
+                if (Build.VERSION.SDK_INT >= 33) {
+                    getTargetActivity().requestPermissions(new String[] {Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO}, QUESTCODE.REQUESTPERMISSION.ordinal());
                 } else {
-                    String[] permissions = {
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    };
-                    //验证是否许可权限
-                    for (String str : permissions) {
-                        if (ActivityCompat.checkSelfPermission(getTargetContext(), str) != PackageManager.PERMISSION_GRANTED) {
-                            //申请权限
-                            ActivityCompat.requestPermissions(getTargetActivity(), permissions, 101);
-                            isOwnPermission = false;
-                        }
-                    }
+                    getTargetActivity().requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, QUESTCODE.REQUESTPERMISSION.ordinal());
                 }
+                //储存Context(这样写是某种好习惯
+
+                /*if (Build.VERSION.SDK_INT >= 30) {
+                    PermissionUtil.requestPermission(getTargetActivity(), new PermissionUtil.IPermissionListener() {
+                                @Override
+                                public void permissionGranted() {
+                                    //call();
+                                    Toast.makeText(getTargetContext(), "已获取权限", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void permissionDenied() {
+                                    //ToastUtil.showToast(PermissionActivity.this,"权限被拒绝");
+                                }
+                            }, "权限被拒绝,请设置应用权限", Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO);
+                } else {
+                    PermissionUtil.requestPermission(getTargetActivity(), new PermissionUtil.IPermissionListener() {
+                                @Override
+                                public void permissionGranted() {
+                                    //call();
+                                    Toast.makeText(getTargetContext(), "已获取权限", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void permissionDenied() {
+                                    //ToastUtil.showToast(PermissionActivity.this,"权限被拒绝");
+                                }
+                            }, "权限被拒绝,请设置应用权限", Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                }*/
 
                 ApplicationInfo info = getTargetContext().getPackageManager().getApplicationInfo("com.taolesi.mcengine", 0);
                 //模块的信息
                 ApplicationInfo mcInfo = getTargetContext().getPackageManager().getApplicationInfo("com.mojang.minecraftpe", 0);
                 //mc的信息
                 String path = new File(info.sourceDir).getAbsolutePath();//模块base.apk的目录
-                String entry = "com.taolesi.mcengine.Loader";
+                String entry = "com.taolesi.mcengine.ModHelper.Loader";
                 String fun = "init";
                 // 重定向lib目录 让load找到正确的加载
                 String mcLib = mcInfo.nativeLibraryDir;//mc的lib路径
