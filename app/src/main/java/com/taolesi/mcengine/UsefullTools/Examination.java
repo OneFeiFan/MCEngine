@@ -6,6 +6,7 @@ import android.webkit.JavascriptInterface;
 
 public class Examination {
     public static long concurrentTime1, concurrentTime2, concurrentMemory1, concurrentMemory2;
+    public Examination() {}
     @JavascriptInterface
     public static void start() {
         concurrentTime1 = System.nanoTime();

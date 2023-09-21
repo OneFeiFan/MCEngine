@@ -135,12 +135,12 @@ JNIEXPORT void JNICALL
 Java_com_taolesi_mcengine_NativeClass_NativeItem_baseItemUseOn(JNIEnv *env, jclass clazz, jlong ptr, jlong itemstack, jlong actor, jint x, jint y, jint z, jshort d, jfloat e, jfloat f, jfloat g)
 {
     //std::cout << fake_Item_isFood((Item*) ptr) << "\n";
-    base_Item_useOn((Item*) ptr, (ItemStack *) itemstack, (Actor *) actor, x, y, z, d, e, f, g);
+    base_Item_useOn((Item *) ptr, (ItemStack *) itemstack, (Actor *) actor, x, y, z, d, e, f, g);
 }
 JNIEXPORT void JNICALL
 Java_com_taolesi_mcengine_NativeClass_NativeItem_define(JNIEnv *env, jclass clazz)
 {
-    NativeClass::NativeItem = (jclass)env->NewGlobalRef(clazz);
+    NativeClass::NativeItem = (jclass) env->NewGlobalRef(clazz);
 }
 }
 #endif

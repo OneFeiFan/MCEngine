@@ -75,9 +75,10 @@ void NC_Item_useOn(Item *ptr, ItemStack *itemstack, Actor *actor, int x, int y, 
 {
     JNIEnv* env = android::getJNIEnv();
     jclass NativeItem = NativeClass::NativeItem;
+
     jmethodID id = env -> GetStaticMethodID(NativeItem, "onItemUse", "(JJJIIISFFF)V");
     env -> CallStaticVoidMethod(NativeItem, id, (jlong) ptr, (jlong) itemstack, (jlong) actor, x, y, z, d, e, f, g);
-    //return;
+    return;
     //return base_Item_useOn(ptr, itemstack, actor, x, y, z, d, e, f, g);
 }
 

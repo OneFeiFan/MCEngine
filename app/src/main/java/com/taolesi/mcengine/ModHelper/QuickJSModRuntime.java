@@ -2,10 +2,15 @@ package com.taolesi.mcengine.ModHelper;
 
 import static com.taolesi.mcengine.UsefullTools.FileTools.JsonToObjTest;
 
+import com.quickjs.JSArray;
 import com.quickjs.JSContext;
+import com.quickjs.JSFunction;
 import com.quickjs.JSObject;
+import com.quickjs.JavaCallback;
+import com.quickjs.JavaVoidCallback;
 import com.quickjs.QuickJS;
 import com.taolesi.mcengine.NativeClass.NativeItem;
+import com.taolesi.mcengine.UsefullTools.Examination;
 
 public class QuickJSModRuntime {
     private QuickJS qjs;
@@ -53,6 +58,7 @@ public class QuickJSModRuntime {
     private void addInterfaces() {
         getJSContext().addJavascriptInterface(new Loader(), "Loader");
         getJSContext().addJavascriptInterface(new NativeItem(), "NativeItem");
+        getJSContext().addJavascriptInterface(new Examination(), "Examination");
 
     }
     private void defineClass() {
@@ -64,27 +70,19 @@ public class QuickJSModRuntime {
             thisObj.set("icon", item.getString("icon"));
             thisObj.set("index", item.getInteger("index"));
             thisObj.set("type", item.getInteger("type"));
-            //JSFunction callback = null;
-            //thisObj.set("onItemUse", "");
-                    /*thisObj.registerJavaMethod((receiver, args1) -> {
-                        JSFunction callback = ((JSFunction) args1.get(0));
-                        nativeItem.addOnItemUseCallback(thisObj, callback);
-                    }, "addOnItemUseCallback");*/
 
-                    /*thisObj.registerJavaMethod((receiver, args1) -> {
-                        //JSFunction callback = (JSFunction) args1.get(0);
-                        Toast.makeText(context, "回调", Toast.LENGTH_SHORT).show();
-                        //Log.put(receiver.toJSONObject().toString());
-                        //nativeItem.addOnItemUseCallback(thisObj, callback);
-                    }, "__OnItemUse");*/
-            //Toast.makeText(context, thisObj.toJSONObject().toString(), Toast.LENGTH_SHORT).show();
-            //quickJS_context_.addJavascriptInterface(new NativeItem(ptr), "Item");
+            JSFunction OnItemUsed = new JSFunction(getJSContext(), (receiver, temp) -> {
+                NativeItem.getCallbacks().put((JSFunction) temp.get(0), getJSContext());
+            });
+            thisObj.set("addOnItemUsedCallback", OnItemUsed);
+
         }, "Item");
+
 
     }
     private void runJS () {
         getJSContext().executeScript(JsonToObjTest(getJavaScriptPath()), getModName() + ".js");
-        getJSContext().close();
-        getQuickJS().close();
+        //getJSContext().close();
+        //getQuickJS().close();
     }
 }
