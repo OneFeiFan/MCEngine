@@ -5,12 +5,13 @@
 #ifndef MCENGINE_FAKE_MATERIAL_HPP
 #define MCENGINE_FAKE_MATERIAL_HPP
 #include <map>
+#include "Other.hpp"
 
 class Material
 {
 
 };
-extern std::map<int,Material *> materialsPool;
+extern std::map<const char*,Material *,cmp_str> materialsPool;
 //fake区
 extern Material const& (*fake_Material_getMaterial)(int);
 //_ZN8Material11getMaterialE12MaterialType(a1);

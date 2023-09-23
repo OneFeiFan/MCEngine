@@ -10,6 +10,7 @@
 #include <jni.h>
 #include "../../headers/CreativeItemCategory.h"
 #include "../../headers/Fake_Item.hpp"
+#include "headers/Other.hpp"
 
 class NC_Items
 {
@@ -45,5 +46,5 @@ public:
     Item *getPtr();
 };
 extern std::vector<NC_Items *> normalItemsPoolArray;
-extern std::map<short,Item::Tier *> tiersPool;
+extern std::map<const char*,Item::Tier *,cmp_str> tiersPool;
 #endif //MCENGINE_NC_ITEMS_HPP

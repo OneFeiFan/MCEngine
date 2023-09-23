@@ -11,15 +11,15 @@
 class NC_SwordItems : public NC_Items
 {
 private:
-    short tier;
+    const char *tier;
     int mDurability;
     int mDamage;
 public:
-    NC_SwordItems(const char *name, const char *iconName, int iconData, const CreativeItemCategory type);
+    NC_SwordItems(const char *, const char *, int, const CreativeItemCategory);
 
-    static NC_SwordItems *createObj(const char *name, const char *iconName, int iconData, const CreativeItemCategory type, short tier_, int durability, int damage);
+    static NC_SwordItems *createObj(const char *, const char *, int, const CreativeItemCategory, const char *, int, int);
 
-    short getTier() const;
+    const char *getTier() const;
 
     int getDurability() const;
 

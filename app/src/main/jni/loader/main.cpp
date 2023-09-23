@@ -162,12 +162,12 @@ void NCHookFR::init()
     //材料
     NC_InLineHook((void *) NC_Material__setupSurfaceMaterials, (void **) &base_Material__setupSurfaceMaterials, "_ZN8Material22_setupSurfaceMaterialsEv");
     //fake原版工具等级
-    tiersPool[0] = new Item::Tier(0, 59, 2.0, 0, 15);//木
-    tiersPool[1] = new Item::Tier(1, 131, 4.0, 1, 5);//石
-    tiersPool[2] = new Item::Tier(2, 250, 6.0, 2, 14);//铁
-    tiersPool[3] = new Item::Tier(3, 1561, 8.0, 3, 10);//钻石
-    tiersPool[4] = new Item::Tier(0, 32, 12.0, 0, 22);//金
-    tiersPool[5] = new Item::Tier(4, 2031, 9.0, 4, 15);//下届合金
+    tiersPool["Wood"] = new Item::Tier(0, 59, 2.0, 0, 15);//木
+    tiersPool["Stone"] = new Item::Tier(1, 131, 4.0, 1, 5);//石
+    tiersPool["Iron"] = new Item::Tier(2, 250, 6.0, 2, 14);//铁
+    tiersPool["Gold"] = new Item::Tier(3, 1561, 8.0, 3, 10);//钻石
+    tiersPool["Diamond"] = new Item::Tier(0, 32, 12.0, 0, 22);//金
+    tiersPool["Netherite"] = new Item::Tier(4, 2031, 9.0, 4, 15);//下届合金
     //历史遗留问题
     //ptr = (void *)dlsym(this->MCHandle, "_ZN4Item7setIconERK22TextureUVCoordinateSet");
     //MSHookFunction(ptr, (void *)&EX_Item_setIcon1, (void **)&base_Item_setIcon1);

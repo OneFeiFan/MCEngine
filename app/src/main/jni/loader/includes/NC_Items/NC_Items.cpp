@@ -6,7 +6,7 @@
 #include "tester/android.hpp"
 
 std::vector<NC_Items *> normalItemsPoolArray;
-std::map<short,Item::Tier *> tiersPool;
+std::map<const char *,Item::Tier *,cmp_str> tiersPool;
 std::vector<Item*> NC_Items::items;
 jobject NC_Items::NativeItemClass;
 
