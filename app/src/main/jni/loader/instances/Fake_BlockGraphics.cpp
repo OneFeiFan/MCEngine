@@ -11,9 +11,9 @@
 #include "headers/Fake_Block.hpp"
 #include "NC_Blocks.hpp"
 #include <iostream>
-#include <string.h>
+#include <cstring>
 
-std::map<std::string, BlockGraphics *> blockGraphicsPool;//存放BlockGraphics对象指针，并以方块名为索引
+std::map<const char *, BlockGraphics *,cmp_str> blockGraphicsPool;//存放BlockGraphics对象指针，并以方块名为索引
 //fake区
 
 BlockGraphics *(*fake_BlockGraphics_setTextureItem)(BlockGraphics *, std::string const &);
@@ -46,7 +46,7 @@ void NC_BlockGraphics_registerLooseBlockGraphics(std::vector<Json::Value> &data)
     memcpy(&data[0], value, sizeof(value));//强制拷贝新内存
     base_BlockGraphics_registerLooseBlockGraphics(data);
     for(auto &NC_BlockPtr: blocksPoolArray){
-        BlockGraphics *ptr = blockGraphicsPool.find(NC_BlockPtr->getName())->second;
+        BlockGraphics *ptr = blockGraphicsPool[NC_BlockPtr->getName()];
         fake_BlockGraphics_setTextureItem(ptr, NC_BlockPtr->getTextureName());
         fake_BlockGraphics_setCarriedTextures(ptr, NC_BlockPtr->getTextureName());
         fake_BlockGraphics_setDefaultCarriedTextures(ptr);
@@ -66,7 +66,7 @@ BlockGraphics *(*base_BlockGraphics_BlockGraphics)(BlockGraphics *, std::string 
 
 BlockGraphics *NC_BlockGraphics_BlockGraphics(BlockGraphics *ptr, std::string const &str)
 {
-    blockGraphicsPool.emplace(str,ptr);
+    blockGraphicsPool.emplace(str.c_str(),ptr);
     return base_BlockGraphics_BlockGraphics(ptr, str);
 }
 
