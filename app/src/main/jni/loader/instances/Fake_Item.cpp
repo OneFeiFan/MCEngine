@@ -68,18 +68,25 @@ void *NC_Item_addCreativeItem(Item *obj, short a)
     }
     return base_Item_addCreativeItem(obj, a);
 }
-
+bool test = true;
 void (*base_Item_useOn)(Item *, ItemStack *, Actor *, int, int, int, short, float, float, float);
 
-void NC_Item_useOn(Item *ptr, ItemStack *itemstack, Actor *actor, int x, int y, int z, short d, float e, float f, float g)
+void NC_Item_useOn(Item *ptr, ItemStack *itemstack, Actor *actor, int x, int y, int z, short face, float vecX, float vecY, float vecZ)
 {
-    JNIEnv* env = android::getJNIEnv();
-    jclass NativeItem = NativeClass::NativeItem;
+    if(test){
+        //std::cout<<ptr<<" "<<itemstack<<" "<<actor<<" "<<face<<std::endl;
+        test = false;
 
-    jmethodID id = env -> GetStaticMethodID(NativeItem, "onItemUse", "(JJJIIISFFF)V");
-    env -> CallStaticVoidMethod(NativeItem, id, (jlong) ptr, (jlong) itemstack, (jlong) actor, x, y, z, d, e, f, g);
-    return;
-    //return base_Item_useOn(ptr, itemstack, actor, x, y, z, d, e, f, g);
+        return; //base_Item_useOn(ptr, itemstack, actor, x, y, z, face, e, f, g);
+    }else{
+        test = true;
+        //std::cout<<ptr<<" "<<itemstack<<" "<<actor<<" "<<face<<std::endl;
+        JNIEnv* env = android::getJNIEnv();
+
+        jmethodID id = env -> GetStaticMethodID(NativeClass::NativeItem, "onItemUse", "(JJJIIISFFF)V");
+        env -> CallStaticVoidMethod(NativeClass::NativeItem, id, (jlong) ptr, (jlong) itemstack, (jlong) actor, x, y, z, face, vecX, vecY, vecZ);
+        return;
+    }
 }
 
 void *(*base_Item_addTag)(Item *, HashedString *);
