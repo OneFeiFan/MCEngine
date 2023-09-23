@@ -24,6 +24,7 @@
 #include "NC_FoodItems.hpp"
 #include "NC_SwordItems.hpp"
 #include "NativeClass.hpp"
+#include "NC_Blocks.hpp"
 
 //const char *linkerName;
 //void *symbol = nullptr;
@@ -125,11 +126,12 @@ JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeClass_NativeItem_create
     const char *food_data = android::jstringToCharArr(env, jfood_data);
     return (jlong *) NC_FoodItems::createObj(name, iconName, index, (CreativeItemCategory) type, food_data);
 }
-JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeClass_NativeItem_createSword(JNIEnv *env, [[maybe_unused]]jclass clazz, jstring jname, jstring jicon, jint jindex, jint jtype, jint jtier, jint jdurability, jint jdamage)
+JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeClass_NativeItem_createSword(JNIEnv *env, [[maybe_unused]]jclass clazz, jstring jname, jstring jicon, jint jindex, jint jtype, jstring jtier, jint jdurability, jint jdamage)
 {
     const char *name = android::jstringToCharArr(env, jname);
     const char *iconName = android::jstringToCharArr(env, jicon);
-    return (jlong *) NC_SwordItems::createObj(name, iconName, jindex, (CreativeItemCategory) jtype, jtier, jdurability, jdamage);
+    const char *tier = android::jstringToCharArr(env, jtier);
+    return (jlong *) NC_SwordItems::createObj(name, iconName, jindex, (CreativeItemCategory) jtype, tier, jdurability, jdamage);
 }
 JNIEXPORT void JNICALL
 Java_com_taolesi_mcengine_NativeClass_NativeItem_baseItemUseOn(JNIEnv *env, jclass clazz, jlong ptr, jlong itemstack, jlong actor, jint x, jint y, jint z, jshort d, jfloat e, jfloat f, jfloat g)
@@ -141,6 +143,14 @@ JNIEXPORT void JNICALL
 Java_com_taolesi_mcengine_NativeClass_NativeItem_define(JNIEnv *env, jclass clazz)
 {
     NativeClass::NativeItem = (jclass) env->NewGlobalRef(clazz);
+}
+JNIEXPORT void JNICALL
+Java_com_taolesi_mcengine_NativeClass_NativeBlock_createBlock(JNIEnv *env, jclass clazz, jstring jname, jstring jTextureName, jint jTextureData, jint jtype,jstring jMaterial)
+{
+    const char *name = android::jstringToCharArr(env, jname);
+    const char *textureName = android::jstringToCharArr(env, jTextureName);
+    const char *material = android::jstringToCharArr(env, jMaterial);
+    NC_Blocks::createObj(name, textureName,jTextureData, (CreativeItemCategory)jtype,material);
 }
 }
 #endif
