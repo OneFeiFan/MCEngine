@@ -3,4 +3,8 @@
 //
 
 #include "../headers/Other.hpp"
-uintptr_t *(*fake_setBlockDisplayName)(uintptr_t*,std::string const&);
+    bool cmp_str::operator()(char const *a, char const *b) const
+    {
+        return std::strcmp(a, b) < 0;
+    }
+//uintptr_t *(*fake_setBlockDisplayName)(uintptr_t*,std::string const&);
