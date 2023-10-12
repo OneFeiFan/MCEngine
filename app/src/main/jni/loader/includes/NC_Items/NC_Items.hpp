@@ -20,29 +20,14 @@ private:
     const int iconData;
     const CreativeItemCategory type;
     Item *ptr;
-
-
 public:
-
     NC_Items(const char *name, const char *iconName, int iconData, CreativeItemCategory type);
-
     static NC_Items* createObj(const char *name, const char *iconName, int iconData, const CreativeItemCategory type);
-    static jobject NativeItemClass;
     void setItemPtr(Item *ptr);
-
     const char *getName() const;
-
     const char *getIconName() const;
-
     int getIconData() const;
-
-    static std::vector<Item*> items;
-
-    static void useOn(Item* item, ItemStack &, Actor &, int, int, int, unsigned char, float, float, float);
-
-
     CreativeItemCategory getType();
-
     Item *getPtr();
 };
 extern std::vector<NC_Items *> normalItemsPoolArray;

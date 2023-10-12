@@ -13,47 +13,41 @@
 
 //#include "../includes/json/json.h"
 Item::Tier::Tier(int level, int durability, float speed, int damage, int echantmentValue) : mLevel(level), mDurability(durability), mSpeed(speed), mDamage(damage), mEnchantmentValue(echantmentValue){}
+
 bool forBlock;
 //fake区
-short (*fake_Item_getId)(Item *);
+#define def(type, method, args...) type (*fake_##method) (args)
 
-char *(*fake_Item_getCommandName)(Item *);
-
-void (*fake_Item_setCategory)(Item *, CreativeItemCategory);
-
-bool (*fake_Item_isFood)(Item *);
-
-void *(*fake_Item_addTag)(Item *, HashedString *);
-
-void (*fake_Item_initClient)(Item *, Json::Value &, Json::Value &);
-
-int (*fake_UseAnimationFromString)(std::string const &);
-
-float (*fake_FoodSaturationFromString)(std::string const &);
-
-int (*fake_Tier_getUses)(Item::Tier *);
-
-int (*fake_Tier_getAttackDamageBonus)(Item::Tier *);
-
-Item *(*fake_Item_setMaxDamage)(Item *, int);
-
-Item *(*fake_Item_setMaxStackSize)(Item *, unsigned char);
-
-Item *(*fake_Item_toBlockId)(Item *, short);
-
-BlockLegacy *(*fake_Item_getLegacyBlock)(Item *);
+def(short, Item_getId, Item*);
+def(char*, Item_getCommandName, Item*);
+def(void, Item_setCategory, Item*, CreativeItemCategory);
+def(bool, Item_isFood, Item*);
+def(void*, Item_addTag, Item*, HashedString*);
+def(void, Item_initClient, Item*, Json::Value &, Json::Value &);
+def(int, UseAnimationFromString, std::string const&);
+def(float, FoodSaturationFromString, std::string const&);
+def(int, Tier_getUses, Item::Tier*);
+def(int, Tier_getAttackDamageBonus, Item::Tier*);
+def(Item*, Item_setMaxDamage, Item*, int);
+def(Item*, Item_setMaxStackSize, Item*, unsigned char);
+def(Item*, Item_toBlockId, Item*, short);
+def(BlockLegacy*, Item_getLegacyBlock, Item*);
 
 //hook区
-void (*base_Item_setIcon)(Item *, std::string const &, short);
+#define hook(type, method, args...) type (*base_##method) (args)
+
+hook(void, Item_setIcon, Item*, std::string const&, short);
+hook(void*, Item_addCreativeItem, Item*, short);
+hook(void, Item_useOn, Item*, ItemStack*, Actor*, int, int, int, short, float, float, float);
+hook(void*, Item_addTag, Item*, HashedString*);
+hook(int, Item_initServer, Item*, Json::Value &);
+hook(void, Item_initClient, Item*, Json::Value &, Json::Value &);
+hook(bool, BlockItem__useOn, Item*, ItemStackBase &, float*, BlockPos const&, uint8_t, float, float, float);
 
 void NC_Item_setIcon(Item *ptr, std::string const &str, short data)
 {
     return base_Item_setIcon(ptr, str, data);
 }
-
-
-
-void *(*base_Item_addCreativeItem)(Item *, short);
 
 void *NC_Item_addCreativeItem(Item *obj, short a)
 {
@@ -68,52 +62,28 @@ void *NC_Item_addCreativeItem(Item *obj, short a)
     }
     return base_Item_addCreativeItem(obj, a);
 }
-bool test = true;
-void (*base_Item_useOn)(Item *, ItemStack *, Actor *, int, int, int, short, float, float, float);
 
 void NC_Item_useOn(Item *ptr, ItemStack *itemstack, Actor *actor, int x, int y, int z, short face, float vecX, float vecY, float vecZ)
 {
-    if(test){
-        //std::cout<<ptr<<" "<<itemstack<<" "<<actor<<" "<<face<<std::endl;
-        test = false;
-
-        return; //base_Item_useOn(ptr, itemstack, actor, x, y, z, face, e, f, g);
-    }else{
-        test = true;
-        //std::cout<<ptr<<" "<<itemstack<<" "<<actor<<" "<<face<<std::endl;
-        JNIEnv* env = android::getJNIEnv();
-
-        jmethodID id = env -> GetStaticMethodID(NativeClass::NativeItem, "onItemUse", "(JJJIIISFFF)V");
-        env -> CallStaticVoidMethod(NativeClass::NativeItem, id, (jlong) ptr, (jlong) itemstack, (jlong) actor, x, y, z, face, vecX, vecY, vecZ);
-        return;
-    }
+    JNIEnv *env = android::getJNIEnv();
+    jmethodID id = env->GetStaticMethodID(NativeClass::NativeItem, "onItemUse", "(JJJIIISFFF)V");
+    env->CallStaticVoidMethod(NativeClass::NativeItem, id, (jlong) ptr, (jlong) itemstack, (jlong) actor, x, y, z, face, vecX, vecY, vecZ);
 }
 
-void *(*base_Item_addTag)(Item *, HashedString *);
-
-[[maybe_unused]] void *NC_Item_addTag(Item *ptr, HashedString *hashedString)
+void *NC_Item_addTag(Item *ptr, HashedString *hashedString)
 {
     return base_Item_addTag(ptr, hashedString);
 }
 
-int (*base_Item_initServer)(Item *, Json::Value &);
-
 int NC_Item_initServer(Item *ptr, Json::Value &ptr_)
 {
-    //ptr_[""];
-    //std::cout<<ptr_.type()<<std::endl;
-    base_Item_initServer(ptr, ptr_);
-    return 1;
+    return base_Item_initServer(ptr, ptr_);
 }
-
-void (*base_Item_initClient)(Item *, Json::Value &, Json::Value &);
 
 void NC_Item_initClient(Item *ptr, Json::Value &ptr_, Json::Value &ptr_1)
 {
     base_Item_initClient(ptr, ptr_, ptr_1);
 }
-
-bool (*base_BlockItem__useOn)(Item *, ItemStackBase &, float *, BlockPos const &, uint8_t, float, float, float);
 
 bool NC_BlockItem__useOn(Item *ptr, ItemStackBase &a, float *b, BlockPos const &c, uint8_t d, float x, float y, float z)
 {

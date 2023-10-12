@@ -27,35 +27,9 @@ void (*base_Block_onPlace)(void *, BlockSource &, BlockPos const &, Block const 
 
 void NC_Block_onPlace(void *ptr, BlockSource &blockSource, BlockPos const &pos, Block const &block)
 {
-    // jclass CLASS = EXHookFR::hookerPtr->Class;
-    // invokeCallback(CLASS, "onBlockPlace", "(JJ)V", (jlong)&blockSource, (jlong)&pos);
     return base_Block_onPlace(ptr, blockSource, pos, block);
 }
 
-
-// void (*base_Item_setIcon1)(void *, TextureUVCoordinateSet const &);
-// void EX_Item_setIcon1(void *ptr, TextureUVCoordinateSet const &a)
-// {
-//     return base_Item_setIcon1(ptr, a);
-// }
-
-// TextureUVCoordinateSet test;
-// void (*base_Item_getTextureUVCoordinateSet)(void *, std::string, int);
-// void EX_Item_getTextureUVCoordinateSet(void *ptr, std::string str, int a)
-// {
-//     return base_Item_getTextureUVCoordinateSet(ptr, std::move(str), a);
-// }
-// TextureUVCoordinateSet const &(*base_Item_getIcon)(Item *, ItemStackBase const &, int, bool);
-// TextureUVCoordinateSet const &EX_Item_getIcon(Item *ptr, ItemStackBase const &a, int b, bool c)
-// {
-//     return base_Item_getIcon(ptr, a, b, c);
-// }
-
-// void (*test11)(std::string, std::string, int);
-// void test_(std::string str1, std::string str2, int i)
-// {
-//     return test11(std::move(str1), std::move(str2), i);
-// }
 void NCHookFR::init()
 {
     // fake区

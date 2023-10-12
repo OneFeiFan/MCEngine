@@ -76,35 +76,6 @@ public class HookEngine implements IXposedHookLoadPackage {
                 }
                 //储存Context(这样写是某种好习惯
 
-                /*if (Build.VERSION.SDK_INT >= 30) {
-                    PermissionUtil.requestPermission(getTargetActivity(), new PermissionUtil.IPermissionListener() {
-                                @Override
-                                public void permissionGranted() {
-                                    //call();
-                                    Toast.makeText(getTargetContext(), "已获取权限", Toast.LENGTH_SHORT).show();
-                                }
-
-                                @Override
-                                public void permissionDenied() {
-                                    //ToastUtil.showToast(PermissionActivity.this,"权限被拒绝");
-                                }
-                            }, "权限被拒绝,请设置应用权限", Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO);
-                } else {
-                    PermissionUtil.requestPermission(getTargetActivity(), new PermissionUtil.IPermissionListener() {
-                                @Override
-                                public void permissionGranted() {
-                                    //call();
-                                    Toast.makeText(getTargetContext(), "已获取权限", Toast.LENGTH_SHORT).show();
-                                }
-
-                                @Override
-                                public void permissionDenied() {
-                                    //ToastUtil.showToast(PermissionActivity.this,"权限被拒绝");
-                                }
-                            }, "权限被拒绝,请设置应用权限", Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                }*/
-
                 ApplicationInfo info = getTargetContext().getPackageManager().getApplicationInfo("com.taolesi.mcengine", 0);
                 //模块的信息
                 ApplicationInfo mcInfo = getTargetContext().getPackageManager().getApplicationInfo("com.mojang.minecraftpe", 0);

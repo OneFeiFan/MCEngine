@@ -25,33 +25,11 @@
 #include "NC_SwordItems.hpp"
 #include "NativeClass.hpp"
 #include "NC_Blocks.hpp"
+#include "IDPool.hpp"
+#include "headers/Fake_ItemRegistry.hpp"
 
-//const char *linkerName;
-//void *symbol = nullptr;
-//JavaVM *loaderVM = nullptr;
-//void *loaderPtr = nullptr;
-//void *NC_handleFake;
-//void *mcengineHandle;
-//
-//char *jstringToChar(JNIEnv *env, jstring jstr)
-//{
-//    char *rtn = nullptr;
-//    jclass class_string = env->FindClass("java/lang/String");
-//    jstring strencode = env->NewStringUTF("utf-8");
-//    jmethodID mid = env->GetMethodID(class_string, "getBytes", "(Ljava/lang/String;)[B");
-//    auto barr = (jbyteArray) env->CallObjectMethod(jstr, mid, strencode);
-//    jsize alen = env->GetArrayLength(barr);
-//    jbyte *ba = env->GetByteArrayElements(barr, JNI_FALSE);
-//
-//    if(alen > 0){
-//        rtn = (char *) malloc(alen + 1);
-//        memcpy(rtn, ba, alen);
-//        rtn[alen] = 0;
-//    }
-//    env->ReleaseByteArrayElements(barr, ba, 0);
-//
-//    return rtn;
-//}
+#define JniExport(type, Class, args...) JNIEXPORT type JNICALL Java_com_taolesi_mcengine_##Class(JNIEnv *env, jclass clazz, ##args)
+
 extern "C" {
 int add(lua_State *L)
 {
@@ -112,45 +90,46 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, [[maybe_unused]]void *reserved)
 
     return JNI_VERSION_1_6;
 }
-
-JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeClass_NativeItem_createItem(JNIEnv *env, [[maybe_unused]] jclass clazz, jstring jname, jstring jiconName, jint jindex, jint jtype)
+JniExport(jlong*, NativeClass_NativeItem_createItem, jstring jname, jstring jiconName, jint jindex, jint jtype)
 {
     const char *name = android::jstringToCharArr(env, jname);
     const char *iconName = android::jstringToCharArr(env, jiconName);
     return (jlong *) NC_Items::createObj(name, iconName, jindex, (CreativeItemCategory) jtype);
 }
-JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeClass_NativeItem_createFood(JNIEnv *env, [[maybe_unused]] jclass clazz, jstring jname, jstring jicon, jint index, jint type, jstring jfood_data)
+JniExport(jlong*, NativeClass_NativeItem_createFood, jstring jname, jstring jicon, jint index, jint type, jstring jfood_data)
 {
     const char *name = android::jstringToCharArr(env, jname);
     const char *iconName = android::jstringToCharArr(env, jicon);
     const char *food_data = android::jstringToCharArr(env, jfood_data);
     return (jlong *) NC_FoodItems::createObj(name, iconName, index, (CreativeItemCategory) type, food_data);
 }
-JNIEXPORT jlong *JNICALL Java_com_taolesi_mcengine_NativeClass_NativeItem_createSword(JNIEnv *env, [[maybe_unused]]jclass clazz, jstring jname, jstring jicon, jint jindex, jint jtype, jstring jtier, jint jdurability, jint jdamage)
+JniExport(jlong*, NativeClass_NativeItem_createSword, jstring jname, jstring jicon, jint jindex, jint jtype, jstring jtier, jint jdurability, jint jdamage)
 {
     const char *name = android::jstringToCharArr(env, jname);
     const char *iconName = android::jstringToCharArr(env, jicon);
     const char *tier = android::jstringToCharArr(env, jtier);
     return (jlong *) NC_SwordItems::createObj(name, iconName, jindex, (CreativeItemCategory) jtype, tier, jdurability, jdamage);
 }
-JNIEXPORT void JNICALL
-Java_com_taolesi_mcengine_NativeClass_NativeItem_baseItemUseOn(JNIEnv *env, jclass clazz, jlong ptr, jlong itemstack, jlong actor, jint x, jint y, jint z, jshort d, jfloat e, jfloat f, jfloat g)
+JniExport(void, NativeClass_NativeItem_baseItemUseOn, jlong ptr, jlong itemstack, jlong actor, jint x, jint y, jint z, jshort d, jfloat e, jfloat f, jfloat g)
 {
-    //std::cout << fake_Item_isFood((Item*) ptr) << "\n";
     base_Item_useOn((Item *) ptr, (ItemStack *) itemstack, (Actor *) actor, x, y, z, d, e, f, g);
 }
-JNIEXPORT void JNICALL
-Java_com_taolesi_mcengine_NativeClass_NativeItem_define(JNIEnv *env, jclass clazz)
+JniExport(void, NativeClass_NativeItem_define)
 {
     NativeClass::NativeItem = (jclass) env->NewGlobalRef(clazz);
+    IDPool::define(*fake_ItemRegistry_mMaxItemID);
 }
-JNIEXPORT void JNICALL
-Java_com_taolesi_mcengine_NativeClass_NativeBlock_createBlock(JNIEnv *env, jclass clazz, jstring jname, jstring jTextureName, jint jTextureData, jint jtype,jstring jMaterial)
+JniExport(void, NativeClass_NativeBlock_createBlock, jstring jname, jstring jTextureName, jint jTextureData, jint jtype, jstring jMaterial)
 {
     const char *name = android::jstringToCharArr(env, jname);
     const char *textureName = android::jstringToCharArr(env, jTextureName);
     const char *material = android::jstringToCharArr(env, jMaterial);
-    NC_Blocks::createObj(name, textureName,jTextureData, (CreativeItemCategory)jtype,material);
+    NC_Blocks::createObj(name, textureName, jTextureData, (CreativeItemCategory) jtype, material);
+}
+JniExport(short, NativeClass_NativeItem_getId, jstring jname)
+{
+    //return fake_Item_getId((Item*)ptr);
+    return IDPool::getId(android::jstringToCharArr(env, jname));
 }
 }
 #endif
