@@ -1,8 +1,12 @@
 
+#include "headers/Fake_BlockSource.hpp"
+
 class Actor
 {
 };
 // 
 // fake区域
-int (*fake_Actor_getRegion)(Actor *);
-bool (*fake_Actor_isSneaking)(Actor *);
+#define def(type, method, args...) type (*fake_##method) (args)
+
+def(BlockSource*, Actor_getRegion, Actor*);
+def(bool, Actor_isSneaking, Actor*);

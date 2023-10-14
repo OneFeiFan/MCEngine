@@ -32,7 +32,7 @@ def(Item*, Item_setMaxDamage, Item*, int);
 def(Item*, Item_setMaxStackSize, Item*, unsigned char);
 def(Item*, Item_toBlockId, Item*, short);
 def(BlockLegacy*, Item_getLegacyBlock, Item*);
-
+def(bool, Item_isSeed, Item*);
 //hook区
 #define hook(type, method, args...) type (*base_##method) (args)
 
@@ -62,12 +62,17 @@ void *NC_Item_addCreativeItem(Item *obj, short a)
     }
     return base_Item_addCreativeItem(obj, a);
 }
-
+bool NC_Item_useOn_first = true;
 void NC_Item_useOn(Item *ptr, ItemStack *itemstack, Actor *actor, int x, int y, int z, short face, float vecX, float vecY, float vecZ)
 {
-    JNIEnv *env = android::getJNIEnv();
-    jmethodID id = env->GetStaticMethodID(NativeClass::NativeItem, "onItemUse", "(JJJIIISFFF)V");
-    env->CallStaticVoidMethod(NativeClass::NativeItem, id, (jlong) ptr, (jlong) itemstack, (jlong) actor, x, y, z, face, vecX, vecY, vecZ);
+    if (NC_Item_useOn_first) {
+        JNIEnv *env = android::getJNIEnv();
+        jmethodID id = env->GetStaticMethodID(NativeClass::ItemCallback, "onItemUse", "(JJJIIISFFF)V");
+        env->CallStaticVoidMethod(NativeClass::ItemCallback, id, (jlong) ptr, (jlong) itemstack, (jlong) actor, x, y, z, face, vecX, vecY, vecZ);
+        NC_Item_useOn_first = false;
+    } else {
+        NC_Item_useOn_first = true;
+    }
 }
 
 void *NC_Item_addTag(Item *ptr, HashedString *hashedString)

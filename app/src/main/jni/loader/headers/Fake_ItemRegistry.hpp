@@ -82,15 +82,16 @@ public:
 
 //
 // fake区域
+#define Extern(type, method, args...) extern type (*fake_##method) (args)
 extern short (*fake_ItemRegistry_mMaxItemID);
+Extern(WeakPtr<Item>, ItemRegistry_registerItemShared, std::string const&, short&);
+Extern(WeakPtr<Item>, ItemRegistry_registerItemSharedForSword, std::string const &, short &,Item::Tier const&);
+Extern(WeakPtr<Item>, ItemRegistry_getItemById, short);
 
-extern WeakPtr<Item> (*fake_ItemRegistry_registerItemShared)(std::string const &, short &);
-
-extern WeakPtr<Item> (*fake_ItemRegistry_registerItemSharedForSword)(std::string const &, short &,Item::Tier const&);
-
-//extern WeakPtr<Item> (*fake_ItemRegistry_registerBlockItemShared)(std::string const &, short &);
-
-extern WeakPtr<Item> (*fake_ItemRegistry_getItemById)(short);
-//_ZN12ItemRegistry7getItemEs
 //hook区
+#define Extern(type, method, args...) extern type (*base_##method) (args)
+Extern(WeakPtr<Item>, ItemRegistry_registerItemShared, std::string const &, short &);
+
+#define Extern(type, method, args...) extern type method (args)
+Extern(WeakPtr<Item>, NC_ItemRegistry_registerItemShared, std::string const &, short &);
 #endif

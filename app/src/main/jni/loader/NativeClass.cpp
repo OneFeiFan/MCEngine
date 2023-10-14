@@ -4,3 +4,4 @@
 #include "NativeClass.hpp"
 
 jclass NativeClass::NativeItem = nullptr;
+jclass NativeClass::ItemCallback = nullptr;

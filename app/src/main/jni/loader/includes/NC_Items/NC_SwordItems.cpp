@@ -3,6 +3,7 @@
 //
 
 #include "NC_SwordItems.hpp"
+#include "IDPool.hpp"
 
 std::vector<NC_SwordItems *> swordItemsPoolArray;
 
@@ -16,6 +17,7 @@ NC_SwordItems *NC_SwordItems::createObj(const char *name, const char *iconName, 
     item->mDurability = durability ? durability : fake_Tier_getUses(ptr);
     item->mDamage = damage ? damage : fake_Tier_getAttackDamageBonus(ptr) + 4;
     swordItemsPoolArray.emplace_back(item);
+    IDPool::setMap(name);
     return item;
 }
 

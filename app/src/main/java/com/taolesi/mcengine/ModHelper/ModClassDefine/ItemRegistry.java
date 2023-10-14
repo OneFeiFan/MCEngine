@@ -3,24 +3,14 @@ package com.taolesi.mcengine.ModHelper.ModClassDefine;
 import com.quickjs.JSContext;
 import com.quickjs.JSObject;
 import com.taolesi.mcengine.ModHelper.Loader;
+import com.taolesi.mcengine.NativeClass.IDPool;
 import com.taolesi.mcengine.NativeClass.NativeItem;
 
-public class ItemRegistry {
-    public JSObject mItemRegistry;
+public class ItemRegistry extends Base {
     public JSObject mItem;
-    public JSContext mContext;
 
-    public JSObject getItemRegistry() {
-        return mItemRegistry;
-    }
-
-    public JSContext getContext() {
-        return mContext;
-    }
-
-    public ItemRegistry(JSObject itemRegistry) {
-        mItemRegistry = itemRegistry;
-        mContext = itemRegistry.getContext();
+    public ItemRegistry(JSContext context) {
+        super(context);
     }
 
     public void pushItemFiles(JSObject item) {
@@ -32,14 +22,14 @@ public class ItemRegistry {
     }
 
     public void start() {
-        getItemRegistry().registerJavaMethod((receiver, args) -> {
+        getJSObject().registerJavaMethod((receiver, args) -> {
             String name = args.getString(0), iconName = args.getString(1);
             int index = args.getInteger(2), category = args.getInteger(3);
             long ptr = NativeItem.createItem(name, iconName, index, category);
-            getItem().set(name, NativeItem.getId(name));
+            getItem().set(name, IDPool.getId(name));
         }, "createBaseItem");
 
-        getItemRegistry().registerJavaMethod((receiver, args) -> {
+        getJSObject().registerJavaMethod((receiver, args) -> {
             String name = args.getString(0), iconName = args.getString(1);
             int index = args.getInteger(2), category = args.getInteger(3);
             JSObject foodData = args.getObject(4);
@@ -69,9 +59,9 @@ public class ItemRegistry {
                 Loader.Toast(String.valueOf(e));
             }
             long ptr = NativeItem.createFood(name, iconName, index, category, "{\"components\": {\"minecraft:food\": {\"nutrition\": " + (foodData.contains("nutrition") ? foodData.getString("nutrition") : "2") + ",\"saturation_modifier\": \"" + saturation + "\"}," + "\"minecraft:use_duration\":" + (foodData.contains("useDuration") ? foodData.getString("useDuration") : "32") + "}}");
-            getItem().set(name, NativeItem.getId(name));
+            getItem().set(name, IDPool.getId(name));
         }, "createFoodItem");
-        getItemRegistry().registerJavaMethod((receiver, args) -> {
+        getJSObject().registerJavaMethod((receiver, args) -> {
             String name = args.getString(0), iconName = args.getString(1);
             int index = args.getInteger(2), category = args.getInteger(3);
             JSObject extraData = args.getObject(4);
@@ -101,8 +91,8 @@ public class ItemRegistry {
                 Loader.Toast(String.valueOf(e));
             }
             long ptr = NativeItem.createSword(name, iconName, index, category, tier, extraData.contains("durability") ? extraData.getInteger("durability") : 0, extraData.contains("damage") ? extraData.getInteger("damage") : 0);
-            getItem().set(name, NativeItem.getId(name));
+            getItem().set(name, IDPool.getId(name));
         }, "createSwordItem");
-        getContext().set("ItemRegistry", getItemRegistry());
+        getContext().set("ItemRegistry", getJSObject());
     }
 }

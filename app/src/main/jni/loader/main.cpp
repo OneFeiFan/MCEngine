@@ -20,6 +20,7 @@
 #include "headers/Fake_BlockGraphics.hpp"
 #include "headers/Other.hpp"
 #include "headers/Fake_Block.hpp"
+#include "headers/Fake_ItemInstance.hpp"
 
 class CreativeItemRegistry;
 
@@ -65,6 +66,7 @@ void NCHookFR::init()
     NC_FakeNative((void **) &fake_Item_getCommandName, "_ZNK4Item14getCommandNameEv");
     NC_FakeNative((void **) &fake_Item_setCategory, "_ZN4Item11setCategoryE20CreativeItemCategory");
     NC_FakeNative((void **) &fake_Item_isFood, "_ZNK4Item6isFoodEv");
+    NC_FakeNative((void **) &fake_Item_isSeed, "_ZNK4Item6isSeedEv");
     NC_FakeNative((void **) &fake_Item_addTag, "_ZN4Item6addTagERK12HashedString");
     NC_FakeNative((void **) &fake_Item_initClient, "_ZN4Item10initClientERN4Json5ValueES2_");
     NC_FakeNative((void **) &fake_Item_setMaxDamage, "_ZN4Item12setMaxDamageEi");
@@ -98,14 +100,7 @@ void NCHookFR::init()
     NC_FakeNative((void **) &fake_UseAnimationFromString, "_Z22UseAnimationFromStringRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE");
     //NC_FakeNative((void **) &fake_setBlockDisplayName, "_ZN6Social11UserProfile14setDisplayNameERKNSt6__ndk112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE_0");
     //NC_FakeNative((void **) &fake_FoodItemComponentLegacy, "_ZN23FoodItemComponentLegacyC2ER4Item");//没用
-
-
-
-
-
-
-
-
+    NC_FakeNative((void **) &fake_ItemInstance_Item, "_ZN12ItemInstanceC1ERK4Item");
     // hook区
     //方块类
     NC_InLineHook((void *) NC_Block_onPlace, (void **) &base_Block_onPlace, "_ZNK5Block7onPlaceER11BlockSourceRK8BlockPosRKS_");
@@ -123,6 +118,7 @@ void NCHookFR::init()
     NC_InLineHook((void *) NC_VanillaItems_registerItems, (void **) &base_VanillaItems_registerItems, "_ZN12VanillaItems13registerItemsERK11Experimentsb");
     NC_InLineHook((void *) NC_VanillaItems_initClientData, (void **) &base_VanillaItems_initClientData, "_ZN12VanillaItems14initClientDataER11Experiments");
     NC_InLineHook((void *) NC_VanillaItems_serverInitCreativeItemsCallback, (void **) &base_VanillaItems_serverInitCreativeItemsCallback, "_ZN12VanillaItems31serverInitCreativeItemsCallbackEP17ActorInfoRegistryP20BlockDefinitionGroupP20CreativeItemRegistrybRK15BaseGameVersionRK11Experiments");
+    NC_InLineHook((void *) NC_ItemRegistry_registerItemShared, (void **) &base_ItemRegistry_registerItemShared, "_ZN12ItemRegistry18registerItemSharedI4ItemJRsEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEEDpOT0_");
     //原版方块管理类
     NC_InLineHook((void *) NC_VanillaBlockTypes_registerBlocks, (void **) &base_VanillaBlockTypes_registerBlocks, "_ZN17VanillaBlockTypes14registerBlocksERK11Experiments");
     //方块注册类

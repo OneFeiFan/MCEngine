@@ -9,6 +9,7 @@
 class NativeClass {
 public:
     static jclass NativeItem;
+    static jclass ItemCallback;
 };
 
 

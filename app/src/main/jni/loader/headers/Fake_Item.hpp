@@ -16,7 +16,7 @@ class ItemStack;
 class Actor;
 class ItemInstance;
 class TextureUVCoordinateSet{};
-
+class ItemStackBase;
 class Item
 {
 public:
@@ -41,21 +41,21 @@ public:
     // virtual void tearDown();
     // virtual void getMaxUseDuration(ItemInstance const*) const;
     // virtual void getMaxUseDuration(ItemStack const*) const;
-    // virtual void isMusicDisk() const;
+     virtual bool isMusicDisk() const;
     // virtual void executeEvent(ItemStackBase&, std::__ndk1::basic_string<char, std::__ndk1::char_traits<char>, std::__ndk1::allocator<char> > const&, RenderParams&) const;
-    // virtual void isComponentBased() const;
-    // virtual void isArmor() const;
-    // virtual void isBlockPlanterItem() const;
-    // virtual void isBucket() const;
-    // virtual void isCamera() const;
-    // virtual void isDamageable() const;
-    // virtual void isDyeable() const;
-    // virtual void isDye() const;
-    // virtual void getItemColor() const;
-    // virtual void isFertilizer() const;
-    // virtual void isFood() const;
-    // virtual void isThrowable() const;
-    // virtual void isUseable() const;
+     virtual bool isComponentBased() const;
+     virtual bool isArmor() const;
+     virtual bool isBlockPlanterItem() const;
+     virtual bool isBucket() const;
+     virtual bool isCamera() const;
+     virtual bool isDamageable() const;
+     virtual bool isDyeable() const;
+     virtual bool isDye() const;
+     virtual void getItemColor() const;
+     virtual bool isFertilizer() const;
+     virtual bool isFood() const;
+     virtual bool isThrowable() const;
+     virtual bool isUseable() const;
     // virtual void getCamera() const;
     // virtual void getFood() const;
     // virtual void getFuel() const;
@@ -166,8 +166,8 @@ public:
     //  void resetId(short);
 
     //  void getFrameCount() const;
-    //  void setCreativeGroup(std::__ndk1::basic_string<char, std::__ndk1::char_traits<char>, std::__ndk1::allocator<char> > const&);
-    //  void reloadIcon();
+    void setCreativeGroup(std::__ndk1::basic_string<char, std::__ndk1::char_traits<char>, std::__ndk1::allocator<char> > const&);
+    void reloadIcon();
     //  void getFullNameHash() const;
     //  void allowOffhand() const;
     //  void beginCreativeGroup(std::__ndk1::basic_string<char, std::__ndk1::char_traits<char>, std::__ndk1::allocator<char> > const&, ItemInstance const&);
@@ -215,7 +215,7 @@ public:
     // void alterAvailableCreativeItems(ActorInfoRegistry*, LevelData&);
     // void getCreativeCategory() const;
     // void getLegacyBlock() const;
-    // void isSeed() const;
+    bool isSeed() const;
     // void isElytraBroken(int);
     // void isMirroredArt() const;
     // void getRenderingPosAdjustment() const;
@@ -279,6 +279,7 @@ Extern(Item*, Item_setMaxDamage, Item*, int);
 Extern(Item*, Item_setMaxStackSize, Item*, unsigned char);
 Extern(Item*, Item_toBlockId, Item*, short);
 Extern(BlockLegacy*, Item_getLegacyBlock, Item*);
+Extern(bool, Item_isSeed, Item*);
 //_ZNK4Item14getLegacyBlockEv
 //hook区
 #define Extern(type, method, args...) extern type (*base_##method) (args)
@@ -289,6 +290,7 @@ Extern(void*, Item_addTag, Item*, HashedString*);
 Extern(int, Item_initServer, Item*, Json::Value&);
 Extern(void, Item_initClient, Item*, Json::Value&, Json::Value&);
 Extern(bool, BlockItem__useOn, Item*, ItemStackBase&, float*, BlockPos const&, uint8_t, float, float, float);
+Extern(bool, Item_isSeed, Item*);
 
 #define Extern(type, method, args...) extern type method (args)
 Extern(void, NC_Item_setIcon, Item*, std::string const&, short);

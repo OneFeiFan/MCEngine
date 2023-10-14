@@ -6,7 +6,6 @@
 
 #include <cstdio>
 #include <string>
-#include <string.h>
 #include <iostream>
 #include <jni.h>
 #include <unistd.h>
@@ -90,34 +89,10 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, [[maybe_unused]]void *reserved)
 
     return JNI_VERSION_1_6;
 }
-JniExport(jlong*, NativeClass_NativeItem_createItem, jstring jname, jstring jiconName, jint jindex, jint jtype)
+
+JniExport(void, NativeClass_Callback_ItemCallback_define)
 {
-    const char *name = android::jstringToCharArr(env, jname);
-    const char *iconName = android::jstringToCharArr(env, jiconName);
-    return (jlong *) NC_Items::createObj(name, iconName, jindex, (CreativeItemCategory) jtype);
-}
-JniExport(jlong*, NativeClass_NativeItem_createFood, jstring jname, jstring jicon, jint index, jint type, jstring jfood_data)
-{
-    const char *name = android::jstringToCharArr(env, jname);
-    const char *iconName = android::jstringToCharArr(env, jicon);
-    const char *food_data = android::jstringToCharArr(env, jfood_data);
-    return (jlong *) NC_FoodItems::createObj(name, iconName, index, (CreativeItemCategory) type, food_data);
-}
-JniExport(jlong*, NativeClass_NativeItem_createSword, jstring jname, jstring jicon, jint jindex, jint jtype, jstring jtier, jint jdurability, jint jdamage)
-{
-    const char *name = android::jstringToCharArr(env, jname);
-    const char *iconName = android::jstringToCharArr(env, jicon);
-    const char *tier = android::jstringToCharArr(env, jtier);
-    return (jlong *) NC_SwordItems::createObj(name, iconName, jindex, (CreativeItemCategory) jtype, tier, jdurability, jdamage);
-}
-JniExport(void, NativeClass_NativeItem_baseItemUseOn, jlong ptr, jlong itemstack, jlong actor, jint x, jint y, jint z, jshort d, jfloat e, jfloat f, jfloat g)
-{
-    base_Item_useOn((Item *) ptr, (ItemStack *) itemstack, (Actor *) actor, x, y, z, d, e, f, g);
-}
-JniExport(void, NativeClass_NativeItem_define)
-{
-    NativeClass::NativeItem = (jclass) env->NewGlobalRef(clazz);
-    IDPool::define(*fake_ItemRegistry_mMaxItemID);
+    NativeClass::ItemCallback = (jclass) env->NewGlobalRef(clazz);
 }
 JniExport(void, NativeClass_NativeBlock_createBlock, jstring jname, jstring jTextureName, jint jTextureData, jint jtype, jstring jMaterial)
 {
@@ -126,10 +101,10 @@ JniExport(void, NativeClass_NativeBlock_createBlock, jstring jname, jstring jTex
     const char *material = android::jstringToCharArr(env, jMaterial);
     NC_Blocks::createObj(name, textureName, jTextureData, (CreativeItemCategory) jtype, material);
 }
-JniExport(short, NativeClass_NativeItem_getId, jstring jname)
+JniExport(jshort, NativeClass_IDPool_getId, jstring jname)
 {
-    //return fake_Item_getId((Item*)ptr);
     return IDPool::getId(android::jstringToCharArr(env, jname));
 }
 }
 #endif
+
