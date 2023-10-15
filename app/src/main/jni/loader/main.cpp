@@ -67,6 +67,7 @@ void NCHookFR::init()
     NC_FakeNative((void **) &fake_Item_setCategory, "_ZN4Item11setCategoryE20CreativeItemCategory");
     NC_FakeNative((void **) &fake_Item_isFood, "_ZNK4Item6isFoodEv");
     NC_FakeNative((void **) &fake_Item_isSeed, "_ZNK4Item6isSeedEv");
+    NC_FakeNative((void **) &fake_Item_getFullItemName, "_ZNK4Item15getFullItemNameEv");
     NC_FakeNative((void **) &fake_Item_addTag, "_ZN4Item6addTagERK12HashedString");
     NC_FakeNative((void **) &fake_Item_initClient, "_ZN4Item10initClientERN4Json5ValueES2_");
     NC_FakeNative((void **) &fake_Item_setMaxDamage, "_ZN4Item12setMaxDamageEi");
@@ -76,6 +77,7 @@ void NCHookFR::init()
     //没用
     NC_FakeNative((void **) &fake_HashedString_c_str, "_ZNK12HashedString5c_strEv");
     NC_FakeNative((void **) &fake_HashedString_HashedString, "_ZN12HashedStringC2EPKc");
+    NC_FakeNative((void **) &fake_HashedString_getString, "_ZNK12HashedString9getStringEv");
     //json库(没大用
     NC_FakeNative((void **) &fake_Json_Value_size, "_ZNK4Json5Value4sizeEv");
     NC_FakeNative((void **) &fake_Json_Value_asCString, "_ZNK4Json5Value9asCStringEv");
@@ -90,6 +92,8 @@ void NCHookFR::init()
     NC_FakeNative((void **) &fake_ItemRegistry_registerItemSharedForSword, "_ZN12ItemRegistry18registerItemSharedI10WeaponItemJRsRKN4Item4TierEEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNSA_11char_traitsIcEENSA_9allocatorIcEEEEDpOT0_");
     //NC_FakeNative((void **) &fake_ItemRegistry_registerBlockItemShared, "_ZN12ItemRegistry18registerItemSharedI9BlockItemJsEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEDpOT0_");//没用，系统自动调用注册
     NC_FakeNative((void **) &fake_ItemRegistry_getItemById, "_ZN12ItemRegistry7getItemEs");
+    //NC_FakeNative((void **) &fake_ItemRegistry_registerLegacyID, "_ZN12ItemRegistry16registerLegacyIDERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEE");
+    NC_FakeNative((void **) &fake_ItemRegistry_getNameFromLegacyID, "_ZN12ItemRegistry19getNameFromLegacyIDEs");
     //工具等级
     NC_FakeNative((void **) &fake_Tier_getUses, "_ZNK4Item4Tier7getUsesEv");
     NC_FakeNative((void **) &fake_Tier_getAttackDamageBonus, "_ZNK4Item4Tier20getAttackDamageBonusEv");
@@ -107,6 +111,7 @@ void NCHookFR::init()
     //Legacy方块类
     NC_InLineHook((void *) NC_BlockLegacy_setExplodeable, (void **) &base_BlockLegacy_setExplodeable, "_ZN11BlockLegacy14setExplodeableEf");
     //物品类
+    NC_InLineHook((void *) NC_Item_Item, (void **) &base_Item_Item, "_ZN4ItemC1ERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEs");
     NC_InLineHook((void *) NC_Item_useOn, (void **) &base_Item_useOn, "_ZNK4Item5useOnER9ItemStackR5Actoriiihfff");
     NC_InLineHook((void *) NC_Item_addCreativeItem, (void **) &base_Item_addCreativeItem, "_ZN4Item15addCreativeItemEPS_s");
     //NC_InLineHook((void *) NC_Item_addTag, (void **) &base_Item_addTag, "_ZN4Item6addTagERK12HashedString");//大概没大用(不知道怎么用
@@ -119,6 +124,7 @@ void NCHookFR::init()
     NC_InLineHook((void *) NC_VanillaItems_initClientData, (void **) &base_VanillaItems_initClientData, "_ZN12VanillaItems14initClientDataER11Experiments");
     NC_InLineHook((void *) NC_VanillaItems_serverInitCreativeItemsCallback, (void **) &base_VanillaItems_serverInitCreativeItemsCallback, "_ZN12VanillaItems31serverInitCreativeItemsCallbackEP17ActorInfoRegistryP20BlockDefinitionGroupP20CreativeItemRegistrybRK15BaseGameVersionRK11Experiments");
     NC_InLineHook((void *) NC_ItemRegistry_registerItemShared, (void **) &base_ItemRegistry_registerItemShared, "_ZN12ItemRegistry18registerItemSharedI4ItemJRsEEE7WeakPtrIT_ERKNSt6__ndk112basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEEDpOT0_");
+    NC_InLineHook((void *) NC_ItemRegistry_registerItem, (void **) &base_ItemRegistry_registerItem, "_ZN12ItemRegistry12registerItemE9SharedPtrI4ItemE");
     //原版方块管理类
     NC_InLineHook((void *) NC_VanillaBlockTypes_registerBlocks, (void **) &base_VanillaBlockTypes_registerBlocks, "_ZN17VanillaBlockTypes14registerBlocksERK11Experiments");
     //方块注册类

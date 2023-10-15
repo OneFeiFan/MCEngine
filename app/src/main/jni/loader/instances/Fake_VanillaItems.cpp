@@ -20,6 +20,7 @@ void *(*base_VanillaItems_registerItems)(VanillaItems *, Experiments const &, bo
 
 void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, bool b)
 {
+    base_VanillaItems_registerItems(ptr, e, b);
     printf("注册物品开始\n");
     Item *itemPtr;
     for(auto &NC_ItemPtr: normalItemsPoolArray){
@@ -74,7 +75,7 @@ void *NC_VanillaItems_registerItems(VanillaItems *ptr, Experiments const &e, boo
         fake_Item_setCategory(itemPtr, NC_ItemPtr->getType());
     }
     printf("物品注册完成，一切正常\n");
-    return base_VanillaItems_registerItems(ptr, e, b);
+    return nullptr;
 }
 
 void *(*base_VanillaItems_initClientData)(VanillaItems *, Experiments const &);

@@ -19,5 +19,6 @@ public class ModMap {
     public void run() {
         modListJson = getContext().getExternalFilesDir("") + "/mods.json";
         copyFile(new File(modListJson), new File(Environment.getExternalStorageDirectory() + "/games/MCEngine/mods.json"));
+        copyFile(new File(getContext().getExternalFilesDir("")+"/assets_modify/IDMap.json"), new File(Environment.getExternalStorageDirectory() + "/games/MCEngine/IDMap.json"));
     }
 }

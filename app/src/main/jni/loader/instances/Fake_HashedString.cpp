@@ -4,6 +4,7 @@
 #include "../headers/Fake_HashedString.h"
 
 //fake区
-void (*fake_HashedString_HashedString)(HashedString *, char *const);
+HashedString * (*fake_HashedString_HashedString)(char *const);
 
 const char *(*fake_HashedString_c_str)(HashedString *);
+std::string (*fake_HashedString_getString)(HashedString *);

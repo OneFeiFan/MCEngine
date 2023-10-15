@@ -280,9 +280,12 @@ Extern(Item*, Item_setMaxStackSize, Item*, unsigned char);
 Extern(Item*, Item_toBlockId, Item*, short);
 Extern(BlockLegacy*, Item_getLegacyBlock, Item*);
 Extern(bool, Item_isSeed, Item*);
+Extern(const char*, Item_getFullItemName, Item*);
+
 //_ZNK4Item14getLegacyBlockEv
 //hook区
 #define Extern(type, method, args...) extern type (*base_##method) (args)
+Extern(Item*, Item_Item, Item*, std::string const&, short);
 Extern(void, Item_setIcon, Item*, std::string const&, short);
 Extern(void*, Item_addCreativeItem, Item*, short);
 Extern(void, Item_useOn, Item*, ItemStack*, Actor*, int, int, int, short, float, float, float);
@@ -293,6 +296,7 @@ Extern(bool, BlockItem__useOn, Item*, ItemStackBase&, float*, BlockPos const&, u
 Extern(bool, Item_isSeed, Item*);
 
 #define Extern(type, method, args...) extern type method (args)
+Extern(Item*, NC_Item_Item, Item*, std::string const&, short);
 Extern(void, NC_Item_setIcon, Item*, std::string const&, short);
 Extern(void*, NC_Item_addCreativeItem, Item*, short);
 Extern(void, NC_Item_useOn, Item*, ItemStack*, Actor*, int, int, int, short, float, float, float);

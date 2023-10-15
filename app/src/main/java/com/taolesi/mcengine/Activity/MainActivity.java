@@ -293,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void refreshAssets() {
         File assets = new File(appFilesDir + "assets_modify");
+        deleteDirectory(assets);
         if (!assets.exists()) {
             try {
                 UnZipAssetsFolder(getContext(), "app.zip", appFilesDir + "assets_modify");

@@ -17,12 +17,10 @@ std::map<const char *, BlockGraphics *,cmp_str> blockGraphicsPool;//存放BlockG
 //fake区
 
 BlockGraphics *(*fake_BlockGraphics_setTextureItem)(BlockGraphics *, std::string const &);
-
 BlockGraphics *(*fake_BlockGraphics_setDefaultCarriedTextures)(BlockGraphics *);
-
 BlockGraphics *(*fake_BlockGraphics_setCarriedTextures)(BlockGraphics *, std::string const &);
-
 Block *(*fake_BlockGraphics_getBlock)(BlockGraphics *);
+
 //hook区
 
 void (*base_BlockGraphics_registerLooseBlockGraphics)(std::vector<Json::Value> &);
@@ -44,7 +42,9 @@ void NC_BlockGraphics_registerLooseBlockGraphics(std::vector<Json::Value> &data)
     reader->parse(json, json + strlen(json), *value);
     //free(&data[0]);//释放原内存
     memcpy(&data[0], value, sizeof(value));//强制拷贝新内存
+
     base_BlockGraphics_registerLooseBlockGraphics(data);
+
     for(auto &NC_BlockPtr: blocksPoolArray){
         BlockGraphics *ptr = blockGraphicsPool[NC_BlockPtr->getName()];
         fake_BlockGraphics_setTextureItem(ptr, NC_BlockPtr->getTextureName());

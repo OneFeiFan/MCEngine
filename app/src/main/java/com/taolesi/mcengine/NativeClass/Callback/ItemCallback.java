@@ -2,6 +2,9 @@ package com.taolesi.mcengine.NativeClass.Callback;
 
 import static com.taolesi.mcengine.NativeClass.NativeItem.baseItemUseOn;
 
+import android.os.Environment;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quickjs.JSArray;
 import com.quickjs.JSContext;
 import com.quickjs.JSFunction;
@@ -12,6 +15,8 @@ import com.quickjs.JavaConstructorCallback;
 import com.taolesi.mcengine.UsefullTools.Log;
 import com.taolesi.mcengine.mod.Item;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +30,7 @@ public class ItemCallback {
     public static Map<JSObject, JSContext> getOnItemUsedCallbacks() {
         return mOnItemUsedCallbacks;
     }
-    public static void onItemUse(long item, long ItemStack, long Actor, int x, int y, int z, short d, float e, float f, float g) {
+    public static void onItemUse(long item, long ItemStack, long Actor, int x, int y, int z, short d, float e, float f, float g) throws IOException {
         for (Map.Entry<JSObject, JSContext> entry : getOnItemUsedCallbacks().entrySet()) {
             JSFunction function = (JSFunction) entry.getKey();
             JSContext context = entry.getValue();

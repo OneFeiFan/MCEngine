@@ -2,6 +2,7 @@
 // Created by 25843 on 2023/10/12.
 //
 
+#include <iostream>
 #include "IDPool.hpp"
 #include "headers/Fake_ItemRegistry.hpp"
 

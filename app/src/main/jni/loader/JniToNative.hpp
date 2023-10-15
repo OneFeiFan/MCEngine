@@ -105,6 +105,10 @@ JniExport(jshort, NativeClass_IDPool_getId, jstring jname)
 {
     return IDPool::getId(android::jstringToCharArr(env, jname));
 }
+JniExport(void, NativeClass_IDPool_setMap, jstring jname)
+{
+    IDPool::setMap(android::jstringToCharArr(env, jname));
+}
 }
 #endif
 
