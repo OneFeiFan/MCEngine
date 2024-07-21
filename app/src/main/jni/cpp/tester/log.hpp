@@ -2,10 +2,6 @@
 // Created by 30225 on 2023/7/30.
 //
 
-#ifndef MCENGINE_LOG_HPP
-#define MCENGINE_LOG_HPP
-
-
 #include <jni.h>
 #include <string>
 #include <ctime>
@@ -14,10 +10,25 @@
 
 class Logger {
 public:
-    Logger(const std::string& filename);
-    ~Logger();
+    Logger(const std::string& filename): filename(filename) {
+        file = fopen(filename.c_str(), "a");
+    };
+    ~Logger(){
+        if (file != NULL) {
+            fclose(file);
+        }
+    };
 
-    void log(const std::string& message);
+    void log(const std::string& message){
+        std::time_t now = std::time(nullptr);
+        char timestamp[20];
+        std::strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
+
+        if (file != NULL) {
+            fprintf(file, "[%s] %s\n", timestamp, message.c_str());
+            fflush(file);
+        }
+    };
     static Logger* instance;
 
 private:
@@ -25,5 +36,4 @@ private:
     FILE* file;
 };
 
-
-#endif //MCENGINE_LOG_HPP
+Logger* Logger::instance = nullptr;

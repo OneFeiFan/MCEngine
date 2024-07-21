@@ -13,9 +13,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.widget.Toast;
 
+import androidx.activity.result.contract.ActivityResultContracts;
+
+import com.taolesi.mcengine.ModHelper.Loader;
 import com.taolesi.mcengine.ModHelper.SoLibraryPatcher;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -28,25 +32,14 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class HookEngine implements IXposedHookLoadPackage {
 
-    public static Activity getTargetActivity() {
-        return targetActivity;
+    private static WeakReference<Context> targetActivity;
+    private static Context getTargetContext() {
+        return targetActivity.get();
     }
 
-    public static void setTargetActivity(Activity target_activity) {
-        HookEngine.targetActivity = target_activity;
+    private static void setTargetContext(Context target_activity) {
+        targetActivity = new WeakReference<>(target_activity);
     }
-
-    public static Activity targetActivity;
-
-    public static Context getTargetContext() {
-        return targetContext;
-    }
-
-    public static void setTargetContext(Context targetContext) {
-        HookEngine.targetContext = targetContext;
-    }
-
-    public static Context targetContext;
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
@@ -54,25 +47,32 @@ public class HookEngine implements IXposedHookLoadPackage {
         XposedHelpers.findAndHookMethod(Activity.class, "onCreate", Bundle.class, new XC_MethodHook() {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Context ctx = (Context) param.thisObject;
-                setTargetActivity((Activity) param.thisObject);
+                setTargetContext(ctx);
+                if (Build.VERSION.SDK_INT >= 33) {
+                    if (!Environment.isExternalStorageManager()) {
+                        ((Activity)param.thisObject).requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, QUESTCODE.REQUESTPERMISSION.ordinal());
+                    }
+                } else {
+                    ((Activity)param.thisObject).requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, QUESTCODE.REQUESTPERMISSION.ordinal());
+                }
                 AssetManager assetManager_org = ctx.getAssets();
                 Method addAssetPath = AssetManager.class.getDeclaredMethod("addAssetPath", String.class);
                 addAssetPath.invoke(assetManager_org, Environment.getExternalStorageDirectory() + "/games/MCEngine/assets.zip");
-                //Toast.makeText(ctx, Arrays.toString(assetManager_org.list("")), Toast.LENGTH_SHORT).show();
                 super.beforeHookedMethod(param);
             }
 
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
-                boolean isOwnPermission = true;
-                setTargetActivity((Activity) param.thisObject);
+                setTargetContext((Activity) param.thisObject);
                 //储存activity
-                setTargetContext(getTargetActivity());
+                setTargetContext(getTargetContext());
 
                 if (Build.VERSION.SDK_INT >= 33) {
-                    getTargetActivity().requestPermissions(new String[] {Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO}, QUESTCODE.REQUESTPERMISSION.ordinal());
+                    if (!Environment.isExternalStorageManager()) {
+                        ((Activity)param.thisObject).requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, QUESTCODE.REQUESTPERMISSION.ordinal());
+                    }
                 } else {
-                    getTargetActivity().requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, QUESTCODE.REQUESTPERMISSION.ordinal());
+                    ((Activity)param.thisObject).requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, QUESTCODE.REQUESTPERMISSION.ordinal());
                 }
                 //储存Context(这样写是某种好习惯
 
@@ -98,7 +98,6 @@ public class HookEngine implements IXposedHookLoadPackage {
                     newLibDir = mcFileDir + "/base/lib/arm64-v8a/";//模块的新lib路径 64位
                 }
                 String output = getTargetContext().getDir("cache_dex", 0).getAbsolutePath();//不懂
-                boolean isOpen = false;
                 try {
                     ClassLoader loader = getTargetContext().getClassLoader();
                     DexClassLoader newLoader = new DexClassLoader(path, output, newLibDir, loader);

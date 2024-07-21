@@ -72,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<String> modLists = new ArrayList<String>();
 
-    public static native void copyToPatch(String input, String output);
-
     private static Context context;
     private String appCacheDir;
     private String appTempDir;

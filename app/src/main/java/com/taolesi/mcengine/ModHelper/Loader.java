@@ -22,8 +22,11 @@ public class Loader {
     public static boolean init(Context context, String apkPath, String lib) throws NoSuchFieldException, ClassNotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException, JsonProcessingException {
         context_ = context;
         System.loadLibrary("dobby");
-        //System.loadLibrary("mcengine");
+        //Toast("dobby 成功加载");
+        System.loadLibrary("quickjs");
+        //Toast("quickjs 成功加载");
         System.loadLibrary("loader");
+        //Toast("loader 成功加载");
         //此处若是加载异常,将会停止向下运行,不用担心quickjs
         Loader loader = new Loader();
         loader.runCoreJS(context);
@@ -32,6 +35,7 @@ public class Loader {
 
     public void runCoreJS(Context context) throws JsonProcessingException {
         String modListJson = Environment.getExternalStorageDirectory() + "/games/MCEngine/mods.json";
+
         ObjectMapper objectMapper = new ObjectMapper();
         Log.init(Environment.getExternalStorageDirectory() + "/games/MCEngine","logJS.txt");
         Map<String, Object> jsonMap = objectMapper.readValue(FileTools.readJsonFile(modListJson), new TypeReference<>() {});

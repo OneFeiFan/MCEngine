@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "IDPool.hpp"
-#include "headers/Fake_ItemRegistry.hpp"
+#include "headers/feifan/ItemRegistryFaker.hpp"
 
 short IDPool::ItemIdMax = 0;
 std::map<std::string, short&> IDPool::ItemIdPair;
