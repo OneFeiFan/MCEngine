@@ -13,9 +13,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.widget.Toast;
 
-import androidx.activity.result.contract.ActivityResultContracts;
-
-import com.taolesi.mcengine.ModHelper.Loader;
 import com.taolesi.mcengine.ModHelper.SoLibraryPatcher;
 
 import java.io.File;
@@ -81,7 +78,7 @@ public class HookEngine implements IXposedHookLoadPackage {
                 ApplicationInfo mcInfo = getTargetContext().getPackageManager().getApplicationInfo("com.mojang.minecraftpe", 0);
                 //mc的信息
                 String path = new File(info.sourceDir).getAbsolutePath();//模块base.apk的目录
-                String entry = "com.taolesi.mcengine.ModHelper.Loader";
+                String entry = "com.taolesi.mcengine.LoadCore.Core";
                 String fun = "init";
                 // 重定向lib目录 让load找到正确的加载
                 String mcLib = mcInfo.nativeLibraryDir;//mc的lib路径

@@ -36,19 +36,19 @@ public:
     const char *getName() const {
         return name;
     }
-    CreativeItemCategory getCategory() const {
+    CreativeItemCategory getCategory() {
         return category;
     }
-    const char * getMaterial() const {
+    const char * getMaterial() {
         return material;
     }
-    const char *getTextureName() const {
+    const char *getTextureName() {
         return textureName;
     }
-    int getTextureData() const {
+    int getTextureData() {
         return textureData;
     }
-    BlockLegacy *getBlockPtr() const {
+    BlockLegacy *getBlockPtr() {
         return ptr;
     }
     void setBlockPtr(BlockLegacy *blockLegacy) {

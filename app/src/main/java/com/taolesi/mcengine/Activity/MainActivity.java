@@ -36,17 +36,22 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.taolesi.mcengine.Map.ModuleMap;
+import com.taolesi.mcengine.Runtime.QuickJSModRuntime;
 import com.taolesi.mcengine.UsefullTools.FileTools;
 import com.taolesi.mcengine.UsefullTools.Log;
-import com.taolesi.mcengine.ModHelper.ModAdapter;
+import com.taolesi.mcengine.Adapter.ModAdapter;
 import com.taolesi.mcengine.R;
-import com.taolesi.mcengine.ModHelper.TextureMap;
+import com.taolesi.mcengine.Map.TextureMap;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -133,8 +138,7 @@ public class MainActivity extends AppCompatActivity {
         launchButton = (FloatingActionButton) findViewById(R.id.floatingActionButton2);
         launchButton.setOnClickListener(v -> {
             try {
-                TextureMap textureMap = new TextureMap(getContext());
-                textureMap.run();
+                new TextureMap().installization(getContext());
                 Intent intent = new Intent();
                 intent.setClassName("com.mojang.minecraftpe", "com.mojang.minecraftpe.MainActivity");
                 startActivity(intent);
@@ -211,7 +215,27 @@ public class MainActivity extends AppCompatActivity {
 
         refreshAssets();
         refreshModList();
-        //Linker linker          = Linker.nativeLinker();
+
+        ModuleMap moduleMap =  new ModuleMap();
+        moduleMap.installization(getContext());
+        moduleMap.addModule("require");
+        //moduleMap.addModule("import");
+
+        try {
+            for (String path : moduleMap.getModules()) {
+                InputStreamReader inputReader = new InputStreamReader(getAssets().open(path + ".js"));
+                BufferedReader bufReader = new BufferedReader(inputReader);
+                String line="";
+                String Result="";
+                while((line = bufReader.readLine()) != null) {
+                    Result += line;
+                }
+                //Log.put(Result);
+                QuickJSModRuntime.mModules.put(Result, path);
+            }
+        } catch (Exception e) {
+            Log.put(e.toString());
+        }
     }
 
     private void getPermission() {

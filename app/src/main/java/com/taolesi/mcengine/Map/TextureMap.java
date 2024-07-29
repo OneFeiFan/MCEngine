@@ -1,4 +1,4 @@
-package com.taolesi.mcengine.ModHelper;
+package com.taolesi.mcengine.Map;
 
 import static com.taolesi.mcengine.UsefullTools.FileTools.copyDir;
 import static com.taolesi.mcengine.UsefullTools.FileTools.deleteFile;
@@ -10,7 +10,6 @@ import android.os.Environment;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.taolesi.mcengine.ModHelper.ModMap;
 import com.taolesi.mcengine.UsefullTools.FileTools;
 import com.taolesi.mcengine.UsefullTools.Log;
 
@@ -24,8 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings({"ResultOfMethodCallIgnored", "unchecked"})
-public class TextureMap {
-    private final Context ctx;
+public class TextureMap extends BaseMap {
 
     private final ObjectMapper objectMapper;
     private String textureListPatch;
@@ -35,13 +33,12 @@ public class TextureMap {
 
     private Map<String, Object> block_json;
 
-    public TextureMap(Context context) {
-        ctx = context;
+    public TextureMap() {
         objectMapper = new ObjectMapper();
     }
-
-    private Context getContext() {
-        return ctx;
+    public void installization (Context context) throws IOException {
+        setContext(context);
+        run();
     }
 
     private void addData(Map.Entry<String, Object> stringObjectEntry, String type) {
@@ -62,7 +59,7 @@ public class TextureMap {
             return;//防止日后手贱出错
         }
         String patch = textureListPatch + "/" + stringObjectEntry.getKey() + "/textures/" + stringObjectEntry.getKey() + "_" + type;
-        ArrayList<String> list = mapItems(patch, textureListPatch + "/" + stringObjectEntry.getKey() + "/");
+        ArrayList<String> list = forEachItems(patch, textureListPatch + "/" + stringObjectEntry.getKey() + "/");
         Log.put("TextureMap: mapItems 成功");
         for (String name : list) {
             Map<String, String> subMap = new HashMap<>();
@@ -125,8 +122,7 @@ public class TextureMap {
                 addData(stringObjectEntry, "items");
                 //terrain_texture.json
                 addData(stringObjectEntry, "blocks");
-                ModMap modMap = new ModMap(getContext());
-                modMap.run();
+                new ModMap().installization(getContext());
             }
         }
         new File(textureListPatch + "/assets/resource_packs/vanilla_1.14/textures/item_texture.json").delete();
@@ -141,7 +137,7 @@ public class TextureMap {
         toZip(textureListPatch + "/assets", new FileOutputStream(Environment.getExternalStorageDirectory() + "/games/MCEngine/assets.zip"), true);
     }
 
-    public ArrayList<String> mapItems(String patch, String blackList) {
+    public ArrayList<String> forEachItems(String patch, String blackList) {
         File file = new File(patch);
         String[] studentFilesName = file.list();
         ArrayList<String> files = new ArrayList<>();
@@ -150,7 +146,7 @@ public class TextureMap {
                 String newPatch = patch + "/" + name;
                 File newFile = new File(newPatch);
                 if (newFile.isDirectory()) {
-                    ArrayList<String> temp = mapItems(newPatch, blackList);
+                    ArrayList<String> temp = forEachItems(newPatch, blackList);
                     files.addAll(temp);
                 } else {
                     String formal = newFile.getAbsolutePath();

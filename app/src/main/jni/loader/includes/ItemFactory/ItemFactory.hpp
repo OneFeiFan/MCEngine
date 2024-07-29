@@ -16,35 +16,36 @@
 class ItemFactory
 {
 private:
-    const char *name;
-    const char *iconName;
-    const int iconData;
-    const CreativeItemCategory type;
+    std::string name;
+    std::string iconName;
+    int iconData;
+    CreativeItemCategory type;
     Item *ptr;
 public:
     static std::vector<ItemFactory*> normalItemsPoolArray;
-    ItemFactory(const char *name, const char *iconName, int iconData, const CreativeItemCategory type) : name(name), iconName(iconName), iconData(iconData), type(type)
-    {
-        ptr = nullptr;
+    ItemFactory(std::string name, std::string iconName, int iconData, const CreativeItemCategory type) {
+        this -> name = name;
+        this -> iconName = iconName;
+        this -> iconData = iconData;
+        this -> type = type;
+        this -> ptr = nullptr;
     }
-    static ItemFactory* createObj(const char *name, const char *iconName,int iconData, const CreativeItemCategory type)
-    {
+    static ItemFactory* createObj(const char *name, const char *iconName,int iconData, const CreativeItemCategory type) {
         auto* item = new ItemFactory(name, iconName, iconData, type);
         normalItemsPoolArray.emplace_back(item);
         IDPool::setMap(name);
         return item;
     }
-    void setItemPtr(Item *ptr_)
-    {
+    void setItemPtr(Item *ptr_) {
         ptr = ptr_;
     }
-    const char *getName() const {
+    std::string getName() {
         return name;
     };
-    const char *getIconName() const {
+    std::string getIconName() {
         return iconName;
     };
-    int getIconData() const {
+    int getIconData()  {
         return iconData;
     };
     CreativeItemCategory getType() {

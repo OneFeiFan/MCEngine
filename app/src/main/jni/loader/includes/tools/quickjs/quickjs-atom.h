@@ -1,6 +1,6 @@
 /*
  * QuickJS atom definitions
- * 
+ *
  * Copyright (c) 2017-2018 Fabrice Bellard
  * Copyright (c) 2017-2018 Charlie Gordon
  *
@@ -82,6 +82,8 @@ DEF(length, "length")
 DEF(fileName, "fileName")
 DEF(lineNumber, "lineNumber")
 DEF(message, "message")
+DEF(cause, "cause")
+DEF(errors, "errors")
 DEF(stack, "stack")
 DEF(name, "name")
 DEF(toString, "toString")
@@ -112,6 +114,7 @@ DEF(caller, "caller")
 DEF(_eval_, "<eval>")
 DEF(_ret_, "<ret>")
 DEF(_var_, "<var>")
+DEF(_arg_var_, "<arg_var>")
 DEF(_with_, "<with>")
 DEF(lastIndex, "lastIndex")
 DEF(target, "target")
@@ -151,6 +154,7 @@ DEF(brand, "<brand>")
 DEF(hash_constructor, "#constructor")
 DEF(as, "as")
 DEF(from, "from")
+DEF(meta, "meta")
 DEF(_default_, "*default*")
 DEF(_star_, "*")
 DEF(Module, "Module")
@@ -163,17 +167,23 @@ DEF(revoke, "revoke")
 DEF(async, "async")
 DEF(exec, "exec")
 DEF(groups, "groups")
+DEF(indices, "indices")
 DEF(status, "status")
 DEF(reason, "reason")
-#ifdef CONFIG_BIGNUM
+DEF(globalThis, "globalThis")
 DEF(bigint, "bigint")
+#ifdef CONFIG_BIGNUM
 DEF(bigfloat, "bigfloat")
+DEF(bigdecimal, "bigdecimal")
+DEF(roundingMode, "roundingMode")
+DEF(maximumSignificantDigits, "maximumSignificantDigits")
+DEF(maximumFractionDigits, "maximumFractionDigits")
 #endif
-#ifdef CONFIG_ATOMICS
+/* the following 3 atoms are only used with CONFIG_ATOMICS */
 DEF(not_equal, "not-equal")
 DEF(timed_out, "timed-out")
 DEF(ok, "ok")
-#endif
+/* */
 DEF(toJSON, "toJSON")
 /* class names */
 DEF(Object, "Object")
@@ -194,24 +204,25 @@ DEF(RegExp, "RegExp")
 DEF(ArrayBuffer, "ArrayBuffer")
 DEF(SharedArrayBuffer, "SharedArrayBuffer")
 /* must keep same order as class IDs for typed arrays */
-DEF(Uint8ClampedArray, "Uint8ClampedArray") 
+DEF(Uint8ClampedArray, "Uint8ClampedArray")
 DEF(Int8Array, "Int8Array")
 DEF(Uint8Array, "Uint8Array")
 DEF(Int16Array, "Int16Array")
 DEF(Uint16Array, "Uint16Array")
 DEF(Int32Array, "Int32Array")
 DEF(Uint32Array, "Uint32Array")
-#ifdef CONFIG_BIGNUM
 DEF(BigInt64Array, "BigInt64Array")
 DEF(BigUint64Array, "BigUint64Array")
-#endif
 DEF(Float32Array, "Float32Array")
 DEF(Float64Array, "Float64Array")
 DEF(DataView, "DataView")
-#ifdef CONFIG_BIGNUM
 DEF(BigInt, "BigInt")
+#ifdef CONFIG_BIGNUM
 DEF(BigFloat, "BigFloat")
 DEF(BigFloatEnv, "BigFloatEnv")
+DEF(BigDecimal, "BigDecimal")
+DEF(OperatorSet, "OperatorSet")
+DEF(Operators, "Operators")
 #endif
 DEF(Map, "Map")
 DEF(Set, "Set") /* Map + 1 */
@@ -256,27 +267,7 @@ DEF(Symbol_species, "Symbol.species")
 DEF(Symbol_unscopables, "Symbol.unscopables")
 DEF(Symbol_asyncIterator, "Symbol.asyncIterator")
 #ifdef CONFIG_BIGNUM
-DEF(Symbol_operatorOrder, "Symbol.operatorOrder")
-DEF(Symbol_operatorAdd, "Symbol.operatorAdd")
-DEF(Symbol_operatorSub, "Symbol.operatorSub")
-DEF(Symbol_operatorMul, "Symbol.operatorMul")
-DEF(Symbol_operatorDiv, "Symbol.operatorDiv")
-DEF(Symbol_operatorMod, "Symbol.operatorMod")
-DEF(Symbol_operatorPow, "Symbol.operatorPow")
-DEF(Symbol_operatorShl, "Symbol.operatorShl")
-DEF(Symbol_operatorShr, "Symbol.operatorShr")
-DEF(Symbol_operatorAnd, "Symbol.operatorAnd")
-DEF(Symbol_operatorOr, "Symbol.operatorOr")
-DEF(Symbol_operatorXor, "Symbol.operatorXor")
-DEF(Symbol_operatorCmpLT, "Symbol.operatorCmpLT")
-DEF(Symbol_operatorCmpLE, "Symbol.operatorCmpLE")
-DEF(Symbol_operatorCmpEQ, "Symbol.operatorCmpEQ")
-DEF(Symbol_operatorPlus, "Symbol.operatorPlus")
-DEF(Symbol_operatorNeg, "Symbol.operatorNeg")
-DEF(Symbol_operatorNot, "Symbol.operatorNot")
-DEF(Symbol_operatorInc, "Symbol.operatorInc")
-DEF(Symbol_operatorDec, "Symbol.operatorDec")
-DEF(Symbol_operatorMathMod, "Symbol.operatorMathMod")
+DEF(Symbol_operatorSet, "Symbol.operatorSet")
 #endif
 
 #endif /* DEF */

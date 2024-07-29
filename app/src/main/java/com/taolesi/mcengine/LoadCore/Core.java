@@ -1,4 +1,4 @@
-package com.taolesi.mcengine.ModHelper;
+package com.taolesi.mcengine.LoadCore;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.taolesi.mcengine.Runtime.QuickJSModRuntime;
 import com.taolesi.mcengine.UsefullTools.FileTools;
 import com.taolesi.mcengine.UsefullTools.Log;
 
@@ -16,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 
-public class Loader {
+public class Core {
     public static Context context_;
     @SuppressLint("UnsafeDynamicallyLoadedCode")
     public static boolean init(Context context, String apkPath, String lib) throws NoSuchFieldException, ClassNotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException, JsonProcessingException {
@@ -26,10 +27,10 @@ public class Loader {
         System.loadLibrary("quickjs");
         //Toast("quickjs 成功加载");
         System.loadLibrary("loader");
-        //Toast("loader 成功加载");
+        //Toast("core 成功加载");
         //此处若是加载异常,将会停止向下运行,不用担心quickjs
-        Loader loader = new Loader();
-        loader.runCoreJS(context);
+        Core core = new Core();
+        core.runCoreJS(context);
         return true;
     }
 
@@ -46,38 +47,9 @@ public class Loader {
                 String modPath = Environment.getExternalStorageDirectory() + "/games/MCEngine/mods/" + modName;
                 String modInfoPath = Environment.getExternalStorageDirectory() + "/games/MCEngine/mods/" + modName + "/modInfo.json";
                 String javaScriptPath = Environment.getExternalStorageDirectory() + "/games/MCEngine/mods/" + modName + "/main.js";
-                try {
-                    new QuickJSModRuntime(modName, modPath, modInfoPath, javaScriptPath).create();
-                } catch (Exception e) {
-                    Log.put(e.toString());
-                }
+                new QuickJSModRuntime().installization(modName, modPath, modInfoPath, javaScriptPath);
                 Log.put(stringObjectEntry.getKey() + "模组加载");
             }
         }
-    }
-
-    @JavascriptInterface
-    public static void Toast(String str) {
-        Toast.makeText(context_, str, Toast.LENGTH_SHORT).show();
-    }
-    @JavascriptInterface
-    public static void log(String str) {
-        Log.put(str);
-    }
-    /*@JavascriptInterface
-    public static JSObject getNewLoader() {
-        return (JSObject) new Loader();
-    }*/
-
-    public static void Log(String claz, int nummber) {
-
-    }
-
-    public static void Log(String claz, float nummber) {
-
-    }
-
-    public static void Log(String claz, String str) {
-
     }
 }

@@ -8,6 +8,7 @@
 #include <jni.h>
 #include <unistd.h>
 #include <dlfcn.h>
+#include <sstream>
 #include "tester/android.hpp"
 #include "tester/log.hpp"
 #include "includes/dobby.h"
@@ -20,6 +21,10 @@
 #include "BlockFactory.hpp"
 #include "IDPool.hpp"
 #include "headers/feifan/ItemRegistryFaker.hpp"
+
+#include "./bridges/ItemBridge.hpp"
+#include "./bridges/UsefulToolBridge.hpp"
+#include "./bridges/QuickJSBridge.hpp"
 
 #define JniExport(type, Class, args...) JNIEXPORT type JNICALL Java_com_taolesi_mcengine_##Class(JNIEnv *env, jclass clazz, ##args)
 
@@ -70,9 +75,10 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 //                printf("成功");
 //            }
 //            lua_close(L);
-        //android::showToast(env, android::charArrToJstring(env, "成功加载native核心"));
+        android::showToast(env, android::charArrToJstring(env, "成功加载native核心"));
         HookFactory::jvm = vm;
         HookFactory::init();
+        QuickJSBridge::installization();
         //}
     } else {
         android::showToast(env, android::charArrToJstring(env, "未能加载native核心"));
@@ -97,44 +103,31 @@ JniExport(void, NativeClass_IDPool_setMap, jstring jname)
 }
 extern "C" {
 #include "includes/tools/quickjs/quickjs-libc.h"
-static JSValue JLJS_Print(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+
+
+JNIEXPORT void JNICALL
+Java_com_taolesi_mcengine_Runtime_QuickJSModRuntime_runQuickjs(JNIEnv *env, jclass clazz, jstring js_filepath, jstring file_name)
 {
-   const char *str;
-   if(argc > 0){
-     str = JS_ToCString(ctx, argv[0]);
-     android::showToast(android::getJNIEnv(), android::charArrToJstring(android::getJNIEnv(), str));
-     //printf("%s", str);
-   }
-   JS_FreeCString(ctx, str);
-   return JS_UNDEFINED;
+    const char *js = android::jstringToCharArr(env, js_filepath);
+    const char *file = android::jstringToCharArr(env, file_name);
+
+    std::ifstream in(js);
+    std::ostringstream sin;
+    sin << in.rdbuf();
+    std::string script_text = sin.str();
+
+    QuickJSBridge::eval(script_text.c_str(), script_text.length(), file);
+
 }
 
 JNIEXPORT void JNICALL
-Java_com_taolesi_mcengine_ModHelper_QuickJSModRuntime_runQuickjs(JNIEnv *env, jclass clazz, jstring js_string, jstring file_name)
+Java_com_taolesi_mcengine_Runtime_QuickJSModRuntime_runQuickjsModule(JNIEnv *env, jclass clazz, jstring js_str, jstring file_name)
 {
-    JSRuntime *runTime = JS_NewRuntime();
-    JSContext *context = JS_NewContext(runTime);
-    JSValue global_obj, script, result;
-
-    global_obj = JS_GetGlobalObject(context);
-    //js_std_add_helpers(context, 0, NULL);
-
-    const char *js = android::jstringToCharArr(env, js_string);
+    const char *js = android::jstringToCharArr(env, js_str);
     const char *file = android::jstringToCharArr(env, file_name);
 
-    //jl_js_init_module_print(context, "Loader");
-
-    JSValue Toast = JS_NewCFunction(context, JLJS_Print, "Toast", 1);
-    //JS_SetPropertyStr(context, Loader, "Toast", JS_NewCFunction(context, JLJS_Print, "Toast", 1));
-    JS_SetPropertyStr(context, global_obj, "Toast", Toast);
-
-    script = JS_Eval(context, js, strlen(js), file, JS_EVAL_TYPE_GLOBAL);
-
-    if (JS_IsException(script)) {
-        printf("%s", JS_ToCString(context, JS_GetException(context)));
-    }
-
-    JS_FreeContext(context);
-    JS_FreeRuntime(runTime);
+    QuickJSBridge::loadModules(js, strlen(js), std::string(std::string(file)+".js").c_str());
+    js_module_loader(QuickJSBridge::globalContext, file, nullptr);
 }
+
 }
