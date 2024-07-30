@@ -6,9 +6,9 @@ android {
     namespace 'com.taolesi.mcengine'
     compileSdk 33
 
-    task runCmdTask(type: Exec) {
-        commandLine 'cmd', '/c', 'cd src/main/jni & ndk-build'
-    }
+//    task runCmdTask(type: Exec) {
+//        commandLine 'cmd', '/c', 'cd src/main/jni & ndk-build'
+//    }
 
     defaultConfig {
         applicationId "com.taolesi.mcengine"
@@ -30,7 +30,7 @@ android {
 
     buildTypes {
         debug {
-            preBuild.dependsOn runCmdTask
+//            preBuild.dependsOn runCmdTask
         }
         release {
             minifyEnabled false
